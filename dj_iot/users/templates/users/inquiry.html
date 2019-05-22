@@ -1,0 +1,23 @@
+{% extends "iotdata/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="content-section">
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Query Data </legend>
+                {{ form|crispy }}
+            </fieldset>
+            <div class="form-group">
+                <input class="btn btn-outline-info" value="Table" name="table" type="submit">
+                <input class="btn btn-outline-info" value="Download" name="download" type="submit">
+                <!-- <input class="btn btn-outline-info" value="Chart" name="chart" type="submit"> -->
+            </div>
+        </form>
+        <div class="border-top pt-3">
+            <small class="text-muted">
+                Problems? Look hear: <a class="ml-2" href="{% url 'login' %}">Manual</a>
+            </small>
+        </div>
+    </div>
+{% endblock content %}

@@ -1,0 +1,15 @@
+{% extends "iotdata/base.html" %}
+{% block content %}
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">
+                <h4><a class="mr-2" >Willkommen auf der IoT42 Platform</a></h4>
+            </div>
+            <a class="article-title" >IoTree42 ist ein Sensor-Netzwerk welches gemeinschaftlich genuzt wird.</a>
+              <br><a class="article-title" >Mehr Informationen unter </a><a class="ml-0" href="{% url 'iot-about' %}" >About this Page</a>
+              <br><a class="article-title" >Bei Interesse oder dem vorhaben dieses Netzwerk zu nutzten, bitte </a>
+              <a class="ml-0" href="mailto:iot42server @ gmail.com" > Mail </a><a>an mich</a>
+            <p class="article-content">Diese Seite entstehn im Rahmen eine Bachelorarbei im Auftrag der Hochschule München.</p>
+          </div>
+        </article>
+{% endblock content %}
