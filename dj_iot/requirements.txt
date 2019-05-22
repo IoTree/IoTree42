@@ -7,3 +7,4 @@ Pillow==6.0.0
 pytz==2018.5
 requests==2.22.0
 urllib3==1.25.2
+pymongo==3.8.0
