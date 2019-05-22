@@ -3,7 +3,7 @@ from django.core.management.base import BaseCommand
 
 
 class Command(BaseCommand):
-    help = 'Create random users'
+    help = 'Create users'
 
     def add_arguments(self, parser):
         parser.add_argument('--user', type=str, help='Username')
