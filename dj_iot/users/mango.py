@@ -12,7 +12,7 @@ class MongoCon:
         self.timeintervall = ""
         self.outcome = "tree"
         self.mongoclient = pymongo.MongoClient('mongodb://xxxxxxxxxxxx:xxxxx/')
-        self.db = self.mongoclient.SensorData
+        self.db = self.mongoclient.xxxxxxxx
 
     def tree(self, lists):
         if self._input_valid_(lists, 'list'):
