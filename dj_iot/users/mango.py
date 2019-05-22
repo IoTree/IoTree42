@@ -11,7 +11,7 @@ class MongoCon:
         self.inverting = False
         self.timeintervall = ""
         self.outcome = "tree"
-        self.mongoclient = pymongo.MongoClient('mongodb://localhost:27017/')
+        self.mongoclient = pymongo.MongoClient('mongodb://xxxxxxxxxxxx:xxxxx/')
         self.db = self.mongoclient.SensorData
 
     def tree(self, lists):
@@ -65,7 +65,7 @@ class MongoCon:
             return False
 
     def _user_valid_(self):
-        collection = self.db.user
+        collection = self.db.xxxxx
         a = collection.find({"username": self.user, "serialnum": self.gateway_id}, {"_id": 1})
         if list(a):
             return True
@@ -148,7 +148,7 @@ class MongoCon:
 
     def find(self):
         if self._input_valid_(self.gateway_id, 'str') and self._user_valid_():
-            collection = self.db.iot01_2
+            collection = self.db.xxxxxxxx
             a = list(collection.find(self._query_find_(), self._query_outcome_()))
             if a:
                 record = self._post_qurey_(a)
