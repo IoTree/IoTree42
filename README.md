@@ -53,6 +53,7 @@ To limit the time or simply to list more than one sensor base from a gateway, yo
 
 You can connect your applications with Rest-Api trough the page "https:/++++.it". You need to be logged in.
 First all your gateway IDs will be sent. Then you can do your queries, with the same possibilities and filters as on the "inquiry" page. The json string is declared as follows:
+
   {"gateway_id": "One of your gateway IDs has been sent to you."
   "Tree": "the branch divided by" _ ",
   "Filter": "data or tree",
