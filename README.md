@@ -33,7 +33,8 @@ To limit the time or simply to list more than one sensor base from a gateway, yo
   2.	The tree structure corresponds to the MQTT topic defined in your sensor base.
       For example, you have an MQTT topic like this: "sensorbase / feather01 / tsl2591" 
       and just want to display this data. For this you can enter "feather01, tsl2591" for example.
-  3.	And   4.  Are setting the start and end point.
+  3.	And   
+  4.  Are setting the start and end point.
   5.	When set to “tree” only the tree branches will be shown. This might be helpful when there are a lot of Sensorbases.
   6.	This refers to point 2. Here you can specify whether or not the tree branch follows a specific order.
   Let's say you have these mqtt-topics:
