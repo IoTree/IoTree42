@@ -92,25 +92,24 @@ Example payload: {“sensor”: ”tsl2591”, “lux”: 2314, “time”: 1561
   -	Yes, it is. The permission for your specific topic is set to read and write. 
   -	Just subscribe your topic (example: gateways/your mqtt username/...), with all the necessary
 information (certificates, user, topic, password, host, port).
-Is my data secure?
+#### Is my data secure?
   -	Yes and no. your data is not stored encrypted and theoretically it can be seen form the admin.
   -	Your profile pic can be seen from everyone who has access to this site.
   -	The use of IoTree42 is at your own risk.
-Can the Gateway itself be also a Sensorbase?
+#### Can the Gateway itself be also a Sensorbase?
   -	Yes, just program your script as if it were on a different Raspberry Pi.
-Can I delete my data?
+#### Can I delete my data?
   -	Yes, when you delete your account everything stored related to you will be deleted.
   -	In the Future there will be a function to deleted specific data.
-Can I use other devices as gateway than a Raspberry pi?
-  -	Yes, you can easily run the mqrrbridge1.py scripts on any Linux,
-but Cputemp.py might not work.
+#### Can I use other devices as gateway than a Raspberry pi?
+  -	Yes, you can easily run the mqrrbridge1.py scripts on any Linux, but Cputemp.py might not work.
   -	If you want to run it on something else you will need the certificates form the “.ssl” folder.
-Can I send data from 2 gateways, which will then be displayed as one?
+#### Can I send data from 2 gateways, which will then be displayed as one?
   -	Yes, it is possible. In the “mqttbridge1.py” script there is the option to set a “gateway_id”.
   -	You need to set the same ID for both.
-Can I set up a gateway as a subgetaway?
+#### Can I set up a gateway as a subgetaway?
   -	Yes, you'll need to modify the mqttbridge1.py script a little so that the data is sent to the first gateway. 
-I would like to extend my measurement with a new sensor. Can I use the already used topic?
+#### I would like to extend my measurement with a new sensor. Can I use the already used topic?
   -	Yes, you can. Just expand your JSON string with a new field and a value.
   -	Do not delete other fields. This can cause problems because some data will not be displayed. Send instead zeros.
 
