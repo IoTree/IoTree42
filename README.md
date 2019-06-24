@@ -28,6 +28,7 @@ To limit the time or simply to list more than one sensor base from a gateway, yo
 
 #### The detailed Mode:
   You can use the second mode with a click on “inquiry”.
+  ![alt text](https://github.com/IoTree/IoTree42/blob/master/github/query_data.png)
   There you have multiple option to query your data.
   1.	Choose your Gateway.
   2.	The tree structure corresponds to the MQTT topic defined in your sensor base.
