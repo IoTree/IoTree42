@@ -51,7 +51,7 @@ To limit the time or simply to list more than one sensor base from a gateway, yo
 ### Rest API
 
 You can connect your applications with Rest-Api trough the page "https:/++++.it". You need to be logged in.
-First all your gateway IDs will be sent. Then you can do your queries, with the same possibilities and filters as on the "inquiry" page. The json string is declared as follows:
+First all your gateway IDs will be sent. Then you can do your queries, with the same possibilities and filters as on the "inquiry" page. #### The json string is declared as follows:
   {"gateway_id": "One of your gateway IDs has been sent to you."
   "Tree": "the branch divided by" _ ",
   "Filter": "data or tree",
@@ -61,9 +61,11 @@ First all your gateway IDs will be sent. Then you can do your queries, with the 
   "time_end": "End of interval in milliseconds"}.
   
 And a POST can look like this:
+
   {"gateway_id": "inku", "tree": "", "filters": "data", "in_order": "True", "negated": "False", "time_start":"0",   "time_end":"1559187967000"}
   
 Or like this:
+
   {"gateway_id":"000000345ba23", "tree":"", "filters": "tree", "in_order": "False", "negated": "True", "time_start":"1559187967000", "time_end": "now"}
   
 As you can see in the second example, the field "time_end" is set to "now". This means that the server take the current UTC +- 0 time.
