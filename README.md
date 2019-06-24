@@ -14,8 +14,10 @@ Sometimes hostname won’t work. It depends on the DHCP-Server in this network
 As mentioned in Setting up my RPi you can use the python script cputemp.py for testing.
 If everything is running and gateway is displaying 2 times “Connection OK”,
 it should work and your data will reach the server.
+
 ### To visualize or du check the incoming data you have two modes.
-The fast Mode:
+
+#### The fast Mode:
   Just click on the button “iotree” in the blue box.
   Now you can choose between your gateways.
   Submit, and then you will see all topics or sensors, if you like.
@@ -23,7 +25,8 @@ The fast Mode:
   All options include all dates from the beginning.
 
 To limit the time or simply to list more than one sensor base from a gateway, you can use the detail mode.
-The detailed Mode:
+
+#### The detailed Mode:
   You can use the second mode with a click on “inquiry”.
   There you have multiple option to query your data.
   1.	Choose your Gateway.
@@ -43,7 +46,9 @@ The detailed Mode:
   It is that easy!
   7.	When you set this choose you simply negated the tree branch. This means if you have the same data as in point 3 and you enter “tsl2591” in point 2 and also undo the hook in point3, you will get the data from "sensorbase/feather01/tsl2591_2" and "sensorbase/feather01/dht22".
   8.	Select if you want to download a CSV file or view a spreadsheet or chart.
+  
 ### Rest API
+
 You can connect your applications with Rest-Api trough the page "https:/++++.it". You need to be logged in.
 First all your gateway IDs will be sent. Then you can do your queries, with the same possibilities and filters as on the "inquiry" page. The json string is declared as follows:
   {"gateway_id": "One of your gateway IDs has been sent to you."
@@ -53,14 +58,19 @@ First all your gateway IDs will be sent. Then you can do your queries, with the 
   "negates": "Should the branch be negated?",
   "time_start": "start of interval in milliseconds",
   "time_end": "End of interval in milliseconds"}.
+  
 And a POST can look like this:
   {"gateway_id": "inku", "tree": "", "filters": "data", "in_order": "True", "negated": "False", "time_start":"0",   "time_end":"1559187967000"}
+  
 Or like this:
   {"gateway_id":"000000345ba23", "tree":"", "filters": "tree", "in_order": "False", "negated": "True", "time_start":"1559187967000", "time_end": "now"}
-As you can see in the second example, the field "time_end" is set to "now". This means that the server take the current UTC + 0 time.
+  
+As you can see in the second example, the field "time_end" is set to "now". This means that the server take the current UTC +- 0 time.
 
 ## Rules for use
+
 Be sure your Raspberry Pi is up to date and secure with a proper password!
+
 ### Important rules for the dataset | object | payload:
   -	It must be in proper JSON-format. If not so it won’t be stored.
   -	Timestamps must be in UNIX-Format. Also the field key needs a form of “time”, “Zeit” or ”UNIX” in it. For example: “timestamp” or “Zeiten” would also work. This is necessary for the server to display the timestamp in human readable time.
@@ -70,13 +80,15 @@ Be sure your Raspberry Pi is up to date and secure with a proper password!
   -	Max time increment is 1 millisecond.
   -	Save measurement values as integer not as string.
 Example payload: {“sensor”: ”tsl2591”, “lux”: 2314, “time”: 1561373832}
+
 ### Important rules for the topic:
   -	For simplicity only alphanumeric and “-“ characters are allowed. If not, so wrong characters will be deleted.
   -	Choose your topic and subtopic-levels wisely. So that you can find data later easily.
   -	Always use "sensorbase/" before the sub-topic. Otherwise it will not be processed through the gateway.
 
 ## FAQs:
-Is it possible to use only the Mqtt-broker?
+
+#### Is it possible to use only the Mqtt-broker?
   -	Yes, it is. The permission for your specific topic is set to read and write. 
   -	Just subscribe your topic (example: gateways/your mqtt username/...), with all the necessary
 information (certificates, user, topic, password, host, port).
