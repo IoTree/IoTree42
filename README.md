@@ -116,30 +116,25 @@ information (certificates, user, topic, password, host, port).
 
 ## Difficulties?
 
-My Mqtt-password has been stolen what should I do?
+#### My Mqtt-password has been stolen what should I do?
   -	Contact admin
-  
-Data is not displayed!
+#### Data is not displayed!
   -	If you just registered the server/admin will need some time to set up everything for you. Try it later again.
   -	Make sure your using global time UTC +-0
   -	Make sure your json string is valid. Can be tested here.
-  -	Make sure your gateway has internet connection
+  -	Make sure your gateway has internet connection.
   -	Make sure your mqtt username and password is set correctly.
-  
-Timestamp is displaying something around 1970.
+#### Timestamp is displaying something around 1970.
   - Your sensorbase likely do not have the global time so it starts with UNIX time = 0 sec,
     which is equal to 01.01.1970 00:00:00 in human readable time.
-    
-I cannot log in!
+#### I cannot log in!
   -	Contact admin
-Raspberry Pi doesn't get any connection to server.
-
+#### Raspberry Pi doesn't get any connection to server.
   -	Check internet connection.
   -	Check your config.json file.
   -	Check your power.
   -	Or contact Admin.
-  
-Some data is missing.
+#### Some data is missing.
   - Look at FAQs “I would like to extend…”
   - Is your JSON-string correct.
   - Dose your sensor works correctly
