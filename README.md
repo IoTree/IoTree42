@@ -42,7 +42,7 @@ The detailed Mode:
   7.	When you set this choose you simply negated the tree branch. This means if you have the same data as in point 3 and you enter “tsl2591” in point 2 and also undo the hook in point3, you will get the data from "sensorbase/feather01/tsl2591_2" and "sensorbase/feather01/dht22".
   8.	Select if you want to download a CSV file or view a spreadsheet or chart.
 ### Rest API
-You can connect your applications with Rest-Api trough the page "https://iot.beratende-ingenieure.it/iotree_api/". You need to be logged in.
+You can connect your applications with Rest-Api trough the page "https:/++++.it". You need to be logged in.
 First all your gateway IDs will be sent. Then you can do your queries, with the same possibilities and filters as on the "inquiry" page. The json string is declared as follows:
   {"gateway_id": "One of your gateway IDs has been sent to you."
   "Tree": "the branch divided by" _ ",
@@ -101,24 +101,30 @@ I would like to extend my measurement with a new sensor. Can I use the already u
   -	Do not delete other fields. This can cause problems because some data will not be displayed. Send instead zeros.
 
 ## Difficulties?
+
 My Mqtt-password has been stolen what should I do?
   -	Contact admin
+  
 Data is not displayed!
   -	If you just registered the server/admin will need some time to set up everything for you. Try it later again.
   -	Make sure your using global time UTC +-0
   -	Make sure your json string is valid. Can be tested here.
   -	Make sure your gateway has internet connection
   -	Make sure your mqtt username and password is set correctly.
+  
 Timestamp is displaying something around 1970.
   - Your sensorbase likely do not have the global time so it starts with UNIX time = 0 sec,
     which is equal to 01.01.1970 00:00:00 in human readable time.
+    
 I cannot log in!
   -	Contact admin
 Raspberry Pi doesn't get any connection to server.
+
   -	Check internet connection.
   -	Check your config.json file.
   -	Check your power.
   -	Or contact Admin.
+  
 Some data is missing.
   - Look at FAQs “I would like to extend…”
   - Is your JSON-string correct.
@@ -136,18 +142,18 @@ Some data is missing.
   -	Own Password for your Database.
   -	"Deleting" Function.
   -	Dynamic Charts.
-in the distant future:
+### in the distant future:
   -	MATLAB integration on server for data processing.
   -	Python integration on server for data processing.
   -	Online Lib with code snippets from users.
     o	For example, from new sensorbases or sensors.
   - time critical connections.
 
-### Also look at GitHub.
-
 ## At last:
+
 There is NO WARRANTY or guarantee FOR LOUSING DATA on both sides, server and gateway.
 The operator takes NO RESPON on anything. THE USE of this platform IoTree42 and anything related to it, IS ON YOUR ON RISK.
+
 
 ### Found some bugs?
 Contact me or on GitHub.
