@@ -4,7 +4,9 @@ The basic is Structure is illustrated below.
  
 
 ## How to use:
+
 ### First you need to set up a gateway.
+
 For this look at follow the link to Setting up my RPi.
 If you want to use a different sensor base like Arduino,
 you need to know your IP of the gateway or its hostname
