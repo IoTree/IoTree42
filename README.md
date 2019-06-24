@@ -1,7 +1,7 @@
 # IoTree42
 ## How it works
 The basic is Structure is illustrated below.
- 
+![alt text](https://github.com/IoTree/IoTree42/blob/master/github/in_a_nutshell.png)
 
 ## How to use:
 
