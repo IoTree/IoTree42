@@ -15,7 +15,7 @@ As mentioned in Setting up my RPi you can use the python script cputemp.py for t
 If everything is running and gateway is displaying 2 times “Connection OK”,
 it should work and your data will reach the server.
 
-### To visualize or du check the incoming data you have two modes.
+### To visualize or to check the incoming data you have two modes.
 
 #### The fast Mode:
   Just click on the button “iotree” in the blue box.
