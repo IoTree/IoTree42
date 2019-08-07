@@ -15,14 +15,14 @@ The gateway itself can be a sensor base.
 Then the gateway sends the data (encrypted) to the server, where it is stored in a database.
 The data can be looked up on the website or via the rest API.
 On the server side there are basically Django, Moquitto Broker, a basic Python scrip that stores all incoming messages on the Mongo-dB, and an additional openssl server.
-On the webpage provided by your Django server is a detailed manual and an installation instruction for the gateway. It also can be found [here](../asdf).
+On the webpage provided by your Django server is a detailed manual and an installation instruction for the gateway. It also can be found [here](https://github.com/IoTree/IoTree42/blob/master/IoTree_dir/home_user/README.md).
 
 ## Installation:
 ### Requirements: 
 Mongo dB version 2.7 or higher must be installed
 It may not work with Resparrian because it is a 32-bit operating system and you will need a 64-bit operating system.
 It is possible to install Ubuntu on Raspberry Pi to achieve full 64-bit.
-The other way would be to optimize Pymongo and Django to work with Mongo dB version 2.4.
+The other way would be to optimize Pymongo to work with Mongo dB version 2.4.
 
 ```
 sudo apt-get update 
@@ -33,10 +33,10 @@ sudo apt-get -y upgrade
 
 download repository with git:
 ```
-git install link to dir
+git install link to IoTree_dir
 ```
 ```
-cd dir 
+cd IoTree_dir 
 ```
 
 ### setup.sh
@@ -65,8 +65,8 @@ sudo crontab -e
 ```
 At the end enter these two lines.
 ```
-@reboot 
-@reboot
+@reboot bash /etc/iotree/reload3.sh
+@reboot bash /etc/iotree/hash3.sh
 ```
 save and close it.
 
@@ -79,10 +79,10 @@ install all the requirements.
 you can choose with virtual environment:
 ```
 --- make env
----- source
+source venv/bin/activate
 pip3 install -r requrements.txt
 ```
-or without env:
+or without venv:
 ```
 pip3 install -r requrements.txt
 ```
@@ -100,10 +100,10 @@ cd ~./dj_iot
 you can choose with virtual environment:
 ```
 ---- env 
----- sourse 
+source venv/bin/activate
 pip3 install -r requirements.txt
 ```
-or without env:
+or without venv:
 ```
 pip3 install -r requirements.txt
 ```
@@ -125,10 +125,13 @@ python3 manage.py collectstatic
 ```
 
 now Django is setup and you can test it.
+```
 python3 manage.py runserver <your ip:8000>
+```
 go in your browser to <your ip:8000>
 
 ## Run it
+To execute it all do:
 ```
 sudo reboot
 ```
@@ -137,24 +140,23 @@ cd ~./iot42
 ```
 start the mqttodb1.py in the background with:
 ```
-nohup python3 mqttodb1.py ------
+nohup python3 mqttodb1.py </dev/null >/dev/null 2>&1 &
 ```
-with env
+with venv:
 ```
------
------
-nohup python3 mqttodb1.py ------
+source venv/bin/activate
+nohup python3 mqttodb1.py </dev/null >/dev/null 2>&1 &
 ```
 ```
 cd ~./dj_iot
 ```
+start django server:
 ```
 python3 manage.py runserver <your dns or ip:8000>
 ```
-with env:
+with venv:
 ```
------
------
+source venv/bin/activate
 python3 manage.py runserver <your dns or ip:8000>
 ```
 
@@ -167,7 +169,7 @@ Look at mqttodb1.py as an example.
 
 ### Deploy on a real server.
 It is recommended to do everything on an Apache server.
-A possible Apache2 configuration file can be found [here](../apache_config_example).
+A possible Apache2 configuration file can be found [here](https://github.com/IoTree/IoTree42/blob/master/apache_config_example).
 You may also want to install a firewall like ufw for security.
 and if you have a DNS name, lets encrypt would be a good choice.
 
