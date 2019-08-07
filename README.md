@@ -154,7 +154,6 @@ Now start the django server:
 ```
 cd ~./dj_iot
 ```
-start django server:
 ```
 python3 manage.py runserver <your dns or ip:8000>
 ```
