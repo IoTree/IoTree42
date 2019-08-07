@@ -1,0 +1,22 @@
+{% extends "iotdata/base.html" %}
+{% block content %}
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">
+                <center><h4><a class="mr-2" >Welcome to IoTree42</a></h4></center>
+            </div>
+              <center>
+              <a class="article-title" >The Platform which connects all your devices, sensors also store, download and visualise your data.</a>
+              <br><a class="article-title" >At IoTree42 were everything is setup quick and easy.</a>
+              </center>
+              <br><br><a class="article-title" >Here is what it does in a nutshell:</a>
+              {% load static %}
+              <br><img src="{% static 'iotdata/img/in_a_nutshell.png' %}" class="img-fluid" alt="How it works">
+              <br><a class="article-title" >All data is passed through a gateway where it is sent encrypted to a server.</a>
+              <center>
+              <br><a>Want to know more </a><a class="ml-0" href="{% url 'iot-about' %}" >Look here.</a>
+              </center>
+          </div>
+        </article>
+{% endblock content %}
+

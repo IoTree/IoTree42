@@ -1,0 +1,59 @@
+{% extends "iotdata/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div  class="content-section">
+        <div class="article-metadata">
+            <h5><a class="mr-2" >How to setup Raspberry Pi</a></h5>
+        </div>
+        <a>We going to start with some commands on our Rpi</a>
+        <p>First update your Raspberry:</p>
+        <div class="rounded">
+        <pre>sudo apt-get update && sudo apt-get upgrade</pre>
+        </div>
+        <p>Now go to your home directory with the following command:</p>
+        <pre>cd</pre>
+        <a>We need to download the repository. Enter the following command.</a>
+        <pre>curl -O -u https:--your site name--/media/downloadfiles/IoTree_Gateway_V_1.1.zip</pre>
+        <p>Or download it manually:</p>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" value="{{ context.file }}" name="download">
+            <button type="submit" class="">
+                Zip Download
+            </button>
+        </form>
+        <br>
+        <p>Lets unzip and delete the downloaded file:</p>
+        <a><pre>unzip IoTree_Gateway_V_1.1.zip</pre></a>
+        <a><pre>rm -r IoTree_Gateway_V_1.1.zip</pre></a>
+        <p>Lets go in the directory witch has been unzip and nano into config.json:</p>
+        <pre>cd IoTree_Gateway</pre>
+        <pre>nano .config.json</pre>
+        <a>In this file put in the credentials which are given to you on the </a><a href="{% url 'profile' %}">Profile-Page.</a>
+        <p>When you're done, close config.json. Now the requirements.txt must be installed:</p>
+        <pre>pip3 install -r requirements.txt</pre>
+        <a>Also we need to install mosquitto server and client as our mqtt service.</a>
+        <p>To do that type in following commands:</p>
+        <pre>sudo apt-get install mosquitto</pre>
+        <pre>sudo apt-get install mosquitto-clients</pre>
+        <a>Now everything is setup!</a>
+        <br><a>If you want, you can run the cputemp.py file to test the connection to get your first entries:</a>
+        <p>First you need to run the gateway bridge:</p>
+        <pre>python3 mqttbridge1.py</pre>
+        <p>and then run: </p>
+        <pre>python3 cputemp.py</pre>
+        <a>Both scripts must be executed at the same time. Simply open a second terminal.</a>
+        <a>By default, this script sends the CPU temperature to the database every 20 seconds.</a>
+        <a>The connection might be rejected. Because your account is not fully set up.</a>
+        <a>Try it a few minutes later.</a>
+        <p>If you want to run the Python scripts in the background or continue to run them even if you are no longer logged in, you can use the nohup command as follows:</p>
+        <pre>nohup python3 mqttbridge1.py &</pre>
+        <pre>nohup python3 cputemp.py &</pre>
+        <p>And last but not least, have fun with your IoTtree42 network.</p>
+        <div class="border-top pt-3">
+            <small class="text-muted">
+                Problems? Look here: <a class="ml-2" href="{% url 'manual' %}">Manual</a>
+            </small>
+        </div>
+    </div>
+{% endblock content %}

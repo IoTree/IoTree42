@@ -1,172 +1,188 @@
-# IoTree42
+# IoTree42 
+The number of sensors is steadily increasing. We find a huge number of sensors in commercial environments such as fabrication processes, surveillance systems, environmental measurements (e.g. weather data), but also increasingly in smart home ecosystems or wearable devices. For commercial application there is a variety of software solutions to connect all the sensors storing, displaying or monitoring the collected data. 
+
+For personal, educational or scientific purposes or settings, where money is a strictly limited resource, there is a lack of an easy-to-use and robust data warehouse, that respects your data privacy. Most of the popular cloud based IoT platforms (e.g. Thingspeak) are either closed source, limited in the possibility to expand, charging for premium features or do not meet the strict European data privacy laws, when storing sensitive personal data. 
+The following project fills this gap by providing an open source software that is capable to scale and collect data from thousands of sensors and make the data accessible easily.
+IoTree42 consists of three parts. The server, that stores the data, the gateway, that connects to the server via TLS and the sensor itself. The server runs on any i386 or ARM platform with a Linux operating system. For the gateway you can choose between a low budget ARM or ESP system. The data is sent from the sensor via the widespread Mqtt protocol using a JSON formatted data set. The server receives the data and stores it in a database (MongoDB). Users can access the data via an easy to use multiuser web interface or by using a RESTAPI. 
+IoTree42 is an easy to use data warehouse and IoT platform with a lot of possibilities for collecting and distributing sensor data for educational or scientific purposes or even for running it at home.
+
 ## How it works
 The basic is Structure is illustrated below.
-![alt text](https://github.com/IoTree/IoTree42/blob/master/github/in_a_nutshell.png)
+![alt text](https://github.com/IoTree/IoTree42/blob/master/.gitignore/in_a_nutshell.png)
 
-## How to use:
+The sensor bases to which the sensor is connected send the respectively measured values ??via mqtt to the gateway.
+The gateway itself can be a sensor base.
+Then the gateway sends the data (encrypted) to the server, where it is stored in a database.
+The data can be looked up on the website or via the rest API.
+On the server side there are basically Django, Moquitto Broker, a basic Python scrip that stores all incoming messages on the Mongo-dB, and an additional openssl server.
+On the webpage provided by your Django server is a detailed manual and an installation instruction for the gateway. It also can be found [here](https://github.com/IoTree/IoTree42/blob/master/IoTree_dir/home_user/README.md).
 
-### First you need to set up a gateway.
+## Installation:
+### Requirements: 
+Mongo dB version 2.7 or higher must be installed
+It may not work with Resparrian because it is a 32-bit operating system and you will need a 64-bit operating system.
+It is possible to install Ubuntu on Raspberry Pi to achieve full 64-bit.
+The other way would be to optimize Pymongo to work with Mongo dB version 2.4.
 
-For this look at follow the link to Setting up my RPi.
-If you want to use a different sensor base like Arduino,
-you need to know your IP of the gateway or its hostname
-Sometimes hostname won’t work. It depends on the DHCP-Server in this network
-As mentioned in Setting up my RPi you can use the python script cputemp.py for testing.
-If everything is running and gateway is displaying 2 times “Connection OK”,
-it should work and your data will reach the server.
+```
+sudo apt-get update 
+```
+```
+sudo apt-get -y upgrade
+```
 
-### To visualize or to check the incoming data you have two modes.
+download repository with git:
+```
+git install link to IoTree_dir
+```
+```
+cd IoTree_dir 
+```
 
-#### The fast Mode:
-  Just click on the button “iotree” in the blue box.
-  Now you can choose between your gateways.
-  Submit, and then you will see all topics or sensors, if you like.
-  You can choose to download the data or display it in a chart or simple table.
-  All options include all dates from the beginning.
+### setup.sh
+Install with sudo bash setup.sh
+For a complete setup, this includes an SSL certificate creation provided by Openssl.
+```
+sudo bash setup.sh
+```
+For more information visit [--Opennssl](https://www.openssl.org/) and [Mosquitto](https://mosquitto.org/man/mosquitto-tls-7.html)
+without ssl encryption do:
+```
+sudo bash setup.sh nossl
+```
+It is possible to add the encryption later.
 
-To limit the time or simply to list more than one sensor base from a gateway, you can use the detail mode.
+The installation can take a while
+At the end you will be asked for an email, a password and an admin-mail.
+The first e-mail and password are for the server to send password resets.
+Not all email providers work, but Gmail usually works. More information can be found [here](https://www.dev2qa.com/how-do-i-enable-less-secure-apps-on-gmail/) and [here](https://support.google.com/a/answer/176600?hl=en).
+The administrator email is for the user and server to send problems and information to you.
 
-#### The detailed Mode:
-  You can use the second mode with a click on “inquiry”.
-  ![alt text](https://github.com/IoTree/IoTree42/blob/master/github/query_data.png)
-  There you have multiple option to query your data.
-  1.	Choose your Gateway.
-  2.	The tree structure corresponds to the MQTT topic defined in your sensor base.
-      For example, you have an MQTT topic like this: "sensorbase / feather01 / tsl2591" 
-      and just want to display this data. For this you can enter "feather01, tsl2591" for example.
-  3.	And   
-  4.  Are setting the start and end point.
-  5.	When set to “tree” only the tree branches will be shown. This might be helpful when there are a lot of Sensorbases.
-  6.	This refers to point 2. Here you can specify whether or not the tree branch follows a specific order.
-  Let's say you have these mqtt-topics:
-    -	sensorbase/feather01/tsl2591
-    -	sensorbase/feather01/tsl2591_2
-    -	sensorbase/feather03/tsl2591
-    -	sensorbase/feather01/dht22
-  Now if you want all the data with "tsl2591", just type "tsl2591" and do not put hook. You will get all the data from:
-  sensorbase/feather01/tsl2591 and sensorbase/feather03/tsl2591.
-  It is that easy!
-  7.	When you set this choose you simply negated the tree branch. This means if you have the same data as in point 3 and you enter “tsl2591” in point 2 and also undo the hook in point3, you will get the data from "sensorbase/feather01/tsl2591_2" and "sensorbase/feather01/dht22".
-  8.	Select if you want to download a CSV file or view a spreadsheet or chart.
-  
-### Rest API
+### set crontab jobs
+we need to set up a crontab job so user will be register on mosquitto broker.
+```
+sudo crontab -e
+```
+At the end enter these two lines.
+```
+@reboot bash /etc/iotree/reload3.sh
+@reboot bash /etc/iotree/hash3.sh
+```
+save and close it.
 
-You can connect your applications with Rest-Api trough the page "https:/++++.it". You need to be logged in.
-First all your gateway IDs will be sent. Then you can do your queries, with the same possibilities and filters as on the "inquiry" page. 
-#### The json string is declared as follows:
-  {"gateway_id": "One of your gateway IDs has been sent to you."
-  "Tree": "the branch divided by" _ ",
-  "Filter": "data or tree",
-  "in_order": "is the branch in an order? ",
-  "negates": "Should the branch be negated?",
-  "time_start": "start of interval in milliseconds",
-  "time_end": "End of interval in milliseconds"}.
-  
-#### And a POST can look like this:
-  {"gateway_id": "inku", "tree": "", "filters": "data", "in_order": "True", "negated": "False", "time_start":"0",   "time_end":"1559187967000"}
-  
-#### Or like this:
-  {"gateway_id":"000000345ba23", "tree":"", "filters": "tree", "in_order": "False", "negated": "True", "time_start":"1559187967000", "time_end": "now"}
-  
-As you can see in the second example, the field "time_end" is set to "now". This means that the server take the current UTC +- 0 time.
+### Installations of python modules and test.
+```
+cd ~./iot42 
+```
+install all the requirements.
 
-## Rules for use
+you can choose with virtual environment:
+```
+--- make env
+source venv/bin/activate
+pip3 install -r requrements.txt
+```
+or without venv:
+```
+pip3 install -r requrements.txt
+```
 
-Be sure your Raspberry Pi is up to date and secure with a proper password!
+test mqtt to mongo dB script with:
+```
+python3 mqttodb1.py
+```
+if no error shows up and the display print “connection status 0” and everything works well.
 
-### Important rules for the dataset | object | payload:
-  -	It must be in proper JSON-format. If not so it won’t be stored.
-  -	Timestamps must be in UNIX-Format. Also the field key needs a form of “time”, “Zeit” or ”UNIX” in it. For example: “timestamp” or “Zeiten” would also work. This is necessary for the server to display the timestamp in human readable time.
-  -	Use global time UTC +-0.
-  -	Don’t use nested objects or Arrays.
-  -	Do not send multiple JSON strings at once. Send them individually.
-  -	Max time increment is 1 millisecond.
-  -	Save measurement values as integer not as string.
-Example payload: {“sensor”: ”tsl2591”, “lux”: 2314, “time”: 1561373832}
+do the same for the Django requirements.
+```
+cd ~./dj_iot
+```
+you can choose with virtual environment:
+```
+---- env 
+source venv/bin/activate
+pip3 install -r requirements.txt
+```
+or without venv:
+```
+pip3 install -r requirements.txt
+```
 
-### Important rules for the topic:
-  -	For simplicity only alphanumeric and “-“ characters are allowed. If not, so wrong characters will be deleted.
-  -	Choose your topic and subtopic-levels wisely. So that you can find data later easily.
-  -	Always use "sensorbase/" before the sub-topic. Otherwise it will not be processed through the gateway.
+### setup Django
+you will need to make a superuser.
+```
+python3 manage.py createsuperuser
+```
+with this user you can enter the admin-page under "<your site name or ip>/admin"
+also migrate to be sure all implantations are set:
+```
+python3 manage.py makemigrations
+pytohn3 manage.py migrate
+```
+Collect all static files.
+```
+python3 manage.py collectstatic
+```
 
-## FAQs:
+now Django is setup and you can test it.
+```
+python3 manage.py runserver <your ip:8000>
+```
+go in your browser to <your ip:8000>
 
-#### Is it possible to use only the Mqtt-broker?
-  -	Yes, it is. The permission for your specific topic is set to read and write. 
-  -	Just subscribe your topic (example: gateways/your mqtt username/...), with all the necessary
-information (certificates, user, topic, password, host, port).
-#### Is my data secure?
-  -	Yes and no. your data is not stored encrypted and theoretically it can be seen form the admin.
-  -	Your profile pic can be seen from everyone who has access to this site.
-  -	The use of IoTree42 is at your own risk.
-#### Can the Gateway itself be also a Sensorbase?
-  -	Yes, just program your script as if it were on a different Raspberry Pi.
-#### Can I delete my data?
-  -	Yes, when you delete your account everything stored related to you will be deleted.
-  -	In the Future there will be a function to deleted specific data.
-#### Can I use other devices as gateway than a Raspberry pi?
-  -	Yes, you can easily run the mqrrbridge1.py scripts on any Linux, but Cputemp.py might not work.
-  -	If you want to run it on something else you will need the certificates form the “.ssl” folder.
-#### Can I send data from 2 gateways, which will then be displayed as one?
-  -	Yes, it is possible. In the “mqttbridge1.py” script there is the option to set a “gateway_id”.
-  -	You need to set the same ID for both.
-#### Can I set up a gateway as a subgetaway?
-  -	Yes, you'll need to modify the mqttbridge1.py script a little so that the data is sent to the first gateway. 
-#### I would like to extend my measurement with a new sensor. Can I use the already used topic?
-  -	Yes, you can. Just expand your JSON string with a new field and a value.
-  -	Do not delete other fields. This can cause problems because some data will not be displayed. Send instead zeros.
+## Run it
+To execute it all do:
+```
+sudo reboot
+```
+```
+cd ~./iot42
+```
+start the mqttodb1.py in the background with:
+```
+nohup python3 mqttodb1.py </dev/null >/dev/null 2>&1 &
+```
+with venv:
+```
+source venv/bin/activate
+nohup python3 mqttodb1.py </dev/null >/dev/null 2>&1 &
+```
+```
+cd ~./dj_iot
+```
+start django server:
+```
+python3 manage.py runserver <your dns or ip:8000>
+```
+with venv:
+```
+source venv/bin/activate
+python3 manage.py runserver <your dns or ip:8000>
+```
 
-## Difficulties?
+## additional installations
+### Gateway and server share the same hardware.
+The easiest way is to install it without SSL encryption.
+Then you can just download and install the gateway repository. Explant on the Setup Gateway page.
+If you also want to use SSL encryption, you must customize the gateway script mqttbgidge1.py to meet your needs.
+Look at mqttodb1.py as an example.
 
-#### My Mqtt-password has been stolen what should I do?
-  -	Contact admin
-#### Data is not displayed!
-  -	If you just registered the server/admin will need some time to set up everything for you. Try it later again.
-  -	Make sure your using global time UTC +-0
-  -	Make sure your json string is valid. Can be tested here.
-  -	Make sure your gateway has internet connection.
-  -	Make sure your mqtt username and password is set correctly.
-#### Timestamp is displaying something around 1970.
-  - Your sensorbase likely do not have the global time so it starts with UNIX time = 0 sec,
-    which is equal to 01.01.1970 00:00:00 in human readable time.
-#### I cannot log in!
-  -	Contact admin
-#### Raspberry Pi doesn't get any connection to server.
-  -	Check internet connection.
-  -	Check your config.json file.
-  -	Check your power.
-  -	Or contact Admin.
-#### Some data is missing.
-  - Look at FAQs “I would like to extend…”
-  - Is your JSON-string correct.
-  - Dose your sensor works correctly
+### Deploy on a real server.
+It is recommended to do everything on an Apache server.
+A possible Apache2 configuration file can be found [here](https://github.com/IoTree/IoTree42/blob/master/apache_config_example).
+You may also want to install a firewall like ufw for security.
+and if you have a DNS name, lets encrypt would be a good choice.
 
-## Limitations:
-  -	This platform can not handle time critical stuff.
-  -	Max payload size : 20MB
-  -	Milliseconds are the minimum time interval
-  -	No nested Array or Object.
+## Rest API
+### some API examples are found here:
+--- github link
 
-## Upcoming features
-### In near future:
-  -	Data sharing with other user's.
-  -	Own Password for your Database.
-  -	"Deleting" Function.
-  -	Dynamic Charts.
-### in the distant future:
-  -	MATLAB integration on server for data processing.
-  -	Python integration on server for data processing.
-  -	Online Lib with code snippets from users.
-    o	For example, from new sensorbases or sensors.
-  - time critical connections.
 
 ## At last:
 
 There is NO WARRANTY or guarantee FOR LOUSING DATA on both sides, server and gateway.
-The operator takes NO RESPON on anything. THE USE of this platform IoTree42 and anything related to it, IS ON YOUR ON RISK.
+The operator takes NO RESPON on anything. THE USE of IoTree42 and anything related to it, IS ON YOUR ON RISK.
 
 
 ### Found some bugs?
-Contact me or on GitHub.
-
-And as always: learning by doing.
+Contact me
