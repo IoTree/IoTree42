@@ -17,13 +17,13 @@ The data can be looked up on the website or via the rest API.
 On the server side there are basically Django, Moquitto Broker, a basic Python scrip that stores all incoming messages on the Mongo-dB, and an additional openssl server.
 On the webpage provided by your Django server is a detailed manual and an installation instruction for the gateway. It also can be found [here](../asdf).
 
-## requirements: 
+## Installation:
+### Requirements: 
 Mongo dB version 2.7 or higher must be installed
 It may not work with Resparrian because it is a 32-bit operating system and you will need a 64-bit operating system.
 It is possible to install Ubuntu on Raspberry Pi to achieve full 64-bit.
 The other way would be to optimize Pymongo and Django to work with Mongo dB version 2.4.
 
-## installation:
 ```
 sudo apt-get update 
 ```
@@ -39,7 +39,7 @@ git install link to dir
 cd dir 
 ```
 
-### main installation
+### setup.sh
 Install with sudo bash setup.sh
 For a complete setup, this includes an SSL certificate creation provided by Openssl.
 ```
@@ -128,7 +128,7 @@ now Django is setup and you can test it.
 python3 manage.py runserver <your ip:8000>
 go in your browser to <your ip:8000>
 
-## to run it all
+## Run it
 ```
 sudo reboot
 ```
