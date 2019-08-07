@@ -108,7 +108,7 @@ chmod -R 644 ./tmp/mosquitto.conf
 
 # build hash3.sh file
 echo '#!/bin/sh' >>./tmp/hash3.sh
-echo '' >>../tmp/hash3.sh
+echo '' >>./tmp/hash3.sh
 string="/home/${myvariable}/.passwd"
 echo MQTT_PASS_PATH='"'${string}'"' >>./tmp/hash3.sh
 string="/home/${myvariable}/.hashing"
