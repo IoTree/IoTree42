@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 import subprocess
 import json
 
-with open('/etc/config.json', encoding='utf-8') as config_file:
+with open('/etc/iotree/config.json', encoding='utf-8') as config_file:
    config = json.load(config_file)
 
 
