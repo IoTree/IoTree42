@@ -133,8 +133,8 @@ python3 manage.py runserver <your ip:8000>
 ```
 go in your browser to (your ip):8000
 
-## Run it
-To execute it all do:
+## Run it all
+To execute it all:
 ```
 sudo reboot
 ```
