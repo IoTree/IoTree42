@@ -36,7 +36,7 @@ download repository with git:
 git clone git@github.com:IoTree/IoTree42.git
 ```
 ```
-cd IoTree_dir 
+cd IoTree42/IoTree_dir 
 ```
 
 ### setup.sh
@@ -52,11 +52,14 @@ sudo bash setup.sh nossl
 ```
 It is possible to add the encryption later.
 
-The installation can take a while
-At the end you will be asked for an email, a password and an admin-mail.
-The first e-mail and password are for the server to send password resets.
-Not all email providers work, but Gmail usually works. More information can be found [here](https://www.dev2qa.com/how-do-i-enable-less-secure-apps-on-gmail/) and [here](https://support.google.com/a/answer/176600?hl=en).
-The administrator email is for the user and server to send problems and information to you.
+The installation can take a while...
+
+You will be ask for the linux Username. This is needed to save all files in the right directory.
+
+Also you will be asked for an email, a password and an admin-mail.
+  The first e-mail and password are for the server to send password resets.
+  Not all email providers work, but Gmail usually works. More information can be found [here](https://www.dev2qa.com/how-do-i-enable-less-secure-apps-on-gmail/) and [here](https://support.google.com/a/answer/176600?hl=en).
+  The administrator email is for the user and server to send problems and information to you.
 
 ### set crontab jobs
 we need to set up a crontab job so user will be register on mosquitto broker.
