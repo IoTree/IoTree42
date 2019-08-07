@@ -150,7 +150,7 @@ cd ~./dj_iot
 ```
 ```
 python3 manage.py runserver <your dns or ip:8000>
-```d
+```
 with env:
 ```
 -----
