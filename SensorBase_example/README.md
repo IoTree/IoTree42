@@ -3,7 +3,7 @@
 
 1. connect to Wi-Fi router
 2. collect measurements (how many can be defined)
-- each measurement contain: lux with timestamp provided by npc server
+- each measurement contain: lux with timestamp provided by udp server
 3. sends the measurements as json string to the Gateway
 
 if the feather is plug to power chare.
