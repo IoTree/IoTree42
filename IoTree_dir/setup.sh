@@ -202,6 +202,7 @@ cp -r ./home_user/ssl/* /home/$myvariable/.ssl
 mv ./home_user/acl /home/$myvariable/.acl
 mv ./home_user/passwd /home/$myvariable/.passwd
 mv ./home_user/hashing /home/$myvariable/.hashing
+rm -r .home_user/ssl
 cp -r ./home_user/* /home/$myvariable/
 cp /etc/mosquitto/mosquitto.conf /etc/mosquitto/mosquitto.conf.iotree_save
 cp -r ./tmp/mosquitto.conf /etc/mosquitto/mosquitto.conf
