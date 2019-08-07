@@ -128,7 +128,7 @@ now Django is setup and you can test it.
 ```
 python3 manage.py runserver <your ip:8000>
 ```
-go in your browser to <your ip:8000>
+go in your browser to (your ip):8000
 
 ## Run it
 To execute it all do:
@@ -138,7 +138,7 @@ sudo reboot
 ```
 cd ~./iot42
 ```
-start the mqttodb1.py in the background with:
+start the mqttodb1.py in the background without nohup.out:
 ```
 nohup python3 mqttodb1.py </dev/null >/dev/null 2>&1 &
 ```
