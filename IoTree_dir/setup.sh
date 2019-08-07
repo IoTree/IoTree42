@@ -19,6 +19,19 @@ if [ "$y" = "samesame" ]; then
   samesame=true
 fi
 
+# entrys
+echo "<<<--- Hallo to IoTree42 --->>>"
+echo "ENTER YOUR LINUX USERNAME FOR BUIDING PATHS"
+read myvariable
+echo "<-- SETUP DJANGO -->"
+echo "ENTER AN EMAIL, for sending the password reset url"
+read sendingmail
+echo "ENTER PASSWORD FOR THIS EMAIL, for sending the password reset url"
+echo "--!! hidden input !!--"
+read -s sendingpass
+echo "ENTER ADMINMAIL, for resiving notivications form server"
+read adminmail
+
 # istalling all nessery programms
 # sudo apt-get update
 # sudo apt-get -y upgrade
@@ -38,9 +51,6 @@ python3 -m pip install --user virtualenv
 mqttpass=$(</dev/urandom tr -dc '0123456789ABZDEFGHIJKLMOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz' | head -c12)
 serverip=$(hostname -I)
 serverip="${serverip//[[:space:]]/}"
-echo "enter your linux username for building directorys"
-echo "or live it emty but mide not work"
-read myvariable
 if [ -z "$myvariable" ]
 then
     myvariable=$(who am i | awk '{print $1}')
@@ -49,10 +59,13 @@ fi
 # setup mosquitto broker
 mosquitto_passwd -b ./home_user/passwd mqttodb $mqttpass
 
-if [ "$nossl" = false ]; then
 # making and storing the ssl certificates
+mkdir ./home_user/ssl
+mkdir ./home_user/ssl/server
+mkdir ./home_user/ssl/client
+mkdir ./home_user/ssl/secrets
+if [ "$nossl" = false ]; then
 echo '!!!the following inputs are for the openssl certificates!!!'
-
 openssl req -new -x509 -days 365 -extensions v3_ca -keyout ca.key -out ca.crt
 openssl genrsa -out server.key 2048
 openssl req -out server.csr -key server.key -new
@@ -61,10 +74,7 @@ openssl genrsa -out client.key 2048
 openssl req -out client.csr -key client.key -new
 openssl x509 -req -in client.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out client.crt -days 364
 
-mkdir ./home_user/ssl
-mkdir ./home_user/ssl/server
-mkdir ./home_user/ssl/client
-mkdir ./home_user/ssl/secrets
+
 mv ca.key ./home_user/ssl/secrets
 cp ca.crt ./home_user/ssl/client
 mv ca.crt ./home_user/ssl/server
@@ -129,15 +139,6 @@ echo '   kill -SIGHUP $PID' >>./tmp/reload3.sh
 echo 'done' >>./tmp/reload3.sh
 
 #build config.json file for django
-echo "<-- setup your django configs -->"
-echo "-- enter a mail, for sending the password reset url. tested with Google mail --"
-echo "-- if you have no sudiple mail accunt live empty the restet funktion is not avalable then --"
-read sendingmail
-echo "-- enter the password mail acaunt, for sending the password reset url --"
-echo "--!! hidden input !!--"
-read -s sendingpass
-echo "-- enter your mail for resiving notivications form server --"
-read adminmail
 djangokey=$(</dev/urandom tr -dc '0123456789!@#$%^&*()_=+abcdefghijklmnopqrstuvwxyz' | head -c50)
 echo '{' >>./tmp/config.json
 echo '"'SENDING_MAIL'"':'"'$sendingmail'"', >>./tmp/config.json
@@ -170,7 +171,9 @@ echo '}' >>./tmp/config.json
 
 # building gateway zip file
 mkdir ./IoTree_Gateway/.ssl
+if [ "$nossl" = false ]; then
 cp ./home_user/ssl/client/* ./IoTree_Gateway/.ssl
+fi
 echo '{' >>./IoTree_Gateway/.config.json
 echo '"'SERVER_IP'"':'"'${serverip}'"', >>./IoTree_Gateway/.config.json
 if [ "$nossl" = false ]; then
@@ -194,16 +197,16 @@ mv ./IoTree_Gateway_V_1.1.zip ./home_user/dj_iot/media/downloadfiles
 # move all files and folders to destination
 mkdir /etc/iotree
 mkdir /home/$myvariable/.ssl
-cp -v ./home_user/ssl/* /home/$myvariable/.ssl
-cp ./home_user/acl /home/$myvariable/.acl
-cp ./home_user/passwd /home/$myvariable/.passwd
-cp ./home_user/hashing /home/$myvariable/.hashing
-cp -v ./home_user/* /home/$myvariable/
+cp -r ./home_user/ssl/* /home/$myvariable/.ssl
+cp -r ./home_user/acl /home/$myvariable/.acl
+cp -r ./home_user/passwd /home/$myvariable/.passwd
+cp -r ./home_user/hashing /home/$myvariable/.hashing
+cp -r ./home_user/* /home/$myvariable/
 cp /etc/mosquitto/mosquitto.conf /etc/mosquitto/mosquitto.conf.iotree_save
-cp ./tmp/mosquitto.conf /etc/mosquitto.conf
-cp ./tmp/config.json /etc/iotree
-cp ./tmp/hash3.sh /etc/iotree
-cp ./tmp/reload3.sh /etc/iotree
+cp -r ./tmp/mosquitto.conf /etc/mosquitto.conf
+cp -r ./tmp/config.json /etc/iotree
+cp -r ./tmp/hash3.sh /etc/iotree
+cp -r ./tmp/reload3.sh /etc/iotree
 
 
 # secure files
