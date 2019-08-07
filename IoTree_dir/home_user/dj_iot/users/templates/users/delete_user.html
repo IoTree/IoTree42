@@ -1,0 +1,39 @@
+{% extends "iotdata/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div  class="content-section">
+        <article class="media content-section">
+            <div class="media-body">
+                <div class="article-metadata">
+                    <h4><a class="mr-2" >Are your sure deleting your account?</a></h4>
+                </div>
+                <a class="article-title" ><u>ALL</u> related <u>DATA</u> to your account <u>WILL BE DELETED!</u></a>
+                <br><a class="article-title" >It might be a good idea to save your data locally!</a>
+                <br><a class="article-title" >There is <u>NO</u> way to recover the data!</a>
+                <br>
+            </div>
+        </article>
+        <div style="width:200px;">
+            <div style="float: right">
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" value="confirm" name="confirm">
+                    <button type="submit" class="btn btn-danger">
+                        OK
+                    </button>
+                </form>
+            </div>
+            <div style="float: left">
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" value="cancel" name="cancel">
+                    <button type="submit" class="btn btn-success">
+                        CANCEL
+                    </button>
+                </form>
+            </div>
+            <br>
+            <br>
+        </div>
+    </div>
+{% endblock content %}

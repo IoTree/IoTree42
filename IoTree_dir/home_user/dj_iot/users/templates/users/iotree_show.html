@@ -1,0 +1,82 @@
+{% extends "iotdata/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% if contexts.has_other_pages %}
+
+    {% if contexts.has_previous %}
+        <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ contexts.previous_page_number }}">Previous</a>
+    {% endif %}
+
+    {% for num in contexts.paginator.page_range %}
+        {% if contexts.number == num %}
+            <a class="btn btn-info mb-4" href="?page= {{ num }}" >{{ num }}</a>
+        {% elif num > contexts.number|add:'-3' and num < contexts.number|add:'3' %}
+            <a class="btn btn-outline-info mb-4" href="?page= {{ num }}" >{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if contexts.has_next %}
+        <a class="btn btn-outline-info mb-4" href="?page={{ contexts.next_page_number }}">Next</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ contexts.paginator.num_pages }}">Last</a>
+    {% endif %}
+
+{% endif %}
+<br>
+<div class="content-section">
+
+    {% for context in contexts %}
+        <table class="table table-striped">
+            <h6>
+                {% for item in context.posts_tree %}
+                    -> {{item}}
+                {% endfor %}
+            </h6>
+            <thead>
+                <tr>
+                {% for post in context.posts_head %}
+                    <th scope="col" >{{ post }}</th>
+                {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for post in context.posts_body %}
+                <tr>
+                    {% for pos in post %}
+                    <th>{{ pos }}</th>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endfor %}
+</div>
+
+{% if contexts.has_other_pages %}
+
+    {% if contexts.has_previous %}
+        <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ contexts.previous_page_number }}">Previous</a>
+    {% endif %}
+
+    {% for num in contexts.paginator.page_range %}
+        {% if contexts.number == num %}
+            <a class="btn btn-info mb-4" href="?page= {{ num }}" >{{ num }}</a>
+        {% elif num > contexts.number|add:'-3' and num < contexts.number|add:'3' %}
+            <a class="btn btn-outline-info mb-4" href="?page= {{ num }}" >{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if contexts.has_next %}
+        <a class="btn btn-outline-info mb-4" href="?page={{ contexts.next_page_number }}">Next</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ contexts.paginator.num_pages }}">Last</a>
+    {% endif %}
+
+{% endif %}
+        <div class="border-top pt-3">
+            <small class="text-muted">
+                Problems? Look here: <a class="ml-2" href="{% url 'manual' %}">Manual</a>
+            </small>
+        </div>
+
+{% endblock content %}
