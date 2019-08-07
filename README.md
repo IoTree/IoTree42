@@ -184,7 +184,7 @@ and if you have a DNS name, lets encrypt would be a good choice.
 ## At last:
 
 There is NO WARRANTY or guarantee FOR LOUSING DATA on both sides, server and gateway.
-The operator takes NO RESPON on anything. THE USE of IoTree42 and anything related to it, IS ON YOUR ON RISK.
+The operator takes NO RESPON on anything. THE USE of IoTree42 and anything related to it, IS ON YOUR OWN RISK.
 
 
 ### Found some bugs?
