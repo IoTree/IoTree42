@@ -7,7 +7,7 @@ IoTree42 consists of three parts. The server, that stores the data, the gateway,
 IoTree42 is an easy to use data warehouse and IoT platform with a lot of possibilities for collecting and distributing sensor data for educational or scientific purposes or even for running it at home.
 
 ## How it works
-The basic is Structure is illustrated below.
+The basic Structure is illustrated below.
 ![alt text](https://github.com/IoTree/IoTree42/blob/master/.gitignore/in_a_nutshell.png)
 
 The sensor bases to which the sensor is connected send the respectively measured values ??via mqtt to the gateway.
