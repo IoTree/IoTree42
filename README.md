@@ -178,8 +178,8 @@ and if you have a DNS name, lets encrypt would be a good choice.
 
 ## Rest API
 ### some API examples are found here:
---- github link
-
+for [python](https://github.com/IoTree/IoTree42/tree/master/API_examples)
+for [R](https://github.com/IoTree/IoTree42/tree/master/API_examples)
 
 ## At last:
 
