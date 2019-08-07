@@ -34,11 +34,10 @@ echo "******************************************"
 echo "<<<-----     Hallo to IoTree42      --->>>"
 echo "ENTER YOUR LINUX USERNAME FOR BUIDING PATHS"
 read myvariable
-echo "<-- SETUP DJANGO -->"
+echo "<<<--          SETUP DJANGO          -->>>"
 echo "ENTER AN EMAIL, for sending the password reset url"
 read sendingmail
-echo "ENTER PASSWORD FOR THIS EMAIL, for sending the password reset url"
-echo "--!! hidden input !!--"
+echo "ENTER PASSWORD FOR THIS EMAIL, for sending the password reset url. !HIDDEN INPUT!"
 read -s sendingpass
 echo "ENTER ADMINMAIL, for resiving notivications form server"
 read adminmail
