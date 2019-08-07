@@ -33,7 +33,7 @@ sudo apt-get -y upgrade
 
 download repository with git:
 ```
-git install link to IoTree_dir
+git clone git@github.com:IoTree/IoTree42.git
 ```
 ```
 cd IoTree_dir 
