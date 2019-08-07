@@ -147,9 +147,10 @@ nohup python3 mqttodb1.py </dev/null >/dev/null 2>&1 &
 ```
 with venv:
 ```
-source venv/bin/activate
+source venv1/bin/activate
 nohup python3 mqttodb1.py </dev/null >/dev/null 2>&1 &
 ```
+Now start the django server:
 ```
 cd ~./dj_iot
 ```
@@ -159,7 +160,7 @@ python3 manage.py runserver <your dns or ip:8000>
 ```
 with venv:
 ```
-source venv/bin/activate
+source venv2/bin/activate
 python3 manage.py runserver <your dns or ip:8000>
 ```
 
