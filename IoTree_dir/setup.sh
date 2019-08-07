@@ -19,6 +19,7 @@ if [ "$y" = "samesame" ]; then
   samesame=true
 fi
 
+python3 -m pip install --user virtualenv
 # entrys
 echo "<<<--- Hallo to IoTree42 --->>>"
 echo "ENTER YOUR LINUX USERNAME FOR BUIDING PATHS"
@@ -44,7 +45,7 @@ sudo apt-get install -y inotify-tools
 sudo apt-get install -y libopenjp2-7
 sudo apt install -y libtiff5
 sudo apt-get install -y zip
-python3 -m pip install --user virtualenv
+
 
 
 # get linux username make password for mqtt get host IP
@@ -198,12 +199,12 @@ mv ./IoTree_Gateway_V_1.1.zip ./home_user/dj_iot/media/downloadfiles
 mkdir /etc/iotree
 mkdir /home/$myvariable/.ssl
 cp -r ./home_user/ssl/* /home/$myvariable/.ssl
-cp -r ./home_user/acl /home/$myvariable/.acl
-cp -r ./home_user/passwd /home/$myvariable/.passwd
-cp -r ./home_user/hashing /home/$myvariable/.hashing
+mv ./home_user/acl /home/$myvariable/.acl
+mv ./home_user/passwd /home/$myvariable/.passwd
+mv ./home_user/hashing /home/$myvariable/.hashing
 cp -r ./home_user/* /home/$myvariable/
 cp /etc/mosquitto/mosquitto.conf /etc/mosquitto/mosquitto.conf.iotree_save
-cp -r ./tmp/mosquitto.conf /etc/mosquitto.conf
+cp -r ./tmp/mosquitto.conf /etc/mosquitto/mosquitto.conf
 cp -r ./tmp/config.json /etc/iotree
 cp -r ./tmp/hash3.sh /etc/iotree
 cp -r ./tmp/reload3.sh /etc/iotree
