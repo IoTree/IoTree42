@@ -6,9 +6,11 @@
 - each measurement contain: lux with timestamp provided by npc server
 3. sends the measurements as json string to the Gateway
 
-if the feather is plug to power chare. 
+if the feather is plug to power chare.
+
  -> Measurement will stop and send.
 if the feather is unplugged form power.
+
  -> measurement will begin
 
 please define all necessary parameter in the script such as:
