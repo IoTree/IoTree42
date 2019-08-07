@@ -66,7 +66,7 @@ we need to set up a crontab job so user will be register on mosquitto broker.
 ```
 sudo crontab -e
 ```
-At the end enter these two lines.
+At the end add these two lines.
 ```
 @reboot bash /etc/iotree/reload3.sh
 @reboot bash /etc/iotree/hash3.sh
