@@ -61,6 +61,10 @@ openssl genrsa -out client.key 2048
 openssl req -out client.csr -key client.key -new
 openssl x509 -req -in client.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out client.crt -days 364
 
+mkdir ./home_user/ssl
+mkdir ./home_user/ssl/server
+mkdir ./home_user/ssl/client
+mkdir ./home_user/ssl/secrets
 mv ca.key ./home_user/ssl/secrets
 cp ca.crt ./home_user/ssl/client
 mv ca.crt ./home_user/ssl/server
@@ -72,56 +76,57 @@ rm -r ca.srl client.csr server.csr
 fi
 
 # build mosquitto.conf file
+mkdir ./tmp
 if [ "$nossl" = false ]; then
-echo 'port 8883' >>./etc/mosquitto/mosquitto.conf
+echo 'port 8883' >>./tmp/mosquitto.conf
 string="cafile /home/${myvariable}/.ssl/server/ca.crt"
-echo ${string} >>./etc/mosquitto/mosquitto.conf
+echo ${string} >>./tmp/mosquitto.conf
 string="certfile /home/${myvariable}/.ssl/server/server.crt"
-echo ${string} >>./etc/mosquitto/mosquitto.conf
+echo ${string} >>./tmp/mosquitto.conf
 string="keyfile /home/${myvariable}/.ssl/server/server.key"
-echo ${string} >>./etc/mosquitto/mosquitto.conf
+echo ${string} >>./tmp/mosquitto.conf
 else
-echo 'port 1883' >>./etc/mosquitto/mosquitto.conf
+echo 'port 1883' >>./tmp/mosquitto.conf
 fi
-echo 'allow_anonymous false' >>./etc/mosquitto/mosquitto.conf
+echo 'allow_anonymous false' >>./tmp/mosquitto.conf
 string="password_file /home/${myvariable}/.passwd"
-echo ${string} >>./etc/mosquitto/mosquitto.conf
+echo ${string} >>./tmp/mosquitto.conf
 string="acl_file /home/${myvariable}/.acl"
-echo ${string} >>./etc/mosquitto/mosquitto.conf
+echo ${string} >>./tmp/mosquitto.conf
 
-chmod -R 644 ./etc/mosquitto/mosquitto.conf
+chmod -R 644 ./tmp/mosquitto.conf
 
 # build hash3.sh file
-echo '#!/bin/sh' >>./etc/mosquitto/hash3.sh
-echo '' >>./etc/mosquitto/hash3.sh
+echo '#!/bin/sh' >>./tmp/hash3.sh
+echo '' >>../tmp/hash3.sh
 string="/home/${myvariable}/.passwd"
-echo MQTT_PASS_PATH='"'${string}'"' >>./etc/mosquitto/hash3.sh
+echo MQTT_PASS_PATH='"'${string}'"' >>./tmp/hash3.sh
 string="/home/${myvariable}/.hashing"
-echo MQTT_HASH_PATH='"'${string}'"' >>./etc/mosquitto/hash3.sh
-echo '' >>./etc/mosquitto/hash3.sh
-echo 'while inotifywait -e close_write $MQTT_HASH_PATH; do' >>./etc/mosquitto/hash3.sh
-echo '   if [ -s $MQTT_HASH_PATH ]' >>./etc/mosquitto/hash3.sh
-echo '   then' >>./etc/mosquitto/hash3.sh
-echo '      mosquitto_passwd -U $MQTT_HASH_PATH' >>./etc/mosquitto/hash3.sh
-echo '      cat $MQTT_HASH_PATH >> $MQTT_PASS_PATH' >>./etc/mosquitto/hash3.sh
-echo '      > $MQTT_HASH_PATH' >>./etc/mosquitto/hash3.sh
-echo '      #PID="$(pidof mosquitto)"' >>./etc/mosquitto/hash3.sh
-echo '      #kill -SIGHUP $PID' >>./etc/mosquitto/hash3.sh
-echo '   else' >>./etc/mosquitto/hash3.sh
-echo '      echo ""' >>./etc/mosquitto/hash3.sh
-echo '   fi' >>./etc/mosquitto/hash3.sh
-echo 'done' >>./etc/mosquitto/hash3.sh
+echo MQTT_HASH_PATH='"'${string}'"' >>./tmp/hash3.sh
+echo '' >>./tmp/hash3.sh
+echo 'while inotifywait -e close_write $MQTT_HASH_PATH; do' >>./tmp/hash3.sh
+echo '   if [ -s $MQTT_HASH_PATH ]' >>./tmp/hash3.sh
+echo '   then' >>./tmp/hash3.sh
+echo '      mosquitto_passwd -U $MQTT_HASH_PATH' >>./tmp/hash3.sh
+echo '      cat $MQTT_HASH_PATH >> $MQTT_PASS_PATH' >>./tmp/hash3.sh
+echo '      > $MQTT_HASH_PATH' >>./tmp/hash3.sh
+echo '      #PID="$(pidof mosquitto)"' >>./tmp/hash3.sh
+echo '      #kill -SIGHUP $PID' >>./tmp/hash3.sh
+echo '   else' >>./tmp/hash3.sh
+echo '      echo ""' >>./tmp/hash3.sh
+echo '   fi' >>./tmp/hash3.sh
+echo 'done' >>./tmp/hash3.sh
 
 # build reload3.sh file
-echo '#!/bin/sh' >>./etc/mosquitto/reload3.sh
-echo '' >>./etc/mosquitto/reload3.sh
-echo '' >>./etc/mosquitto/reload3.sh
+echo '#!/bin/sh' >>./tmp/reload3.sh
+echo '' >>./tmp/reload3.sh
+echo '' >>./tmp/reload3.sh
 string="/home/${myvariable}/.passwd"
-echo MQTT_PASS_PATH='"'${string}'"' >>./etc/mosquitto/reload3.sh
-echo 'while inotifywait -e close_write $MQTT_PASS_PATH; do' >>./etc/mosquitto/reload3.sh
-echo '   PID="$(pidof mosquitto)"' >>./etc/mosquitto/reload3.sh
-echo '   kill -SIGHUP $PID' >>./etc/mosquitto/reload3.sh
-echo 'done' >>./etc/mosquitto/reload3.sh
+echo MQTT_PASS_PATH='"'${string}'"' >>./tmp/reload3.sh
+echo 'while inotifywait -e close_write $MQTT_PASS_PATH; do' >>/reload3.sh
+echo '   PID="$(pidof mosquitto)"' >>./tmp/reload3.sh
+echo '   kill -SIGHUP $PID' >>./tmp/reload3.sh
+echo 'done' >>./tmp/reload3.sh
 
 #build config.json file for django
 echo "<-- setup your django configs -->"
@@ -134,37 +139,38 @@ read -s sendingpass
 echo "-- enter your mail for resiving notivications form server --"
 read adminmail
 djangokey=$(</dev/urandom tr -dc '0123456789!@#$%^&*()_=+abcdefghijklmnopqrstuvwxyz' | head -c50)
-echo '{' >>./etc/config.json
-echo '"'SENDING_MAIL'"':'"'$sendingmail'"', >>./etc/config.json
-echo '"'SENDING_PASS'"':'"'$sendingpass'"', >>./etc/config.json
-echo '"'ADMIN_MAIL'"':'"'$adminmail'"', >>./etc/config.json
-echo '"'DJANGO_SECRET_KEY'"':'"'$djangokey'"', >>./etc/config.json
-echo '"'MANGO_ADRESS'"':'"'mongodb://localhost:27017/'"', >>./etc/config.json
-echo '"'MANGO_DATA_COL'"':'"'SensorData'"', >>./etc/config.json
-echo '"'MANGO_DATABASE'"':'"'iot42'"', >>./etc/config.json
-echo '"'HOST_IP'"':'"'$serverip'"', >>./etc/config.json
-echo '"'MQTT_ACL_PATH'"':'"'/home/$myvariable/.acl'"', >>./etc/config.json
-echo '"'MQTT_HASH_PATH'"':'"'/home/$myvariable/.hashing'"', >>./etc/config.json
-echo '"'MQTT_PASS_PATH'"':'"'/home/${myvariable}/.passwd'"', >>./etc/config.json
-echo '"'MQTT_IP'"':'"'${serverip}'"', >>./etc/config.json
+echo '{' >>./tmp/config.json
+echo '"'SENDING_MAIL'"':'"'$sendingmail'"', >>./tmp/config.json
+echo '"'SENDING_PASS'"':'"'$sendingpass'"', >>./tmp/config.json
+echo '"'ADMIN_MAIL'"':'"'$adminmail'"', >>./tmp/config.json
+echo '"'DJANGO_SECRET_KEY'"':'"'$djangokey'"', >>./tmp/config.json
+echo '"'MANGO_ADRESS'"':'"'mongodb://localhost:27017/'"', >>./tmp/config.json
+echo '"'MANGO_DATA_COL'"':'"'SensorData'"', >>./tmp/config.json
+echo '"'MANGO_DATABASE'"':'"'iot42'"', >>./tmp/config.json
+echo '"'HOST_IP'"':'"'$serverip'"', >>./tmp/config.json
+echo '"'MQTT_ACL_PATH'"':'"'/home/$myvariable/.acl'"', >>./tmp/config.json
+echo '"'MQTT_HASH_PATH'"':'"'/home/$myvariable/.hashing'"', >>./tmp/config.json
+echo '"'MQTT_PASS_PATH'"':'"'/home/${myvariable}/.passwd'"', >>./tmp/config.json
+echo '"'MQTT_IP'"':'"'${serverip}'"', >>./tmp/config.json
 if [ "$nossl" = false ]; then
-  echo '"'MQTT_PORT'"':'"'8883'"', >>./etc/config.json
-  echo '"'CLIENT_CERT'"':'"'/home/${myvariable}/.ssl/client/client.crt'"', >>./etc/config.json
-  echo '"'CLIENT_CA'"':'"'/home/${myvariable}/.ssl/client/ca.crt'"', >>./etc/config.json
-  echo '"'CLIENT_KEY'"':'"'/home/${myvariable}/.ssl/client/client.key'"', >>./etc/config.json
+  echo '"'MQTT_PORT'"':'"'8883'"', >>./tmp/config.json
+  echo '"'CLIENT_CERT'"':'"'/home/${myvariable}/.ssl/client/client.crt'"', >>./tmp/config.json
+  echo '"'CLIENT_CA'"':'"'/home/${myvariable}/.ssl/client/ca.crt'"', >>./tmp/config.json
+  echo '"'CLIENT_KEY'"':'"'/home/${myvariable}/.ssl/client/client.key'"', >>./tmp/config.json
 else
-  echo '"'MQTT_PORT'"':'"'1883'"', >>./etc/config.json
-  echo '"'CLIENT_CERT'"':'"''"', >>./etc/config.json
-  echo '"'CLIENT_CA'"':'"''"', >>./etc/config.json
-  echo '"'CLIENT_KEY'"':'"''"', >>./etc/config.json
+  echo '"'MQTT_PORT'"':'"'1883'"', >>./tmp/config.json
+  echo '"'CLIENT_CERT'"':'"''"', >>./tmp/config.json
+  echo '"'CLIENT_CA'"':'"''"', >>./tmp/config.json
+  echo '"'CLIENT_KEY'"':'"''"', >>./tmp/config.json
 fi
-echo '"'MQTT_TODB_NAME'"':'"'mqttodb'"', >>./etc/config.json
-echo '"'MQTT_TODB_PASS'"':'"'${mqttpass}'"' >>./etc/config.json
-echo '}' >>./etc/config.json
+echo '"'MQTT_TODB_NAME'"':'"'mqttodb'"', >>./tmp/config.json
+echo '"'MQTT_TODB_PASS'"':'"'${mqttpass}'"' >>./tmp/config.json
+echo '}' >>./tmp/config.json
 
 
 # building gateway zip file
-cp ./home_user/ssl/client/* ./IoTree_Gateway/ssl
+mkdir ./IoTree_Gateway/.ssl
+cp ./home_user/ssl/client/* ./IoTree_Gateway/.ssl
 echo '{' >>./IoTree_Gateway/.config.json
 echo '"'SERVER_IP'"':'"'${serverip}'"', >>./IoTree_Gateway/.config.json
 if [ "$nossl" = false ]; then
@@ -181,7 +187,6 @@ fi
 echo '"'MQTT_USERNAME'"':'"''"', >>./IoTree_Gateway/.config.json
 echo '"'MQTT_PASSWORD'"':'"''"' >>./IoTree_Gateway/.config.json
 echo '}' >>./IoTree_Gateway/.config.json
-mv ssl .ssl
 zip -r IoTree_Gateway_V_1.1.zip ./IoTree_Gateway
 mv ./IoTree_Gateway_V_1.1.zip ./home_user/dj_iot/media/downloadfiles
 
@@ -193,18 +198,19 @@ mv ./home_user/passwd /home/$myvariable/.passwd
 mv ./home_user/hashing /home/$myvariable/.hashing
 mv -v ./home_user/* /home/$myvariable/
 mv /etc/mosquitto/mosquitto.conf /etc/mosquitto/mosquitto.conf.iotree_save
-mv -v ./etc/mosquitto/* /etc/mosquitto/
-mv ./etc/config.json /etc
+mv ./tmp/mosquitto.conf /etc/mosquitto.conf
+mv ./tmp/config.json /etc/iotree
+mv ./tmp/hash3.sh /etc/iotree
+mv ./tmp/reload3.sh /etc/iotree
 
 
 # secure files
 chmod -R 700 /home/$myvariable/.ssl/secrets
 chmod -R 744 /home/$myvariable/.ssl/client
 chmod -R 744 /home/$myvariable/.ssl/server
-chmod -R 744 /etc/config.json
+chmod -R 744 /etc/iotree/config.json
 
 # delete all install files
-rm -r ../IoTree_dir
 
 # restart services
 service mosquitto restart
