@@ -21,7 +21,7 @@ import json
 import re
 import os
 
-with open('/etc/config.json', encoding='utf-8') as config_file:
+with open('/etc/iotree/config.json', encoding='utf-8') as config_file:
    config = json.load(config_file)
 
 
