@@ -192,16 +192,18 @@ mv ./IoTree_Gateway_V_1.1.zip ./home_user/dj_iot/media/downloadfiles
 
 
 # move all files and folders to destination
-mv -v ./home_user/ssl/* /home/$myvariable/.ssl
-mv ./home_user/acl /home/$myvariable/.acl
-mv ./home_user/passwd /home/$myvariable/.passwd
-mv ./home_user/hashing /home/$myvariable/.hashing
-mv -v ./home_user/* /home/$myvariable/
-mv /etc/mosquitto/mosquitto.conf /etc/mosquitto/mosquitto.conf.iotree_save
-mv ./tmp/mosquitto.conf /etc/mosquitto.conf
-mv ./tmp/config.json /etc/iotree
-mv ./tmp/hash3.sh /etc/iotree
-mv ./tmp/reload3.sh /etc/iotree
+mkdir /etc/iotree
+mkdir /home/$myvariable/.ssl
+cp -v ./home_user/ssl/* /home/$myvariable/.ssl
+cp ./home_user/acl /home/$myvariable/.acl
+cp ./home_user/passwd /home/$myvariable/.passwd
+cp ./home_user/hashing /home/$myvariable/.hashing
+cp -v ./home_user/* /home/$myvariable/
+cp /etc/mosquitto/mosquitto.conf /etc/mosquitto/mosquitto.conf.iotree_save
+cp ./tmp/mosquitto.conf /etc/mosquitto.conf
+cp ./tmp/config.json /etc/iotree
+cp ./tmp/hash3.sh /etc/iotree
+cp ./tmp/reload3.sh /etc/iotree
 
 
 # secure files
