@@ -22,7 +22,16 @@ fi
 python3 -m pip install --user virtualenv
 
 # entrys
-echo "<<<--- Hallo to IoTree42 --->>>"
+echo "******************************************"
+echo "*  _____   _______            _  _ ___   *"
+echo "* |_   _| |__   __|          | || |__ \  *"
+echo "*   | |  ___ | |_ __ ___  ___| || |_ ) | *"
+echo "*   | | / _ \| | '__/ _ \/ _ \__   _/ /  *"
+echo "*  _| || (_) | | | |  __/  __/  | |/ /_  *"
+echo "* |_____\___/|_|_|  \___|\___|  |_|____| *"
+echo "*                                        *"
+echo "******************************************"
+echo "<<<-----     Hallo to IoTree42      --->>>"
 echo "ENTER YOUR LINUX USERNAME FOR BUIDING PATHS"
 read myvariable
 echo "<-- SETUP DJANGO -->"
