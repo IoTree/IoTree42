@@ -81,8 +81,8 @@ install all the requirements.
 
 you can choose with virtual environment:
 ```
---- make env
-source venv/bin/activate
+virtualenv venv1
+source venv1/bin/activate
 pip3 install -r requrements.txt
 ```
 or without venv:
@@ -102,8 +102,8 @@ cd ~./dj_iot
 ```
 you can choose with virtual environment:
 ```
----- env 
-source venv/bin/activate
+virtualenv venv2
+source venv2/bin/activate
 pip3 install -r requirements.txt
 ```
 or without venv:
