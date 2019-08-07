@@ -8,7 +8,8 @@
 
 if the feather is plug to power chare.
 
- -> Measurement will stop and send.
+ -> Measurement will stop and send. 
+ 
 if the feather is unplugged form power.
 
  -> measurement will begin
