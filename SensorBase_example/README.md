@@ -7,9 +7,9 @@
 3. sends the measurements as json string to the Gateway
 
 if the feather is plug to power chare. 
--> Measurement will stop and send.
+ -> Measurement will stop and send.
 if the feather is unplugged form power.
--> measurement will begin
+ -> measurement will begin
 
 please define all necessary parameter in the script such as:
 - Wi-Fi
