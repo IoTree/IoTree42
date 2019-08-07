@@ -54,7 +54,8 @@ sudo apt-get install -y inotify-tools
 sudo apt-get install -y libopenjp2-7
 sudo apt install -y libtiff5
 sudo apt-get install -y zip
-
+sudo apt-get install -y python3-pip
+python3 -m pip install --user virtualenv
 
 # get linux username make password for mqtt get host IP
 mqttpass=$(</dev/urandom tr -dc '0123456789ABZDEFGHIJKLMOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz' | head -c12)
