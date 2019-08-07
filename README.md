@@ -117,7 +117,7 @@ you will need to make a superuser.
 python3 manage.py createsuperuser
 ```
 with this user you can enter the admin-page under "<your site name or ip>/admin"
-also migrate to be sure all implantations are set:
+also migrate to be sure all implementation are set:
 ```
 python3 manage.py makemigrations
 pytohn3 manage.py migrate
