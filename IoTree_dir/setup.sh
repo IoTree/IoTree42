@@ -20,6 +20,7 @@ if [ "$y" = "samesame" ]; then
 fi
 
 python3 -m pip install --user virtualenv
+
 # entrys
 echo "<<<--- Hallo to IoTree42 --->>>"
 echo "ENTER YOUR LINUX USERNAME FOR BUIDING PATHS"
@@ -45,7 +46,6 @@ sudo apt-get install -y inotify-tools
 sudo apt-get install -y libopenjp2-7
 sudo apt install -y libtiff5
 sudo apt-get install -y zip
-
 
 
 # get linux username make password for mqtt get host IP
@@ -211,6 +211,7 @@ cp -r ./tmp/reload3.sh /etc/iotree
 
 
 # secure files
+chown -R $myvariable /home/$myvariable/.ssl
 chmod -R 700 /home/$myvariable/.ssl/secrets
 chmod -R 744 /home/$myvariable/.ssl/client
 chmod -R 744 /home/$myvariable/.ssl/server
