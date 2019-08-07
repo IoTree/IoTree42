@@ -91,7 +91,7 @@ test mqtt to mongo dB script with:
 ```
 python3 mqttodb1.py
 ```
-if no error shows up and the display print ìconnection status 0î and everything works well.
+if no error shows up and the display print ‚Äúconnection status 0‚Äù and everything works well.
 
 do the same for the Django requirements.
 ```
