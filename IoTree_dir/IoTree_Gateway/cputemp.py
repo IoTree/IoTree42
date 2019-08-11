@@ -1,5 +1,16 @@
-#!pyton3
+#!pyton3.6
 
+"""
+//Iotree42 sensor Network
+//purpose: collecting CPU-Temperature and sendig it to Gateway
+//used software: python3.6, python paho module
+//for hardware: Debian-Server
+//design by Sebastian Stadler
+//on behalf of the university of munich.
+//NO WARRANTY AND NO LIABILITY
+//use of the code at your own risk.
+//https://github.com/IoTree/IoTree42
+"""
 
 import socket
 import time
