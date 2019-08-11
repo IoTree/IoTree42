@@ -13,7 +13,7 @@
         <p>Now go to your home directory with the following command:</p>
         <pre>cd</pre>
         <a>We need to download the repository. Enter the following command.</a>
-        <pre>curl -O -u https:--your site name--/media/downloadfiles/IoTree_Gateway_V_1.1.zip</pre>
+        <pre>curl -O https:--your site name--/media/downloadfiles/IoTree_Gateway_V_1.1.zip</pre>
         <p>Or download it manually:</p>
         <form method="post">
             {% csrf_token %}
@@ -47,8 +47,8 @@
         <a>The connection might be rejected. Because your account is not fully set up.</a>
         <a>Try it a few minutes later.</a>
         <p>If you want to run the Python scripts in the background or continue to run them even if you are no longer logged in, you can use the nohup command as follows:</p>
-        <pre>nohup python3 mqttbridge1.py &</pre>
-        <pre>nohup python3 cputemp.py &</pre>
+        <pre>nohup python3 mqttbridge1.py </dev/null >/dev/null 2>&1 &</pre>
+        <pre>nohup python3 cputemp.py </dev/null >/dev/null 2>&1 &</pre>
         <p>And last but not least, have fun with your IoTtree42 network.</p>
         <div class="border-top pt-3">
             <small class="text-muted">
