@@ -1,7 +1,15 @@
-#!pyton3
+#!pyton3.6
 
 """
-github IoTree/IoTree42
+//Iotree42 sensor Network
+//purpose: sending incoming Massages to Server
+//used software: python3.6, python paho module
+//for hardware: Debian-Server
+//design by Sebastian Stadler
+//on behalf of the university of munich.
+//NO WARRANTY AND NO LIABILITY
+//use of the code at your own risk.
+//https://github.com/IoTree/IoTree42
 """
 
 import socket
