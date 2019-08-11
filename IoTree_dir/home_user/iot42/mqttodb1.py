@@ -52,7 +52,7 @@ def buildtree(topic):  # making two lists out of string topic, for checking and 
 
 def on_connect(client, userdata, flags, rc):  # func. to connect to mosquitto-Broker/Server
     print("Connected with result code "+str(rc))
-    client.subscribe(mqttbase2)  # subscribe to topic define before
+    client.subscribe(mqttbase2, qos=2)  # subscribe to topic define before with quality of service = 2
 
 def on_message(client, userdata, msg):  # func. for handling incoming massage and post process
     receiveTime=datetime.datetime.now()
