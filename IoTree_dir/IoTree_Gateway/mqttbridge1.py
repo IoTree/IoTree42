@@ -100,7 +100,7 @@ def on_message2(client2, userdata, msg):
 	topic3 += "/"
 	topic3 += topic2
 	print(topic3)
-	client.publish(topic3, m_decode)
+	client.publish(topic3, qos=2, payload=m_decode)
 	print("message received", m_decode)
 
 
@@ -131,7 +131,7 @@ client2.on_disconnect = on_disconnect2
 client2.on_message = on_message2
 print("Connecting to broker2 ", hostname)
 client2.connect(hostname, 1883)
-client2.subscribe("sensorbase/#")
+client2.subscribe("sensorbase/#", qos=2)
 
 client2.loop_start()
 client.loop_forever()
