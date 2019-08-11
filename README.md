@@ -19,7 +19,8 @@ On the webpage provided by your Django server is a detailed manual and an instal
 
 ## Installation:
 ### Requirements: 
-Mongo dB version 2.7 or higher must be installed
+#### NOTE: Please use Python3.6.x or less. This will be fixed soon.
+Mongo dB version 2.7 or higher must be installed!
 It may not work with Resparrian because it is a 32-bit operating system and you will need a 64-bit operating system.
 It is possible to install Ubuntu on Raspberry Pi to achieve full 64-bit.
 The other way would be to optimize Pymongo to work with Mongo dB version 2.4.
