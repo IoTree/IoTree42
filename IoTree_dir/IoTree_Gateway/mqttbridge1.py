@@ -104,7 +104,7 @@ if not ID:
 
 # Client connection for sending data to server #
 conn_flag = False
-client = paho.Client(mqtt_username)
+client = paho.Client(ID)
 client.username_pw_set(mqtt_username, mqtt_password)
 if not nossl:
     client.tls_set(ca_certs=ca_path, certfile=cert_path, keyfile=key_path)
