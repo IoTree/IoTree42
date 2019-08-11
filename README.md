@@ -47,7 +47,8 @@ For a complete setup, this includes an SSL certificate creation provided by Open
 sudo bash setup.sh
 ```
 For more information visit [--Opennssl](https://www.openssl.org/) and [Mosquitto](https://mosquitto.org/man/mosquitto-tls-7.html)
-without ssl encryption do:
+
+Without ssl encryption:
 ```
 sudo bash setup.sh nossl
 ```
