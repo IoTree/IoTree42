@@ -18,3 +18,24 @@ if the feather is unplugged form power.
 please define all necessary parameter in the script such as:
 - Wi-Fi
 - Gateway IP
+
+## Radon Sensorbase example
+### Raspberry Zero w with RD200M
+#### this code will do:
+
+1. connect to Wi-Fi router
+2. collect measurements (how many can be defined)
+- each measurement contain: lux with timestamp provided by udp server
+3. sends the measurements as json string to the Gateway
+
+if the feather is plug to power chare.
+
+ -> Measurement will stop and send. 
+ 
+if the feather is unplugged form power.
+
+ -> measurement will begin
+
+please define all necessary parameter in the script such as:
+- Wi-Fi
+- Gateway IP
