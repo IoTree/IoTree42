@@ -1,5 +1,6 @@
-## Adafruit Feather m0 Wi-Fi with tsl2591
-### this code will do:
+## Lux Sensorbase example
+### Adafruit Feather m0 Wi-Fi with tsl2591
+#### this code will do:
 
 1. connect to Wi-Fi router
 2. collect measurements (how many can be defined)
