@@ -16,6 +16,7 @@ Then the gateway sends the data (encrypted) to the server, where it is stored in
 The data can be looked up on the website or via the rest API.
 On the server side there are basically Django, Moquitto Broker, a basic Python scrip that stores all incoming messages on the Mongo-dB, and an additional openssl server.
 On the webpage provided by your Django server is a detailed manual and an installation instruction for the gateway. It also can be found [here](https://github.com/IoTree/IoTree42/blob/master/IoTree_dir/home_user/README.md).
+The Gateway can be any Device capable of running mosquitto Broker and Python.
 
 ## Installation:
 ### Requirements: 
@@ -24,6 +25,8 @@ Mongo dB version 2.7 or higher must be installed!
 It may not work with Resparrian because it is a 32-bit operating system and you will need a 64-bit operating system.
 It is possible to install Ubuntu on Raspberry Pi to achieve full 64-bit.
 The other way would be to optimize Pymongo to work with Mongo dB version 2.4.
+
+The setup was tested on Debian 9.
 
 ```
 sudo apt-get update 
