@@ -14,7 +14,7 @@ The sensor bases to which the sensor is connected send the respectively measured
 The gateway itself can be a sensor base.
 Then the gateway sends the data (encrypted) to the server, where it is stored in a database.
 The data can be looked up on the website or via the rest API.
-On the server side there are basically Django, Moquitto Broker, a basic Python scrip that stores all incoming messages on the Mongo-dB, and an additional openssl server.
+On the server side there are basically Django, Moquitto Broker, a basic Python scrip that stores all incoming messages on the Mongo-dB. Additionally the connection between Gateway and Server can be TLS-encrypted.
 On the webpage provided by your Django server is a detailed manual and an installation instruction for the gateway. It also can be found [here](https://github.com/IoTree/IoTree42/blob/master/IoTree_dir/home_user/README.md).
 The Gateway can be any Device capable of running mosquitto Broker and Python.
 
