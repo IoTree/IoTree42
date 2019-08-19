@@ -94,8 +94,8 @@ class IDPostForm(forms.Form):
 # class for making fields for the inquiry page
 class InquiryPostForm(forms.Form):
     tree_branch = forms.CharField(max_length=120, required=False, label="Tree branch:  example(feather,tsl2591,...")
-    time_start = forms.SplitDateTimeField(required=False, initial=datetime.datetime(1970, 1, 1))
-    time_end = forms.SplitDateTimeField(required=False)
-    filters = forms.ChoiceField(choices=[("data", "Data"), ("tree", "Tree")])
     in_order = forms.BooleanField(required=False, initial=True, label="In Order")
     negated = forms.BooleanField(required=False, initial=False, label="Negated")
+    time_start = forms.SplitDateTimeField(required=False, initial=datetime.datetime(1970, 1, 1))
+    time_end = forms.SplitDateTimeField(required=False)
+    filters = forms.ChoiceField(choices=[("data", "All Data"), ("tree", "Tree Branches")], label="Return all data or just the branches.")
