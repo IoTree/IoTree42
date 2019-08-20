@@ -32,8 +32,8 @@ if config['CA_PATH'] == "":
     nossl=True
 if not nossl:
    ca_path = config['CA_PATH']		  # set ca.crt path
-   cert_path = config['CERT_PATH']		  # set client.crt path
-   key_path = config['KEY_PATH']		  # set client.key path
+#   cert_path = config['CERT_PATH']		  # set client.crt path, no need for this
+#   key_path = config['KEY_PATH']		  # set client.key path, no need for this
 mqtt_username = config['MQTT_USERNAME']	  # set Mqtt Username is given on registration process on www.xyt.com
 mqtt_password = config['MQTT_PASSWORD']	  # set Mqtt Password is given on registration process on www.xyt.com
 
@@ -115,7 +115,7 @@ conn_flag = False
 client = paho.Client(ID)
 client.username_pw_set(mqtt_username, mqtt_password)
 if not nossl:
-    client.tls_set(ca_certs=ca_path, certfile=cert_path, keyfile=key_path)
+    client.tls_set(ca_certs=ca_path)
     client.tls_insecure_set(False)
 client.on_connect = on_connect
 client.on_disconnect = on_disconnect
