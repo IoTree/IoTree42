@@ -35,8 +35,8 @@ broker = config.get('MQTT_IP')  # Here you can define the adress of the mqtt-Bro
 port = int(config.get('MQTT_PORT'))  # The adress must match the on in the ssl key.
 if not nossl:
     ca = config.get('CLIENT_CA')  # Here you can specify the path to the Openssl certificate
-    cert = config.get('CLIENT_CERT')  # needed to connect to the Brocker
-    key = config.get('CLIENT_KEY')
+#    cert = config.get('CLIENT_CERT')  # needed to connect to the Brocker, no need for this
+#    key = config.get('CLIENT_KEY')  # no need for this
 username = config.get('MQTT_TODB_NAME')  # mosquitto-Broker user credentials
 password = config.get('MQTT_TODB_PASS')
 
@@ -80,7 +80,7 @@ conn_flag=False
 client = paho.Client(broker)
 client.username_pw_set(username, password)
 if not nossl:
-    client.tls_set(ca_certs=ca, certfile=cert, keyfile=key)
+    client.tls_set(ca_certs=ca)
     client.tls_insecure_set(False)
 client.on_connect=on_connect
 #client.on_disconnect=on_disconnect
