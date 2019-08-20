@@ -80,19 +80,13 @@ openssl req -new -x509 -days 365 -extensions v3_ca -keyout ca.key -out ca.crt
 openssl genrsa -out server.key 2048
 openssl req -out server.csr -key server.key -new
 openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt -days 364
-openssl genrsa -out client.key 2048
-openssl req -out client.csr -key client.key -new
-openssl x509 -req -in client.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out client.crt -days 364
-
 
 mv ca.key ./home_user/ssl/secrets
 cp ca.crt ./home_user/ssl/client
 mv ca.crt ./home_user/ssl/server
 mv server.key ./home_user/ssl/server
 mv server.crt ./home_user/ssl/server
-mv client.crt ./home_user/ssl/client
-mv client.key ./home_user/ssl/client
-rm -r ca.srl client.csr server.csr
+rm -r ca.srl server.csr
 fi
 
 # build mosquitto.conf file
@@ -165,14 +159,10 @@ echo '"'MQTT_PASS_PATH'"':'"'/home/${myvariable}/.passwd'"', >>./tmp/config.json
 echo '"'MQTT_IP'"':'"'${serverip}'"', >>./tmp/config.json
 if [ "$nossl" = false ]; then
   echo '"'MQTT_PORT'"':'"'8883'"', >>./tmp/config.json
-  echo '"'CLIENT_CERT'"':'"'/home/${myvariable}/.ssl/client/client.crt'"', >>./tmp/config.json
   echo '"'CLIENT_CA'"':'"'/home/${myvariable}/.ssl/client/ca.crt'"', >>./tmp/config.json
-  echo '"'CLIENT_KEY'"':'"'/home/${myvariable}/.ssl/client/client.key'"', >>./tmp/config.json
 else
   echo '"'MQTT_PORT'"':'"'1883'"', >>./tmp/config.json
-  echo '"'CLIENT_CERT'"':'"''"', >>./tmp/config.json
   echo '"'CLIENT_CA'"':'"''"', >>./tmp/config.json
-  echo '"'CLIENT_KEY'"':'"''"', >>./tmp/config.json
 fi
 echo '"'MQTT_TODB_NAME'"':'"'mqttodb'"', >>./tmp/config.json
 echo '"'MQTT_TODB_PASS'"':'"'${mqttpass}'"' >>./tmp/config.json
@@ -189,13 +179,9 @@ echo '"'SERVER_IP'"':'"'${serverip}'"', >>./IoTree_Gateway/.config.json
 if [ "$nossl" = false ]; then
   echo '"'SERVER_PORT'"':'"'8883'"', >>./IoTree_Gateway/.config.json
   echo '"'CA_PATH'"':'"'./.ssl/ca.crt'"', >>./IoTree_Gateway/.config.json
-  echo '"'CERT_PATH'"':'"'./.ssl/client.crt'"', >>./IoTree_Gateway/.config.json
-  echo '"'KEY_PATH'"':'"'./.ssl/client.key'"', >>./IoTree_Gateway/.config.json
 else
   echo '"'SERVER_PORT'"':'"'1883'"', >>./IoTree_Gateway/.config.json
   echo '"'CA_PATH'"':'"''"', >>./IoTree_Gateway/.config.json
-  echo '"'CERT_PATH'"':'"''"', >>./IoTree_Gateway/.config.json
-  echo '"'KEY_PATH'"':'"''"', >>./IoTree_Gateway/.config.json
 fi
 echo '"'MQTT_USERNAME'"':'"''"', >>./IoTree_Gateway/.config.json
 echo '"'MQTT_PASSWORD'"':'"''"' >>./IoTree_Gateway/.config.json
