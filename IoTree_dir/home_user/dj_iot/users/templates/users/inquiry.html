@@ -5,7 +5,7 @@
         <form method="POST">
             {% csrf_token %}
             <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Query Data </legend>
+                <legend class="border-bottom mb-4">Advanced database search</legend>
                 {{ form_b|crispy }}
                 {{ form_a|crispy }}
             </fieldset>
