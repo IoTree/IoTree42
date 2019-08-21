@@ -65,7 +65,7 @@ def on_connect(client, userdata, flags, rc):
 
 
 def on_disconnect(client, userdata, flags, rc=0):
-	print("DisConnected result code "+str(rc))
+	print("Server DisConnected result code "+str(rc))
 
 
 def on_message(client, userdata, msg):
@@ -86,7 +86,7 @@ def on_connect2(client2, userdata, flags, rc):
 
 
 def on_disconnect2(client2, userdata, flags, rc=0):
-	print("DisConnected result code "+str(rc))
+	print("Gateway DisConnected result code "+str(rc))
 
 
 def on_message2(client2, userdata, msg):
