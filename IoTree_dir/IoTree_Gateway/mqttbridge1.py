@@ -12,6 +12,8 @@
 //https://github.com/IoTree/IoTree42
 """
 
+import string
+import random
 import socket
 import json
 import paho.mqtt.client as paho
@@ -24,6 +26,9 @@ with open('.config.json', encoding='utf-8') as config_file:
 # define all necessary variables #
 ID = ""					# gateway_id, default = cpu-serial-number, can be changed if so
 hostname = socket.gethostname()		# get hostname for connecting to localhost and testing
+
+client_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(12)) # make a random client_id
+			# If you want to continue with a session, you must use a fixed client_id.
 
 nossl=False
 server_ip = str(config['SERVER_IP'])	  # set server ip
@@ -112,7 +117,7 @@ if not ID:
 
 # Client connection for sending data to server #
 conn_flag = False
-client = paho.Client(ID)
+client = paho.Client(client_id)
 client.username_pw_set(mqtt_username, mqtt_password)
 if not nossl:
     client.tls_set(ca_certs=ca_path)
