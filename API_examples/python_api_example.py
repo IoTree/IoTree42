@@ -41,12 +41,17 @@ def main():
     json_dict = dict(json_list[0])
     posts_body = json_dict["posts_body"]
     posts_head = json_dict["posts_head"]
-    print(posts_head)
     index = [i for i, s in enumerate(posts_head) if field_to_process in s]
     last = posts_body[-1]
-    print(last)
+    strn =""
+    counter = 0
+    for n in posts_head:
+        strn+=str(n)+" = "+str(last[counter])+", "
+    print(strn)
+    #print(posts_head)
+    #print(str(last))
     last_item = last[index[0]]
-    print(column+": "last_item)
+    print(str(column)+": "+str(last_item))
 
 if __name__ == '__main__':
     main()
