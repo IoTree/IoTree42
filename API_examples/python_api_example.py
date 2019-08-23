@@ -7,13 +7,22 @@ this script will display the last entry of an specific column you define.
 you will need to enter the authurl, url, logins, column name, gateway_id, and tree (tree branch)
 """
 
+host = ""  # your host adress (ip:port or url)
+username = ""  # login's from web page
+password = ""  # login's from web page
+column = ""  # column name
+gateway_id = ""  # define gateway_id if you have only on gateway leave it empty
+tree_branch = [""]  # define tree branch or sensor-base, list of strings. leave it empty if only one sensor base exists.
+
+tree = " ".join(tree_branch)
 start_time = (int(time.time())-300)*1000
-auth_url = "<your ip or dns>/api-token-auth/"  # url to your api-token-auth page
-url = '<your ip or dns>/iotree_api/?format=json'  # url to your iotree api page
-prams = {"username":"", "password":""}  # login's from web page
-field_to_process = ""  # column name
-query = {"gateway_id":"",  # define gateway_id if you have only on gateway leave it empty
-	"tree":"",  # define tree branch or sensor-base. leave it empty if only one sensor base exists.
+
+auth_url =  str(host)+"/api-token-auth/"  # url to your api-token-auth page
+url = str(host)+'/iotree_api/?format=json'  # url to your iotree api page
+prams = {"username":username, "password":password}  
+field_to_process = column  
+query = {"gateway_id": gateway_id,  
+	"tree": tree,  
 	"filters":"data",
 	"in_order":"True", 
 	"negated":"False", 
