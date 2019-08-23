@@ -3,7 +3,8 @@ import json
 import time
 
 """
-this script will display the last entry of an specific column you define.
+this script will display the last entry of your saved Dataset/Measurement
+also it will display the last entry of an specific column if you define.
 you will need to enter the authurl, url, logins, column name, gateway_id, and tree (tree branch)
 """
 
@@ -11,7 +12,7 @@ def main():
     host = ""  # your host adress (ip:port or url)
     username = ""  # login's from web page
     password = ""  # login's from web page
-    column = ""  # column name
+    column = ""  # column name you, you can leave it empty
     gateway_id = ""  # define gateway_id if you have only on gateway leave it empty
     tree_branch = [""]  # define tree branch or sensor-base, list of strings. leave it empty if only one sensor base exists.
 
@@ -43,8 +44,9 @@ def main():
     print(posts_head)
     index = [i for i, s in enumerate(posts_head) if field_to_process in s]
     last = posts_body[-1]
+    print(last)
     last_item = last[index[0]]
-    print(last_item)
+    print(column+": "last_item)
 
 if __name__ == '__main__':
     main()
