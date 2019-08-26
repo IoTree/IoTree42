@@ -59,9 +59,12 @@ def register(request):
             user = form.save(commit=False)
             init_mqtt_client = InitMqttClient(user_name, user_email)
             mqttpw = init_mqtt_client.run()
-            user.first_name = mqttpw
+            user.first_name = "was given to you when registering."
             user.save()
             messages.success(request, str(user_name)+' account has been created! You are now able to log in!')
+            messages.info(request, 'Your MQTT-Password is: -->'+str(mqttpw)+'<-- keep it safe. There is no way to restore it.')
+            mqttpw = None
+            del init_mqtt_client
             return redirect('login')
     else:
         form = UserRegisterForm()
