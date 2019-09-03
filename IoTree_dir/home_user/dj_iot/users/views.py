@@ -414,10 +414,7 @@ def iotree_api(request):
             query = MongoCon(request.user.username)
             query.set_gateway_id(gateway_id)
             # process tree data to list
-            mongotree = tree.split('_')
-            while "" in mongotree:
-                mongotree.remove("")
-            query.tree(mongotree)
+            query.tree(tree)
             # process in_order to bool
             in_order = in_order == 'True'
             query.order(in_order)
@@ -430,8 +427,8 @@ def iotree_api(request):
             if time_end == 'now':
                 time_end = time.time()
             else:
-                time_end = int(time_end) / 1000
-            time_start = int(time_start) / 1000
+                time_end = float(time_end)
+            time_start = float(time_start)
             query.start_time(time_start)
             query.end_time(time_end)
             query.time_unix(True)
