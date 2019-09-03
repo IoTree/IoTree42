@@ -35,13 +35,13 @@ gateway_id <- content(gateways)[[1]][[2]] # Choose one of the available gateways
 
 query <- list(
   gateway_id = jsonlite::unbox(gateway_id), # Insert the gateway_id
-  tree = jsonlite::unbox(''), # insert the tree branch, split branches by "_". example: "gatewayself_sensor"
+  tree = jsonlite::unbox([]), # insert the tree branch, example: ["gatewayself", "sensor"]
   filters = jsonlite::unbox('data'), # insert ether 'data' or 'tree'
   in_order = jsonlite::unbox('True'), # insert bool if tree (branch) should be queried in order or not.
   negated = jsonlite::unbox('False'), # insert bool if tree (branch) should be queried as negative or not.
-  #time_start = jsonlite::unbox('1562793111000'), # insert start time in UNIX-Time in milisec
-  time_start = jsonlite::unbox('0'), # insert start time in UNIX-Time in milisec
-  time_end = jsonlite::unbox('now') # insert end time in UNIX-Time in millisec. You can use "now" for current time.
+  #time_start = jsonlite::unbox(1562793111000), # insert start time in UNIX-Time in milisec
+  time_start = jsonlite::unbox(0.0), # insert start time in UNIX-Time 
+  time_end = jsonlite::unbox('now') # insert end time in UNIX-Time. You can use "now" for current time.
   )
 results <- POST(url, add_headers(Authorization = token), body = query,  encode = "json")
 json_string <- content(results)
