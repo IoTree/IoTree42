@@ -177,7 +177,7 @@ Look at mqttodb1.py as an example.
 
 ### Deploy on a real server.
 It is recommended to do everything on an Apache server.
-A possible Apache2 configuration file can be found [here](https://github.com/IoTree/IoTree42/blob/master/apache_config_example).
+A possible Apache2 configuration file can be found [here](https://github.com/IoTree/IoTree42/blob/master/apache_conf_example).
 You may also want to install a firewall like ufw for security.
 and if you have a DNS name, lets encrypt would be a good choice.
 
