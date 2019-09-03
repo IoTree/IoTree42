@@ -15,11 +15,10 @@ def main():
     password = ""  # login's from web page
     gateway_id = ""  # define gateway_id
     column = ""  # column name you, you can leave it empty
-    tree_branch = [""]  # define tree branch or sensor-base, list of strings. you can leave it empty.
+    tree = []  # define tree branch or sensor-base, list of strings. you can leave it empty.
     interval = 300 # Time interval until now in which data is searched. Take your measurementinterall and multiply it by 2
 
-    tree = " ".join(tree_branch)
-    start_time = (int(time.time())-interval)*1000
+    start_time = int(time.time())-interval
 
     auth_url =  str(host)+"/api-token-auth/"  # url to your api-token-auth page
     url = str(host)+'/iotree_api/?format=json'  # url to your iotree api page
