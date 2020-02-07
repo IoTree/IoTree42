@@ -39,9 +39,10 @@ if not nossl:
    ca_path = config['CA_PATH']		  # set ca.crt path
 #   cert_path = config['CERT_PATH']		  # set client.crt path, no need for this
 #   key_path = config['KEY_PATH']		  # set client.key path, no need for this
-mqtt_username = config['MQTT_USERNAME']	  # set Mqtt Username is given on registration process on www.xyt.com
-mqtt_password = config['MQTT_PASSWORD']	  # set Mqtt Password is given on registration process on www.xyt.com
-
+mqtt_username = config['MQTT_USERNAME']	  # set Mqtt Username is given on registration process on www.your host.com
+mqtt_password = config['MQTT_PASSWORD']	  # set Mqtt Password is given on registration process on www.your host.com
+mqtt_topics = config['MQTT_SUB_SERVER']   # set the Mqtt sub form server to make conaction bidirectional, in config file make a list of topics.
+					  # the massage form server will be puplished under "fromserver/..." 
 
 def getserial():
 	# Extract serial from cpuinfo file
@@ -74,7 +75,11 @@ def on_disconnect(client, userdata, flags, rc=0):
 
 
 def on_message(client, userdata, msg):
+	topic = msg.topic
 	m_decode=str(msg.payload.decode("utf-8","ignor"))
+	topic1, topic2, topic3, topic4 = topic.split('/', 3)
+        topic4 = "fromserver/" + topic4
+	client2.publish(topic4, qos=2, payload=m_decode)
 	print("message received", m_decode)
 
 
@@ -127,6 +132,9 @@ client.on_disconnect = on_disconnect
 client.on_message = on_message
 print("Connecting to broker1 ", server_ip)
 client.connect(server_ip, server_port)
+for topicc in mqtt_topics:
+    topicc = "gateways/" + mqtt_username + "/" + ID + topicc
+    client.subscribe(topicc)
 
 
 # Client for Sensorbases and subgateways
