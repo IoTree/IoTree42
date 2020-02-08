@@ -185,6 +185,7 @@ else
 fi
 echo '"'MQTT_USERNAME'"':'"''"', >>./IoTree_Gateway/.config.json
 echo '"'MQTT_PASSWORD'"':'"''"' >>./IoTree_Gateway/.config.json
+echo '"'MQTT_SUB_SERVER'"':'"''"' >>./IoTree_Gateway/.config.json
 echo '}' >>./IoTree_Gateway/.config.json
 zip -r IoTree_Gateway_V_1.1.zip ./IoTree_Gateway
 mv ./IoTree_Gateway_V_1.1.zip ./home_user/dj_iot/media/downloadfiles
