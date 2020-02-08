@@ -26,17 +26,10 @@ with open('/etc/iotree/config.json', encoding='utf-8') as config_file:
 
 
 # set variable #
-nossl=False
-if config.get('CLIENT_CA') == "":
-    nossl=True
 mqttbase = "gateways" # Here qu can define the first instance of subscriber of mqtt.
 mqttbase2 = mqttbase+"/#"  # do nothing
-broker = config.get('MQTT_IP')  # Here you can define the adress of the mqtt-Broker.
-port = int(config.get('MQTT_PORT'))  # The adress must match the on in the ssl key.
-if not nossl:
-    ca = config.get('CLIENT_CA')  # Here you can specify the path to the Openssl certificate
-#    cert = config.get('CLIENT_CERT')  # needed to connect to the Brocker, no need for this
-#    key = config.get('CLIENT_KEY')  # no need for this
+broker = "0.0.0.0"
+port = 1883
 username = config.get('MQTT_TODB_NAME')  # mosquitto-Broker user credentials
 password = config.get('MQTT_TODB_PASS')
 
@@ -79,9 +72,6 @@ collection = db[config.get('MANGO_DATA_COL')]
 conn_flag=False
 client = paho.Client(broker)
 client.username_pw_set(username, password)
-if not nossl:
-    client.tls_set(ca_certs=ca)
-    client.tls_insecure_set(False)
 client.on_connect=on_connect
 #client.on_disconnect=on_disconnect
 client.on_message=on_message
