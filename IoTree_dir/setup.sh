@@ -170,23 +170,8 @@ echo '}' >>./tmp/config.json
 
 
 # building gateway zip file
-mkdir ./IoTree_Gateway/.ssl
 if [ "$nossl" = false ]; then
-cp ./home_user/ssl/client/* ./IoTree_Gateway/.ssl
-fi
-echo '{' >>./IoTree_Gateway/.config.json
-echo '"'SERVER_IP'"':'"'${serverip}'"', >>./IoTree_Gateway/.config.json
-if [ "$nossl" = false ]; then
-  echo '"'SERVER_PORT'"':'"'8883'"', >>./IoTree_Gateway/.config.json
-  echo '"'CA_PATH'"':'"'./.ssl/ca.crt'"', >>./IoTree_Gateway/.config.json
-else
-  echo '"'SERVER_PORT'"':'"'1883'"', >>./IoTree_Gateway/.config.json
-  echo '"'CA_PATH'"':'"''"', >>./IoTree_Gateway/.config.json
-fi
-echo '"'MQTT_USERNAME'"':'"''"', >>./IoTree_Gateway/.config.json
-echo '"'MQTT_PASSWORD'"':'"''"' >>./IoTree_Gateway/.config.json
-echo '"'MQTT_SUB_SERVER'"':'"''"' >>./IoTree_Gateway/.config.json
-echo '}' >>./IoTree_Gateway/.config.json
+cp ./home_user/ssl/client/* ./IoTree_Gateway
 zip -r IoTree_Gateway_V_1.1.zip ./IoTree_Gateway
 mv ./IoTree_Gateway_V_1.1.zip ./home_user/dj_iot/media/downloadfiles
 
