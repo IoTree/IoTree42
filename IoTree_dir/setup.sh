@@ -107,6 +107,7 @@ string="password_file /home/${myvariable}/.passwd"
 echo ${string} >>./tmp/mosquitto.conf
 string="acl_file /home/${myvariable}/.acl"
 echo ${string} >>./tmp/mosquitto.conf
+echo 'listener 1883 0.0.0.0' >>./tmp/mosquitto.conf
 
 chmod -R 644 ./tmp/mosquitto.conf
 
