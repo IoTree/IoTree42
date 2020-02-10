@@ -23,7 +23,7 @@ echo "<<<--          MQTT-Password          -->>>"
 echo "ENTER your MQTT-Password given to you when registering. !HIDDEN INPUT!"
 read -s Password
 
-NEW_UUID=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+NEW_UUID=$(cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 16 | head -n 1)
 
 echo 'port 1883' >>./mosquitto.conf
 string="connection ${Username}"
