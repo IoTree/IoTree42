@@ -23,6 +23,8 @@ echo "<<<--          MQTT-Password          -->>>"
 echo "ENTER your MQTT-Password given to you when registering. !HIDDEN INPUT!"
 read -s Password
 
+NEW_UUID=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+
 echo 'port 1883' >>./mosquitto.conf
 string="connection ${Username}"
 echo ${string} >>./mosquitto.conf
@@ -33,7 +35,7 @@ echo ${string} >>./mosquitto.conf
 echo 'bridge_cafile /etc/mosquitto/certs/DST_Root_CA_X3.pem' >>./mosquitto.conf
 string="remote_clientid ${Username}"
 echo ${string} >>./mosquitto.conf
-string="topic # both 2 sensorbase/ gateways/${Username}/"
+string="topic # both 2 sensorbase/ gateways/${Username}/${NEW_UUID}/"
 echo ${string} >>./mosquitto.conf
 
 chmod -R 644 ./mosquitto.conf
