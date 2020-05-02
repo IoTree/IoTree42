@@ -1,0 +1,112 @@
+{% extends "iotdata/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="content-section">
+<legend class="border-bottom mb-4">Your IoTree</legend>
+<div class="container">
+ <div class="row">
+  <div class="col col-lg-4">
+  <form id="t" method="POST">
+            {% csrf_token %}
+                <input type="hidden" value="" id="datasend" name="tree">
+                {{ form | crispy }}
+           <input class="btn btn-outline-info btn-block" id="submitdata" value="Submit" name="table" type="submit">
+        </form>
+        <br>
+     <br>
+</div>
+<div class="col-lg-8">
+<div class="pt-1"></div>
+<!--
+<h6>  </h6>
+-->
+<label>Select your nodes and leafs</label>
+     <form id="s">
+<div class="input-group mb-4">
+  <input type="text" class="form-control" placeholder="Search for leaf" id="q" aria-label="Search" aria-describedby="basic-addon2">
+  <div class="input-group-append">
+    <button class="btn btn-outline-secondary" type="submit">Search</button>
+  </div>
+</div>
+    <button class="btn btn-outline-secondary" id="deselect" type="submit">Deselect all</button>
+    <button class="btn btn-outline-secondary" id="select" type="submit">Select all</button>
+    <button class="btn btn-outline-secondary" id="openall" type="submit">Open all</button>
+    <button class="btn btn-outline-secondary" id="closeall" type="submit">Close all</button>
+     </form>
+       </br>
+     <div id="container"></div>
+       </br>
+    </div>
+  </div>
+</div>
+           <div class="border-top pt-3">
+            <small class="text-muted">
+                Problems? Look here: <a class="ml-2" href="{% url 'manual' %}">Manual</a>
+            </small>
+        </div>
+    </div>
+
+
+{% block javascript %}
+
+
+<script type="text/javascript">
+var test3 = {{ context | safe}};
+
+$('#deselect').click(function(){
+    $('#container').jstree("deselect_all");
+});
+$('#select').click(function(){
+    $('#container').jstree("select_all");
+});
+$('#openall').click(function(){
+    $('#container').jstree("open_all");
+});
+$('#closeall').click(function(){
+    $('#container').jstree("close_all");
+});
+
+
+$('#submitdata').click(function(){
+    var delornot = $('#id_action').val();
+    var selectedElmsIds = $('#container').jstree("get_selected");
+    if (selectedElmsIds == "") {
+        alert("!!No node or leaf selected!!");
+        return false;
+    };
+    if ( delornot == "delete"){
+        if (confirm("Selected data will be irreversibly deleted!!!")){
+        } else {
+            return false;
+        }
+    };
+    document.getElementById('datasend').value = selectedElmsIds.join(",");
+});
+
+$(function() {
+  $('#container').jstree({
+    "plugins" : [ "checkbox",  "search", "wholerow", "themes"],
+    checkbox: {
+      three_state: false,
+      whole_node: false,
+    },
+    'core' : {
+      "check_callback" : false,
+      'data' : test3,
+      'themes':{
+        'icons': false,
+        "variant" : 'large',
+        "dots" : false
+      }
+    },
+  });
+
+
+$("#s").submit(function(e) {
+  e.preventDefault();
+  $("#container").jstree(true).search($("#q").val());
+});
+});
+</script>
+{% endblock javascript %}
+{% endblock content %}

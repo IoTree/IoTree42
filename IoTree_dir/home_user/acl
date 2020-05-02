@@ -1,5 +1,0 @@
-# local
-user mqttodb
-topic read gateways/#
-
-# add users:

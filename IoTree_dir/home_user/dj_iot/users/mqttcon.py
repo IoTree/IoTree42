@@ -2,7 +2,6 @@
 """
 Workaourond for setting up an mosquttion user and the related acl's
 bash script in background takes care of hashing and reloading the mosquitto broker
-
 """
 
 from django.contrib.auth.models import User
@@ -15,14 +14,13 @@ with open('/etc/iotree/config.json', encoding='utf-8') as config_file:
 
 # saves user to acl and hashing file
 class InitMqttClient:
-    def __init__(self, user, email):
+    def __init__(self, user, pword):
         self.user = user
-        self.email = email
+        self.pword = pword
 
     def run(self):
         try:
-            import os
-            mqttpw = User.objects.make_random_password(length=14)
+            mqttpw = self.pword
             f = open(config['MQTT_ACL_PATH'], "a")
             f.write(
                 "\nuser " + str(self.user) + "\ntopic readwrite gateways/" + str(self.user) + "/#")

@@ -17,11 +17,12 @@ from django import forms
 from django.contrib.auth.models import User
 from .models import Profile
 from django.contrib.auth.forms import UserCreationForm
-from .mango import MongoCon
 from captcha.fields import CaptchaField
+from django.core.validators import RegexValidator
 import datetime
 
 
+isalphavalidator = RegexValidator(r'^[\w]*$', message='name must be alphanumeric', code='Invalid name')
 # class for checking if mail already exists
 class UniqueEmailForm:
     def clean_email(self):
@@ -37,7 +38,7 @@ class UniqueEmailForm:
 # class for creating all fields for the user
 class UserRegisterForm(UniqueEmailForm, UserCreationForm):
     email = forms.EmailField()
-    first_name = forms.CharField(widget=forms.HiddenInput(), required=False)
+    username = forms.CharField(validators=[isalphavalidator], max_length=20, required=True)
     captcha = CaptchaField()
 
     class Meta:
@@ -47,22 +48,19 @@ class UserRegisterForm(UniqueEmailForm, UserCreationForm):
     def save(self, commit=True):
         user = super(UserRegisterForm, self).save(commit=False)
         user.email = self.cleaned_data["email"]
-        user.first_name = self.cleaned_data['first_name']
         if commit:
-            print(user.first_name)
             user.save()
         return user
 
 
 # class for updating user fields
 class UserUpdateForm(UniqueEmailForm, forms.ModelForm):
-    email = forms.EmailField()
+    email = forms.EmailField(widget=forms.TextInput(attrs={'readonly': 'readonly'}))
     username = forms.CharField(label="Mqtt Username", widget=forms.TextInput(attrs={'readonly': 'readonly'}))
-    first_name = forms.CharField(label="Mqtt Password", widget=forms.TextInput(attrs={'readonly': 'readonly'}))
 
     class Meta:
         model = User
-        fields = ['email', 'username', 'first_name']
+        fields = ['email', 'username']
         labels = {
             'username': ['mqtt_username']
         }
@@ -76,26 +74,18 @@ class ProfileUpdateForm(forms.ModelForm):
         fields = ['image']
 
 
-# class for making a gateway choice field with all the gateways related to the username
-class IDPostForm(forms.Form):
-    gateway_id = forms.ChoiceField(choices=[("no data", "No Data")])
-
-    def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
-        super(IDPostForm, self).__init__(*args, **kwargs)
-        gateways = MongoCon(user)
-        self.choices = gateways.find_gateways()
-        if not self.choices:
-            self.fields['gateway_id'].choices = [('no data', 'No Data')]
-        else:
-            self.fields['gateway_id'].choices = self.choices
-
 
 # class for making fields for the inquiry page
 class InquiryPostForm(forms.Form):
-    tree_branch = forms.CharField(max_length=120, required=False, label="Tree branch:  example(feather,tsl2591,...")
+    tree_branch = forms.CharField(max_length=120, required=False, label="Tree branch:  example(Sensorbase01, Sensor02, ... )")
     in_order = forms.BooleanField(required=False, initial=True, label="In Order")
     negated = forms.BooleanField(required=False, initial=False, label="Negated")
     time_start = forms.SplitDateTimeField(required=False, initial=datetime.datetime(1970, 1, 1))
     time_end = forms.SplitDateTimeField(required=False)
     filters = forms.ChoiceField(choices=[("data", "All Data"), ("tree", "Tree Branches")], label="Return all data or just the branches.")
+
+
+class TreePostForm(forms.Form):
+    time_start = forms.DateTimeField(required=False, initial=datetime.datetime(1970, 1, 1))
+    time_end = forms.DateTimeField(required=False)
+    action = forms.ChoiceField(choices=[("table", "As Table"), ("chart", "As Chart"), ("download", "As CSV-File"), ("delete", "Delete Selected")], label="Action")

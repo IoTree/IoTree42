@@ -44,17 +44,21 @@ cd IoTree42/IoTree_dir
 
 ### setup.sh
 Install with sudo bash setup.sh
-For a complete setup, this includes an SSL certificate creation provided by Openssl.
+For a complete setup, this includes an SSL certificate creation provided by Let's encrypt and Nginx as web server do:
+```
+sudo bash setup.sh --letsencrypt --nginx
+```
+Without ssl encryption but with nginx do (recommended):
+```
+sudo bash setup.sh --nginx
+```
+or:
 ```
 sudo bash setup.sh
 ```
-For more information visit [--Opennssl](https://www.openssl.org/) and [Mosquitto](https://mosquitto.org/man/mosquitto-tls-7.html)
+It is possible to add the encryption later for exaple with Openssl tutorials can be found [here](http://www.steves-internet-guide.com/mosquitto-tls/) and [here](https://mosquitto.org/man/mosquitto-tls-7.html).
+You have to change the IoTree_Gateway_V_1.0.zip so that it contains the required certificate (client) for the gateway.
 
-Without ssl encryption:
-```
-sudo bash setup.sh nossl
-```
-It is possible to add the encryption later.
 
 The installation can take a while...
 
@@ -83,48 +87,33 @@ cd ~./iot42
 ```
 install all the requirements.
 
-you can choose with virtual environment:
 ```
-virtualenv venv1
+virtualenv -p python3 venv1
 source venv1/bin/activate
 pip3 install -r requrements.txt
 ```
-or without venv:
-```
-pip3 install -r requrements.txt
-```
-
-test mqtt to mongo dB script with:
-```
-python3 mqttodb1.py
-```
-if no error shows up and the display print “connection status 0” and everything works well.
-
 do the same for the Django requirements.
 ```
 cd ~./dj_iot
 ```
 you can choose with virtual environment:
 ```
-virtualenv venv2
+virtualenv -p python3 venv2
 source venv2/bin/activate
 pip3 install -r requirements.txt
 ```
-or without venv:
-```
-pip3 install -r requirements.txt
-```
 
-### setup Django
+### Setup Django
 you will need to make a superuser.
 ```
+source venv2/bin/activate
 python3 manage.py createsuperuser
 ```
 with this user you can enter the admin-page under "<your site name or ip>/admin"
 also migrate to be sure all implementation are set:
 ```
 python3 manage.py makemigrations
-pytohn3 manage.py migrate
+python3 manage.py migrate
 ```
 Collect all static files.
 ```
@@ -140,36 +129,30 @@ go in your browser to (your ip):8000
 ## Run it all
 To execute it all:
 ```
-sudo reboot
-```
-```
 cd ~./iot42
 ```
 start the mqttodb1.py in the background without nohup.out:
 ```
-nohup python3 mqttodb1.py </dev/null >/dev/null 2>&1 &
-```
-with venv:
-```
 source venv1/bin/activate
-nohup python3 mqttodb1.py </dev/null >/dev/null 2>&1 &
+nohup python3 mqttoinflux1.py </dev/null >/dev/null 2>&1 &
 ```
-Now start the django server:
+Now start the django server without nginx:
 ```
 cd ~./dj_iot
 ```
 ```
-python3 manage.py runserver <your dns or ip:8000>
-```
-with venv:
-```
 source venv2/bin/activate
 python3 manage.py runserver <your dns or ip:8000>
+```
+OR start the django server with nginx:
+```
+sudo systemctl restart nginx
+sudo systemctl restart gunicorn
 ```
 
 ## additional installations
 ### Gateway and server share the same hardware.
-The easiest way is to install it without SSL encryption.
+install without let's encrypt..
 Then you can just download and install the gateway repository. Explant on the Setup Gateway page.
 If you also want to use SSL encryption, you must customize the gateway script mqttbgidge1.py to meet your needs.
 Look at mqttodb1.py as an example.
@@ -193,3 +176,4 @@ The operator takes NO RESPON on anything. THE USE of IoTree42 and anything relat
 
 ### Found some bugs?
 Contact me
+

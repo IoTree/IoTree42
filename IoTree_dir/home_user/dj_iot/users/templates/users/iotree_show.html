@@ -1,6 +1,7 @@
 {% extends "iotdata/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
+<div class="content-section">
 {% if contexts.has_other_pages %}
 
     {% if contexts.has_previous %}
@@ -23,13 +24,12 @@
 
 {% endif %}
 <br>
-<div class="content-section">
 
     {% for context in contexts %}
         <table class="table table-striped">
             <h6>
+                    {{ context.posts_tree }}
                 {% for item in context.posts_tree %}
-                    -> {{item}}
                 {% endfor %}
             </h6>
             <thead>
@@ -40,7 +40,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for post in context.posts_body %}
+                {% for post in context.posts_body reversed %}
                 <tr>
                     {% for pos in post %}
                     <th>{{ pos }}</th>
@@ -50,7 +50,6 @@
             </tbody>
         </table>
     {% endfor %}
-</div>
 
 {% if contexts.has_other_pages %}
 
@@ -78,5 +77,6 @@
                 Problems? Look here: <a class="ml-2" href="{% url 'manual' %}">Manual</a>
             </small>
         </div>
+</div>
 
 {% endblock content %}

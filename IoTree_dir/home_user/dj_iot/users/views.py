@@ -16,8 +16,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .forms import UserUpdateForm, ProfileUpdateForm, IDPostForm, InquiryPostForm, UserRegisterForm
-from .mango import MongoCon
+from .forms import UserUpdateForm, ProfileUpdateForm, UserRegisterForm, TreePostForm
 from django.core.paginator import Paginator
 from .mqttcon import InitMqttClient, DelMqttClient
 from django.http import HttpResponse, Http404
@@ -27,14 +26,20 @@ from .fusioncharts import FusionTable
 from .fusioncharts import TimeSeries
 from django.contrib.auth.models import User
 from datetime import timezone
+from .fluxcon import InitInfluxUser, DelInfluxAll, DelInfluxData
+from .fluxdatacon import FluxDataCon
+from .grafanacon import InitGrafaUser, DelGrafaAll
 import time
+import json
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 import datetime
 
 
-# func. for process the zip_download request
+with open('/etc/iotree/config.json', encoding='utf-8') as config_file:
+   config = json.load(config_file)
+
 def zip_download(request, version):
     import os
     if int(version) == 1:
@@ -56,15 +61,21 @@ def register(request):
         if form.is_valid():
             user_name = form.cleaned_data.get('username')
             user_email = form.cleaned_data.get('email')
+            password1 = form.cleaned_data.get('password1')
             user = form.save(commit=False)
-            init_mqtt_client = InitMqttClient(user_name, user_email)
-            mqttpw = init_mqtt_client.run()
-            user.first_name = "was given to you when registering."
+            init_flux_client = InitInfluxUser(user_name, password1)
+            init_flux_client.run()
+            init_mqtt_client = InitMqttClient(user_name, password1)
+            init_mqtt_client.run()
+            init_grafa_client = InitGrafaUser(user_name, password1, user_email)
+            init_grafa_client.run()
+            user.first_name = "Same as the login PW from this site."
+            user.last_name = "Same as the login PW from this site."
             user.save()
-            messages.success(request, str(user_name)+' account has been created! You are now able to log in!')
-            messages.info(request, 'Your MQTT-Password is: -->'+str(mqttpw)+'<-- keep it safe. There is no way to restore it.')
-            mqttpw = None
+            messages.success(request, str(user_name)+': account has been created! You are now able to log in!')
             del init_mqtt_client
+            del init_grafa_client
+            del init_flux_client
             return redirect('login')
     else:
         form = UserRegisterForm()
@@ -80,10 +91,12 @@ def delete_user(request):
         if confirm == 'confirm':
             user = User.objects.get(username=request.user.username)
             user.delete()
-            data_del = MongoCon(request.user.username)
-            data = data_del.delete_all()
+            del_flux_client = DelInfluxAll(request.user.username)
+            del_flux_client.run()
+            del_grafa_client = DelGrafaAll(request.user.username)
+            del_grafa_client.run()
             mqttdel = DelMqttClient(request.user.username, request.user.email)
-            mqttdel.deldel()
+            data = mqttdel.deldel()
             if data:
                 messages.success(request, 'All data related to your account has been deleted!')
             else:
@@ -114,7 +127,6 @@ def profile(request):
                 messages.success(request, ' account does not exist!')
             except Exception as e:
                 messages.success(request, str(e.message))
-
     else:
         u_form = UserUpdateForm(instance=request.user)
         p_form = ProfileUpdateForm(instance=request.user.profile)
@@ -128,22 +140,52 @@ def profile(request):
 
 # func. for the iotree site
 @login_required
-def iotree(request):
+def treeview(request):
     if request.method == 'POST':
-        form = IDPostForm(request.POST, user=request.user)
+        form = TreePostForm(request.POST)
         if form.is_valid():
-            gateway_id = form.cleaned_data['gateway_id']
-            query = MongoCon(request.user.username)
-            query.set_gateway_id(gateway_id)
-            record = query.find()
-            if record:
-                return redirect('iotree-branch', gateway_id)
+            time_start = form.cleaned_data.get('time_start')
+            time_end = form.cleaned_data.get('time_end')
+            time_start = time_start.replace(tzinfo=timezone.utc).timestamp()
+            time_end = time_end.replace(tzinfo=timezone.utc).timestamp()
+            tree = request.POST.get('tree', None)
+            action = form.cleaned_data.get('action')
+            flux_client = FluxDataCon(request.user.username)
+            time_start = int(time_start*1000)
+            time_end = int(time_end*1000)
+            flux_client.start_time(time_start)
+            flux_client.end_time(int(time.time())*1000)
+            contexts = flux_client.find(tree)
+            treee = tree.replace("/", "_")
+            if len(contexts) == 0:
+                messages.error(request, 'No Data Found! Data response: '+str(contexts)+'. Given Nodes: '+str(tree) )
+                return redirect('treeview')
             else:
-                messages.info(request, 'There is no data jet!')
-                return render(request, 'users/iotree.html', {'form': form})
+                if action == 'chart':
+                    return redirect('iotree-chart', str(treee), time_start, time_end)
+                if action == 'table':
+                    return redirect('iotree-show', str(treee), time_start, time_end)
+                if action == 'download':
+                    return redirect('iotree-download', str(treee), time_start, time_end)
+                if action == 'delete':
+                    tags = flux_client.get_raw_tags(str(tree))
+                    if tags == "":
+                        messages.info(request, "No Date Found! on delete")
+                        return redirect('treeview')
+                    else:
+                        flux_del = DelInfluxData(request.user.username, tags)
+                        response = flux_del.run()
+                        messages.info(request, 'Measuerments droped: '+str(tags)+'Database response: '+str(response))
+                        del flux_del
+                        del flux_client
+                        return redirect('treeview')
     else:
-        form = IDPostForm(user=request.user)
-        return render(request, 'users/iotree.html', {'form': form})
+        form = TreePostForm(initial={'time_end':datetime.datetime.now()})
+        flux_client = FluxDataCon(request.user.username)
+        context = flux_client.get_tag_tree()
+        if str(context) == "[]":
+            messages.info(request, 'No data jet!')
+        return render(request, 'users/treeview.html', {'context':context, 'form':form})
 
 
 # func. for the setup_rpi site
@@ -166,215 +208,73 @@ def manual(request):
     return render(request, 'users/manual.html')
 
 
-# func. for the iotree_branch site
+# func. for the grafana site
 @login_required
-def iotree_branch(request, gateway_id):
-    if request.method == 'POST':
-        # some spacing for transmitting tree list as sting over url
-        import ast
-        treeasstring1 = request.POST.get('postdownload', None)
-        treeasstring2 = request.POST.get('postshow', None)
-        treeasstring3 = request.POST.get('postchart', None)
-        if treeasstring1:
-            treeaslist = ast.literal_eval(treeasstring1)
-            tree = "_".join(treeaslist)
-            return redirect('iotree-download', gateway_id, tree, 'data', 'True', 'False', str(0), 'now')
-        if treeasstring2:
-            treeaslist = ast.literal_eval(treeasstring2)
-            tree = "_".join(treeaslist)
-            return redirect('iotree-show', gateway_id, tree, 'data', 'True', 'False', str(0), 'now')
-        if treeasstring3:
-            treeaslist = ast.literal_eval(treeasstring3)
-            tree = "_".join(treeaslist)
-            return redirect('iotree-chart', gateway_id, tree, 'data', 'True', 'False', str(0), 'now')
-    else:
-        query = MongoCon(request.user.username)
-        query.set_gateway_id(gateway_id)
-        contexts = query.find()
-        messages.success(request, 'Tree branches from gateway: ' + gateway_id)
-        return render(request, 'users/iotree_branch.html', {'contexts': contexts})
+def tografana(request):
+    return redirect(config['GRAFA_ADDRESS'])
 
 
 # func. for the iotree_show site, for displaying tables
 @login_required
-def iotree_show(request, gateway_id, tree, filters, in_order, negated, time_start, time_end):
-    # connecting to mongodb
-    query = MongoCon(request.user.username)
-    query.set_gateway_id(gateway_id)
-    # process tree data to list
-    mongotree = tree.split('_')
-    while "" in mongotree:
-        mongotree.remove("")
-    query.tree(mongotree)
-    # process in_order to bool
-    in_order = in_order == 'True'
-    query.order(in_order)
-    # process negated to bool
-    negated = negated == 'True'
-    query.invert(negated)
-    query.result_def(filters)
-    # process time_.. back to float
-    if time_end == 'now':
-        time_end = time.time()
-    else:
-        time_end = int(time_end) / 1000
-    time_start = int(time_start)/1000
-    query.start_time(time_start)
-    query.end_time(time_end)
-    # query with given info
-    contexts = query.find()
-    print(contexts)
-    # make more than one page if necessary
-    if filters == "tree":
-        inst = 30
-    else:
-        inst = 1
-    paginator = Paginator(contexts, inst)
+def iotree_show(request, tags, time_start, time_end):
+    tags = tags.replace("_", "/")
+    time_start = int(time_start)
+    time_end = int(time_end)
+    flux_client = FluxDataCon(request.user.username)
+    flux_client.start_time(time_start)
+    flux_client.end_time(time_end)
+    contexts = flux_client.find(tags)
+    paginator = Paginator(contexts, 1)
     page = request.GET.get('page')
     context = paginator.get_page(page)
-    # give som info about the search
-    tree_branch = tree.replace('_', ' -> ')
-    messages.success(request, 'Gateway: ' + gateway_id)
-    messages.info(request, 'Tree branch search: ' + tree_branch)
-    # render page with given data
     return render(request, 'users/iotree_show.html', {'contexts': context})
 
 
-# func. for the iotree_download process
 @login_required
-def iotree_download(request, gateway_id, tree, filters, in_order, negated, time_start, time_end):
-    # import some tools for making and sending a csv file
+def iotree_download(request, tags, time_start, time_end):
     import csv
     import datetime
-    # connecting to mongodb
-    query = MongoCon(request.user.username)
-    query.set_gateway_id(gateway_id)
-    # process tree data to list
-    mongotree = tree.split('_')
-    while "" in mongotree:
-        mongotree.remove("")
-    query.tree(mongotree)
-    # process in_order to bool
-    in_order = in_order == 'True'
-    query.order(in_order)
-    # process negated to bool
-    negated = negated == 'True'
-    query.invert(negated)
-    query.result_def(filters)
-    # process time_.. back to float
-    if time_end == 'now':
-        time_end = time.time()
-    else:
-        time_end = int(time_end) / 1000
-    time_start = int(time_start) / 1000
-    query.start_time(time_start)
-    query.end_time(time_end)
-    # set time_unix to true -> time is also in raw (unix) available
-    query.time_unix(True)
-    # query with given info
-    context = query.find()
+    tags = tags.replace("_", "/")
+    time_start = int(time_start)
+    time_end = int(time_end)
+    flux_client = FluxDataCon(request.user.username)
+    flux_client.start_time(time_start)
+    flux_client.end_time(time_end)
+    context = flux_client.find(tags)
     # starting a csv file
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="{}"'.format(gateway_id+'_'+tree+'_'+str(datetime.datetime.
+    response['Content-Disposition'] = 'attachment; filename="{}"'.format('IoTree42_'+str(datetime.datetime.
                                                                                                      now())+'.csv')
     writer = csv.writer(response, delimiter=';', dialect='excel')
     for z in context:
         # add info about data to csv
-        writer.writerow(['gateway: ', gateway_id, 'tree branch: ', ','.join(z['posts_tree'])])
+        writer.writerow(['tree branchs: ', z['posts_tree']])
         # headings for csv from data mongo
         writer.writerow(z['posts_head'])
         # values for csv form data mongo
-        for n in z['posts_body']:
+        for n in reversed(z['posts_body']):
             writer.writerow(n)
         writer.writerow(['------', '------', '------', '------', '------', '------', '------'])
     return response
 
 
-# func. for the inquiry site
 @login_required
-def inquiry(request):
-    if request.method == 'POST':
-        form_a = InquiryPostForm(request.POST)  # save Post in from_a
-        form_b = IDPostForm(request.POST, user=request.user)  # save Post in from_b
-        if form_a.is_valid() and form_b.is_valid():  # check if inputs a valid
-            import re
-            gateway_id = form_b.cleaned_data.get('gateway_id')
-            if gateway_id != 'no data':  # check if there is a gateway astaplished
-                # make all nessery variables with given data from Post
-                tree = form_a.cleaned_data.get('tree_branch')
-                filters = form_a.cleaned_data.get('filters')
-                in_order = form_a.cleaned_data.get('in_order')
-                negated = form_a.cleaned_data.get('negated')
-                time_start = form_a.cleaned_data.get('time_start')
-                time_end = form_a.cleaned_data.get('time_end')
-                time_start = time_start.replace(tzinfo=timezone.utc).timestamp()
-                time_start = int(time_start*1000)
-                time_end = time_end.replace(tzinfo=timezone.utc).timestamp()
-                time_end = int(time_end*1000)
-                if tree:
-                    tree = re.sub("\s+", "", tree)
-                    tree = tree.split(',')
-                    tree = '_'.join(tree)
-                else:
-                    tree = "_"
-                # redirect web user with given information to the desired site / task
-                if 'table' in request.POST:
-                    return redirect('iotree-show', gateway_id, tree, filters, in_order, negated, time_start, time_end)
-                elif 'download' in request.POST:
-                    return redirect('iotree-download', gateway_id, tree, filters, in_order, negated, time_start, time_end)
-                elif 'chart' in request.POST:
-                    return redirect('iotree-chart', gateway_id, tree, filters, in_order, negated, time_start, time_end)
-            # if there is now data jet give the user a short feedback
-            else:
-                messages.info(request, 'There is no data jet!')
-                return render(request, 'users/inquiry.html', {'form_a': form_a,
-                                                              'form_b': form_b})
-    # render all input fields
-    else:
-        form_a = InquiryPostForm(initial={'time_end':datetime.datetime.now()})
-        form_b = IDPostForm(user=request.user)
-        return render(request, 'users/inquiry.html', {'form_a': form_a,
-                                                      'form_b': form_b})
-
-
-# func. for the iotree_chart site
-@login_required
-def iotree_chart(request, gateway_id, tree, filters, in_order, negated, time_start, time_end):
-    # connecting to mongodb
-    query = MongoCon(request.user.username)
-    query.set_gateway_id(gateway_id)
-    # process tree data to list
-    mongotree = tree.split('_')
-    while "" in mongotree:
-        mongotree.remove("")
-    query.tree(mongotree)
-    # process in_order to bool
-    in_order = in_order == 'True'
-    query.order(in_order)
-    # process negated to bool
-    negated = negated == 'True'
-    query.invert(negated)
-    query.result_def(filters)
-    # process time_.. back to float
-    if time_end == 'now':
-        time_end = time.time()
-    else:
-        time_end = int(time_end) / 1000
-    time_start = int(time_start) / 1000
-    query.start_time(time_start)
-    query.end_time(time_end)
-    # query with given info
-    contexts = query.find()
-    # make more than one page if necessary
-    caption = "'"+'Gateway: '+str(gateway_id)+"'"
+def iotree_chart(request, tags, time_start, time_end):
+    tags = tags.replace("_", "/")
+    time_start = int(time_start)
+    time_end = int(time_end)
+    flux_client = FluxDataCon(request.user.username)
+    flux_client.start_time(time_start)
+    flux_client.end_time(time_end)
+    contexts = flux_client.find(tags)
+    caption = "'"+'Tags: '+str(tags)+"'"
     # render page with given data
     i = 0
     for n in contexts:
         data = n['posts_body']
-        subcaption = "'" + 'Tree Branch: ' + '->'.join(n['posts_tree']) + "'"
-        # make schema with shema function form MangoCon
-        schema = query.shema(n['posts_head'])
-        print(schema)
+        subcaption = "'" + 'Tree Branch: ' + n['posts_tree']+ "'"
+        # make schema with shema function
+        schema = flux_client.shema(n['posts_head'])
 
         fusionTable = FusionTable(schema, data)
         timeSeries = TimeSeries(fusionTable)
@@ -389,14 +289,13 @@ def iotree_chart(request, gateway_id, tree, filters, in_order, negated, time_sta
         # returning complete JavaScript and HTML code, which is used to generate chart in the browsers.
         contexts[i]['posts_chart'] = fcchart.render()
         i += 1
-    # using django paginator to make more pages
     paginator = Paginator(contexts, 1)
     page = request.GET.get('page')
     context = paginator.get_page(page)
     return render(request, 'users/iotree_chart.html', {'contexts': context})
 
 
-# func. for the rest_api
+
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def iotree_api(request):
@@ -404,40 +303,30 @@ def iotree_api(request):
         try:
             data = dict(request.data)
             print(data)
-            gateway_id = data['gateway_id']
             tree = data['tree']
-            filters = data['filters']
-            in_order = data['in_order']
-            negated = data['negated']
             time_start = data['time_start']
             time_end = data['time_end']
-            query = MongoCon(request.user.username)
-            query.set_gateway_id(gateway_id)
-            # process tree data to list
-            query.tree(tree)
-            # process in_order to bool
-            in_order = in_order == 'True'
-            query.order(in_order)
-            # process negated to bool
-            negated = negated == 'True'
-
-            query.invert(negated)
-            query.result_def(filters)
-            # process time_.. back to float
             if time_end == 'now':
-                time_end = time.time()
+                time_end = int(time.time()*1000)
             else:
-                time_end = float(time_end)
-            time_start = float(time_start)
-            query.start_time(time_start)
-            query.end_time(time_end)
-            query.time_unix(True)
-            # query with given info
-            context = query.find()
+                time_end = int(time_end)
+            time_start = int(time_start)
+            flux_client = FluxDataCon(request.user.username)
+            flux_client.start_time(time_start)
+            flux_client.end_time(time_end)
+            context = flux_client.find(tree)
             return Response(context)
         except:
             return Response({"status":404})
-    # connecting to mongodb to find related gateways to user
-    query = MongoCon(request.user.username)
-    gateways = query.find_gateways()
-    return Response(gateways)
+    else:
+        flux_client = FluxDataCon(request.user.username)
+        context = flux_client.get_tag_tree()
+        if str(context) == "false":
+            context = {"error":"false"}
+        if str(context) == "[]":
+            context = {"error":"No Data jet!"}
+        return Response(context)
+
+
+
+

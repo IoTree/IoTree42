@@ -4,22 +4,22 @@
 # chacking for flags
 x=$1
 y=$2
-nossl=false
-samesame=false
-if [ "$x" = "nossl" ]; then
-  nossl=true
+ssl=false
+nginx=false
+if [ "$x" = "--ssl" ]; then
+  ssl=true
 fi
-if [ "$x" = "samesame" ]; then
-  samesame=true
+if [ "$x" = "--nginx" ]; then
+  nginx=true
 fi
-if [ "$y" = "nossl" ]; then
-  nossl=true
+if [ "$y" = "--ssl" ]; then
+  ssl=true
 fi
-if [ "$y" = "samesame" ]; then
-  samesame=true
+if [ "$y" = "--nginx" ]; then
+  nginx=true
 fi
 
-python3 -m pip install --user virtualenv
+
 
 # entrys
 echo "******************************************"
@@ -45,163 +45,177 @@ read adminmail
 # istalling all nessery programms
 # sudo apt-get update
 # sudo apt-get -y upgrade
-sudo apt install -y python3-pip
-sudo apt-get install -y openssl
-# install mongodb 2.7 or later
-sudo apt install -y mosquitto
-sudo apt install -y mosquitto mosquitto-clients
-sudo apt-get install -y inotify-tools
-sudo apt-get install -y libopenjp2-7
-sudo apt install -y libtiff5
-sudo apt-get install -y zip
-sudo apt-get install -y python3-pip
+apt-get install -y python3-pip
+apt-get install -y curl
 python3 -m pip install --user virtualenv
+apt install virtualenv python3-virtualenv
+apt install -y mosquitto mosquitto-clients
+if [ "$nginx" = true ]; then
+apt install -y nginx
+fi
+apt-get install -y influxdb
+apt install -y influxdb-client
+apt-get install -y inotify-tools
+apt-get install -y libopenjp2-7
+apt install -y libtiff5
+apt-get install -y zip
+# installing grafana
+apt-get install -y adduser libfontconfig1
+wget https://dl.grafana.com/oss/release/grafana_6.6.2_amd64.deb
+PATH=$PATH:/sbin
+dpkg -i grafana_6.6.2_amd64.deb
 
-# get linux username make password for mqtt get host IP
+
+
+# get linux username make password for mqtt, get host IP ....
 mqttpass=$(</dev/urandom tr -dc '0123456789ABZDEFGHIJKLMOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz' | head -c12)
-serverip=$(hostname -I)
-serverip="${serverip//[[:space:]]/}"
+serverip=$(ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1  -d'/')
+hostname=$(hostname)
 if [ -z "$myvariable" ]
 then
     myvariable=$(who am i | awk '{print $1}')
 fi
-
-# setup mosquitto broker
-mosquitto_passwd -b ./home_user/passwd mqttodb $mqttpass
-
-# making and storing the ssl certificates
-mkdir ./home_user/ssl
-mkdir ./home_user/ssl/server
-mkdir ./home_user/ssl/client
-mkdir ./home_user/ssl/secrets
-if [ "$nossl" = false ]; then
-echo '!!!the following inputs are for the openssl certificates!!!'
-openssl req -new -x509 -days 365 -extensions v3_ca -keyout ca.key -out ca.crt
-openssl genrsa -out server.key 2048
-openssl req -out server.csr -key server.key -new
-openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt -days 364
-
-mv ca.key ./home_user/ssl/secrets
-cp ca.crt ./home_user/ssl/client
-mv ca.crt ./home_user/ssl/server
-mv server.key ./home_user/ssl/server
-mv server.crt ./home_user/ssl/server
-rm -r ca.srl server.csr
+if [ -z "$sendingmail" ]
+then
+    sendingmail=defaultsendig
+fi
+if [ -z "$sendingpass" ]
+then
+    sendingpass=defaultpass
+fi
+if [ -z "$adminmail" ]
+then
+    adminmail=defaultadmin
 fi
 
-# build mosquitto.conf file
+#generate pw for influx: admin, fluxcondj, mqttodb,
+fluxadmin=$(</dev/urandom tr -dc '0123456789ABZDEFGHIJKLMOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz' | head -c32)
+fluxcondj=$(</dev/urandom tr -dc '0123456789ABZDEFGHIJKLMOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz' | head -c32)
+fluxmqttodb=$(</dev/urandom tr -dc '0123456789ABZDEFGHIJKLMOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz' | head -c32)
+
+#generate pw for grafana admin
+grafadmin=$(</dev/urandom tr -dc '0123456789ABZDEFGHIJKLMOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz' | head -c20)
+
+#generate django key
+djangokey=$(</dev/urandom tr -dc '0123456789!@#$%^&*()_=+abcdefghijklmnopqrstuvwxyz' | head -c50)
+
 mkdir ./tmp
-if [ "$nossl" = false ]; then
-echo 'port 8883' >>./tmp/mosquitto.conf
-string="cafile /home/${myvariable}/.ssl/server/ca.crt"
-echo ${string} >>./tmp/mosquitto.conf
-string="certfile /home/${myvariable}/.ssl/server/server.crt"
-echo ${string} >>./tmp/mosquitto.conf
-string="keyfile /home/${myvariable}/.ssl/server/server.key"
-echo ${string} >>./tmp/mosquitto.conf
+# build mosquitto.conf file
+if [ "$ssl" = true ]; then
+./bin/tmp.mosquitto.conf.ssl.sh $serverip > ./tmp/mosquitto.conf
 else
-echo 'port 1883' >>./tmp/mosquitto.conf
+./bin/tmp.mosquitto.conf.nossl.sh > ./tmp/mosquitto.conf
 fi
-echo 'allow_anonymous false' >>./tmp/mosquitto.conf
-string="password_file /home/${myvariable}/.passwd"
-echo ${string} >>./tmp/mosquitto.conf
-string="acl_file /home/${myvariable}/.acl"
-echo ${string} >>./tmp/mosquitto.conf
-echo 'listener 1883 0.0.0.0' >>./tmp/mosquitto.conf
-
 chmod -R 644 ./tmp/mosquitto.conf
 
-# build hash3.sh file
-echo '#!/bin/sh' >>./tmp/hash3.sh
-echo '' >>./tmp/hash3.sh
-string="/home/${myvariable}/.passwd"
-echo MQTT_PASS_PATH='"'${string}'"' >>./tmp/hash3.sh
-string="/home/${myvariable}/.hashing"
-echo MQTT_HASH_PATH='"'${string}'"' >>./tmp/hash3.sh
-echo '' >>./tmp/hash3.sh
-echo 'while inotifywait -e close_write $MQTT_HASH_PATH; do' >>./tmp/hash3.sh
-echo '   if [ -s $MQTT_HASH_PATH ]' >>./tmp/hash3.sh
-echo '   then' >>./tmp/hash3.sh
-echo '      mosquitto_passwd -U $MQTT_HASH_PATH' >>./tmp/hash3.sh
-echo '      cat $MQTT_HASH_PATH >> $MQTT_PASS_PATH' >>./tmp/hash3.sh
-echo '      > $MQTT_HASH_PATH' >>./tmp/hash3.sh
-echo '      #PID="$(pidof mosquitto)"' >>./tmp/hash3.sh
-echo '      #kill -SIGHUP $PID' >>./tmp/hash3.sh
-echo '   else' >>./tmp/hash3.sh
-echo '      echo ""' >>./tmp/hash3.sh
-echo '   fi' >>./tmp/hash3.sh
-echo 'done' >>./tmp/hash3.sh
 
-# build reload3.sh file
-echo '#!/bin/sh' >>./tmp/reload3.sh
-echo '' >>./tmp/reload3.sh
-echo '' >>./tmp/reload3.sh
-string="/home/${myvariable}/.passwd"
-echo MQTT_PASS_PATH='"'${string}'"' >>./tmp/reload3.sh
-echo 'while inotifywait -e close_write $MQTT_PASS_PATH; do' >>/reload3.sh
-echo '   PID="$(pidof mosquitto)"' >>./tmp/reload3.sh
-echo '   kill -SIGHUP $PID' >>./tmp/reload3.sh
-echo 'done' >>./tmp/reload3.sh
+# building nginx config file
+if [ "$nginx" = true ]; then
+./bin/tmp.nginx-ssl.sh $myvariable $serverip > ./tmp/nginx-ssl.conf
+./bin/tmp.nginx-nossl.sh $myvariable $serverip > ./tmp/nginx-nossl.conf
+fi
+
+# building gunicorn config file: service and sockets
+if [ "$nginx" = true ]; then
+./bin/tmp.gunicorn.service.sh $myvariable > ./tmp/gunicorn.service
+./bin/tmp.gunicorn.socket.sh > ./tmp/gunicorn.socket
+fi
+
+# building grafana config file
+./bin/tmp.grafana.ini.sh > ./tmp/grafana.ini
+
+# building indluxdb config file
+./bin/tmp.influxdb.conf.sh > ./tmp/influxdb.conf
 
 #build config.json file for django
-djangokey=$(</dev/urandom tr -dc '0123456789!@#$%^&*()_=+abcdefghijklmnopqrstuvwxyz' | head -c50)
-echo '{' >>./tmp/config.json
-echo '"'SENDING_MAIL'"':'"'$sendingmail'"', >>./tmp/config.json
-echo '"'SENDING_PASS'"':'"'$sendingpass'"', >>./tmp/config.json
-echo '"'ADMIN_MAIL'"':'"'$adminmail'"', >>./tmp/config.json
-echo '"'DJANGO_SECRET_KEY'"':'"'$djangokey'"', >>./tmp/config.json
-echo '"'MANGO_ADRESS'"':'"'mongodb://localhost:27017/'"', >>./tmp/config.json
-echo '"'MANGO_DATA_COL'"':'"'SensorData'"', >>./tmp/config.json
-echo '"'MANGO_DATABASE'"':'"'iot42'"', >>./tmp/config.json
-echo '"'HOST_IP'"':'"'$serverip'"', >>./tmp/config.json
-echo '"'MQTT_ACL_PATH'"':'"'/home/$myvariable/.acl'"', >>./tmp/config.json
-echo '"'MQTT_HASH_PATH'"':'"'/home/$myvariable/.hashing'"', >>./tmp/config.json
-echo '"'MQTT_PASS_PATH'"':'"'/home/${myvariable}/.passwd'"', >>./tmp/config.json
-echo '"'MQTT_IP'"':'"'${serverip}'"', >>./tmp/config.json
-if [ "$nossl" = false ]; then
-  echo '"'MQTT_PORT'"':'"'8883'"', >>./tmp/config.json
-  echo '"'CLIENT_CA'"':'"'/home/${myvariable}/.ssl/client/ca.crt'"', >>./tmp/config.json
+if [ "$nginx" = true ]; then
+grafaaddress="/grafana/"
 else
-  echo '"'MQTT_PORT'"':'"'1883'"', >>./tmp/config.json
-  echo '"'CLIENT_CA'"':'"''"', >>./tmp/config.json
+grafaaddress="http://$serverip:3000"
 fi
-echo '"'MQTT_TODB_NAME'"':'"'mqttodb'"', >>./tmp/config.json
-echo '"'MQTT_TODB_PASS'"':'"'${mqttpass}'"' >>./tmp/config.json
-echo '}' >>./tmp/config.json
+
+./bin/tmp.config.json.sh $myvariable $serverip $adminmail $sendingmail $sendingpass $djangokey $serverip $fluxadmin $fluxmqttodb $fluxcondj $grafadmin $grafaaddress $hostname > ./tmp/config.json
+
+# build hash3.sh file
+./bin/tmp.hash3.sh > ./tmp/hash3.sh
+
+# build reload3.sh file
+./bin/tmp.reload3.sh > ./tmp/reload3.sh
 
 
 # building gateway zip file
-if [ "$nossl" = false ]; then
+if [ "$ssl" = true ]; then
 cp ./home_user/ssl/client/* ./IoTree_Gateway
+fi
 zip -r IoTree_Gateway_V_1.1.zip ./IoTree_Gateway
 mv ./IoTree_Gateway_V_1.1.zip ./home_user/dj_iot/media/downloadfiles
 
 
 # move all files and folders to destination
 mkdir /etc/iotree
-mkdir /home/$myvariable/.ssl
-cp -r ./home_user/ssl/* /home/$myvariable/.ssl
-mv ./home_user/acl /home/$myvariable/.acl
-mv ./home_user/passwd /home/$myvariable/.passwd
-mv ./home_user/hashing /home/$myvariable/.hashing
-rm -r ./home_user/ssl
 cp -r ./home_user/* /home/$myvariable/
 cp /etc/mosquitto/mosquitto.conf /etc/mosquitto/mosquitto.conf.iotree_save
 cp -r ./tmp/mosquitto.conf /etc/mosquitto/mosquitto.conf
+cp /etc/influxdb/influxdb.conf /etc/influxdb/influxdb.conf.iotree_save
+cp -r ./tmp/influxdb.conf /etc/influxdb/influxdb.conf
 cp -r ./tmp/config.json /etc/iotree
 cp -r ./tmp/hash3.sh /etc/iotree
 cp -r ./tmp/reload3.sh /etc/iotree
+cp -r ./tmp/gunicorn.service /etc/systemd/system
+cp -r ./tmp/gunicorn.socket /etc/systemd/system
+if [ "$nginx" = true ]; then
+cp -r ./tmp/nginx-ssl.conf /etc/nginx/sites-available/nginx-ssl.conf
+cp -r ./tmp/nginx-nossl.conf /etc/nginx/sites-available/nginx-nossl.conf
+cp /etc/grafana/grafana.ini /etc/grafana/grafana.ini.iotree_save
+cp -r ./tmp/grafana.ini /etc/grafana/grafana.ini
+else
+cp -r ./tmp/grafana.ini /etc/grafana/grafana.ini.iotree
+fi
 
+# building files acl, hashing, passwd
+touch /etc/iotree/.acl
+touch /etc/iotree/.hashing
+touch /etc/iotree/.passwd
 
 # secure files
-chown -R $myvariable /home/$myvariable/.ssl
-chmod -R 700 /home/$myvariable/.ssl/secrets
-chmod -R 744 /home/$myvariable/.ssl/client
-chmod -R 744 /home/$myvariable/.ssl/server
 chmod -R 744 /etc/iotree/config.json
+chmod -R 766 /etc/iotree/.acl
+chmod -R 766 /etc/iotree/.hashing
+chmod -R 766 /etc/iotree/.passwd
+chown $myvariable:$myvariable /home/$myvariable/dj_iot
+chown $myvariable:$myvariable /home/$myvariable/iot42
+chmod -R 766 /home/$myvariable/dj_iot/db.sqlite3
 
-# delete all install files
+# setup mosquitto broker user
+mosquitto_passwd -b /etc/iotree/.passwd mqttodb $mqttpass
 
-# restart services
-service mosquitto restart
+# making influxdb user: fluxcondj, mqttodb, admin (all privileged),
+curl "http://localhost:8086/query" --data-urlencode "q=CREATE USER fluxcondj WITH PASSWORD '$fluxcondj'"
+curl "http://localhost:8086/query" --data-urlencode "q=CREATE USER mqttodb WITH PASSWORD '$fluxmqttodb'"
+curl "http://localhost:8086/query" --data-urlencode "q=CREATE USER admin WITH PASSWORD '$fluxadmin' WITH ALL PRIVILEGES"
 
+
+# start services:
+systemctl daemon-reload
+systemctl enable grafana-server
+systemctl restart grafana-server
+systemctl restart influxdb
+if [ "$nginx" = true ]; then
+systemctl start gunicorn
+systemctl enable gunicorn
+systemctl reload nginx
+fi
+
+if [ "$nginx" = true ]; then
+if [ "$ssl" = true ]; then
+ln -s /etc/nginx/sites-available/nginx-ssl.conf /etc/nginx/sites-enabled/
+else
+ln -s /etc/nginx/sites-available/nginx-nossl.conf /etc/nginx/sites-enabled/
+fi
+rm -r /etc/nginx/sites-enabled/default
+fi
+
+
+# making grafana user: admin
+sleep 10
+grafana-cli admin reset-admin-password $grafadmin

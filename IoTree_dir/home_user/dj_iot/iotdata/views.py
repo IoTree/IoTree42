@@ -8,3 +8,7 @@ def home(request):
 
 def about(request):
     return render(request, 'iotdata/about.html', {'title': 'About'})
+
+
+def impressum(request):
+    return render(request, 'iotdata/impressum.html', {'title': 'Impressum'})
