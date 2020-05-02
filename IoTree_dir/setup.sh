@@ -185,7 +185,7 @@ chmod -R 766 /etc/iotree/.passwd
 chown $myvariable:$myvariable /home/$myvariable/dj_iot
 chown $myvariable:$myvariable /home/$myvariable/iot42
 chmod -R 766 /home/$myvariable/dj_iot/db.sqlite3
-chmod 764 /home/$myvariable/dj_iot
+chmod 765 /home/$myvariable/dj_iot
 
 # setup mosquitto broker user
 mosquitto_passwd -b /etc/iotree/.passwd mqttodb $mqttpass
