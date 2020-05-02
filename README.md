@@ -86,7 +86,7 @@ install all the requirements.
 ```
 virtualenv -p python3 venv1
 source venv1/bin/activate
-pip3 install -r requrements.txt
+pip3 install -r requirements.txt
 ```
 do the same for the Django requirements.
 ```
