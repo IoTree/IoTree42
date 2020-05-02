@@ -20,12 +20,8 @@ The Gateway can be any Device capable of running mosquitto Broker and Python.
 
 ## Installation:
 ### Requirements: 
-Mongo dB version 2.7 or higher must be installed!
-It may not work with Resparrian because it is a 32-bit operating system and you will need a 64-bit operating system.
-It is possible to install Ubuntu on Raspberry Pi to achieve full 64-bit.
-The other way would be to optimize Pymongo to work with Mongo dB version 2.4.
 
-The setup was tested on Debian 9.
+The setup was tested on Debian 9 and Rpi 3B+ / 4.
 
 ```
 sudo apt-get update 
@@ -158,8 +154,7 @@ If you also want to use SSL encryption, you must customize the gateway script mq
 Look at mqttodb1.py as an example.
 
 ### Deploy on a real server.
-It is recommended to do everything on an Apache server.
-A possible Apache2 configuration file can be found [here](https://github.com/IoTree/IoTree42/blob/master/apache_conf_example).
+It is recommended to do everything on an Nginx server.
 You may also want to install a firewall like ufw for security.
 and if you have a DNS name, lets encrypt would be a good choice.
 
