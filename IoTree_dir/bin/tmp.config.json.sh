@@ -14,6 +14,7 @@ FLUXDJANGOPW=$10
 GRAFAPW=$11
 GRAFAADD=$12
 HOSTNAME=$13
+MQTTPASSWORD=$14
 
 #define the template.
 cat << EOF
@@ -27,6 +28,9 @@ cat << EOF
 
 	"HOST_IP":"$HOSTIP",
 	"HOSTNAME":"$HOSTNAME",
+
+	"MQTTUSER":"mqttodb",
+	"MQTTPASS":"$MQTTPASSWORD",
 
 	"FLUX_PORT":"8086",
 	"FLUX_ADRESS":"127.0.0.1",
