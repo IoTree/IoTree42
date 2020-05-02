@@ -134,7 +134,7 @@ else
 grafaaddress="http://$serverip:3000"
 fi
 
-./bin/tmp.config.json.sh $myvariable $serverip $adminmail $sendingmail $sendingpass $djangokey $serverip $fluxadmin $fluxmqttodb $fluxcondj $grafadmin $grafaaddress $hostname > ./tmp/config.json
+./bin/tmp.config.json.sh $myvariable $serverip $adminmail $sendingmail $sendingpass $djangokey $serverip $fluxadmin $fluxmqttodb $fluxcondj $grafadmin $grafaaddress $hostname $mqttpass > ./tmp/config.json
 
 # build hash3.sh file
 ./bin/tmp.hash3.sh > ./tmp/hash3.sh
