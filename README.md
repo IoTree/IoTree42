@@ -18,6 +18,18 @@ On the server side there are basically Django, Moquitto Broker, a basic Python s
 On the webpage provided by your Django server is a detailed manual and an installation instruction for the gateway. It also can be found [here](https://github.com/IoTree/IoTree42/blob/master/IoTree_dir/home_user/README.md).
 The Gateway can be any Device capable of running mosquitto Broker and Python.
 
+
+## General:
+#### Gateway:
+The gateway forwards all incoming messages under sensorbases/ to the server. Furthermore, it receives all other messages from all other gateways of a user by default. This can be adjusted in the mosquitto.conf file. A user friendly web environment for configuration of the gateway is under development.
+
+##### server: 
+The installation includes Eclipse Mosquitto as broker, Django as web framework and Inlfuxdb as database. Optionally, nginx and gunicorn can be installed and configured as web servers.
+
+##### Encryption: 
+Originally, encryption was implemented using Openssl, but at the moment the focus is on let's encrpypt as certificate authority. Which is also accepted by the common browsers.
+
+
 ## Installation:
 ### Requirements: 
 
