@@ -1,4 +1,4 @@
-## DHT22 Sensorbase example
+## DHT22_RPI Sensorbase example
 ### RPI 2 - 4 /zero
 #### this code will do:
 1. connect to Wi-Fi router
