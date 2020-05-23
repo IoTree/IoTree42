@@ -6,13 +6,13 @@ x=$1
 y=$2
 ssl=false
 nginx=false
-if [ "$x" = "--ssl" ]; then
+if [ "$x" = "--letsencrypt" ]; then
   ssl=true
 fi
 if [ "$x" = "--nginx" ]; then
   nginx=true
 fi
-if [ "$y" = "--ssl" ]; then
+if [ "$y" = "--letsencrypt" ]; then
   ssl=true
 fi
 if [ "$y" = "--nginx" ]; then
@@ -163,7 +163,7 @@ fi
 
 # building gateway zip file
 if [ "$ssl" = true ]; then
-cp ./home_user/ssl/client/* ./IoTree_Gateway
+cp /etc/ssl/certs/DST_Root_CA_X3.pem ./IoTree_Gateway
 fi
 zip -r IoTree_Gateway_V_1.1.zip ./IoTree_Gateway
 mv ./IoTree_Gateway_V_1.1.zip ./home_user/dj_iot/media/downloadfiles
