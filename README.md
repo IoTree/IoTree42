@@ -91,7 +91,7 @@ save and close it.
 
 ### Installations of python modules and test.
 ```
-cd ~./iot42 
+cd ~/iot42 
 ```
 install all the requirements.
 
@@ -102,7 +102,7 @@ pip3 install -r requirements.txt
 ```
 do the same for the Django requirements.
 ```
-cd ~./dj_iot
+cd ~/dj_iot
 ```
 you can choose with virtual environment:
 ```
