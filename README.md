@@ -51,9 +51,11 @@ cd IoTree42/IoTree_dir
 ```
 
 ### setup.sh
-Install with sudo bash setup.sh
+Install with sudo bash setup.sh.
 
-For a complete setup, this includes an SSL certificate setup provided by Let's encrypt and Nginx as web server do:
+For a complete setup, this includes an SSL certificate setup provided by Let's encrypt and Nginx as web server.
+Please check after instalation if Gateway ZIP file has a PEM included.
+Also define Servername in /etc/iotree/config.json instad of IP.
 #### NOTE: please setup the certs befor running setup.sh using certbot!
 ```
 sudo bash setup.sh --letsencrypt --nginx
