@@ -1,3 +1,20 @@
+## DHT22_ESP32 Sensorbase example
+### ESP32
+#### this code will do:
+1. connect to Wi-Fi router
+2. collect measurements
+- each measurement contain: Temperature, Humidity
+3. sends the measurements as json string to the Gateway
+
+for more information refere and thx to:
+https://xylem.aegean.gr/~modestos/mo.blog/esp32-send-dht-to-mqtt-and-deepsleep/
+
+please define all necessary parameter in the script such as:
+- Gateway IP
+- Wifi logins
+- Gpio of one wire connection
+- type of DHT (22/11)
+
 ## DHT22_RPI Sensorbase example
 ### RPI 2 - 4 /zero
 #### this code will do:
