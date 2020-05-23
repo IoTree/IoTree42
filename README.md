@@ -137,7 +137,7 @@ go in your browser to (your ip):8000
 ## Run it all
 To execute it all:
 ```
-cd ~./iot42
+cd ~/iot42
 ```
 start the mqttodb1.py in the background without nohup.out:
 ```
@@ -146,7 +146,7 @@ nohup python3 mqttoinflux1.py </dev/null >/dev/null 2>&1 &
 ```
 Now start the django server without nginx:
 ```
-cd ~./dj_iot
+cd ~/dj_iot
 ```
 ```
 source venv2/bin/activate
