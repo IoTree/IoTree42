@@ -16,8 +16,8 @@ mqttbase = "gateways"                   ## Here qu can define the first instance
 mqttbase2 = mqttbase+"/#"               ## do nothing
 broker = "0.0.0.0"                      ## Here you can define the adress of
 port = 1883                             ## The adress must match the on in the ssl key.
-username = os.environ['MQTT_TODB_NAME']
-password = os.environ['MQTT_TODB_PASS']
+username = config["MQTTUSER"]
+password = config["MQTTPASS"]
 
 
 ### mking two lists out of topic sting for later save in db and chacking stings
