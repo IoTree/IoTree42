@@ -53,6 +53,7 @@ cd IoTree42/IoTree_dir
 ### setup.sh
 Install with sudo bash setup.sh
 For a complete setup, this includes an SSL certificate creation provided by Let's encrypt and Nginx as web server do:
+#### NOTE: please setup the certs befor running setup.sh using certbot!
 ```
 sudo bash setup.sh --letsencrypt --nginx
 ```
