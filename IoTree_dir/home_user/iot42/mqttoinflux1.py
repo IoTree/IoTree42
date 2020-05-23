@@ -25,10 +25,10 @@ def buildtree(topic):
     topics = topic.split('/')
     suptopics = topics[2:]
     ## change or deleting all non alnum $$ _ && - characters for later simplification
-    suptopicss = [w.replace('_', '-') for w in suptopics]
+    suptopicss = [w.replace('_', '') for w in suptopics]
     suptopicsss = []
     for w in suptopicss:
-        suptopicsss.append(re.sub('[^0-9^a-z^A-Z^-]',"", w))
+        suptopicsss.append(re.sub('[^0-9^a-z^A-Z]',"", w))
     return topics, suptopicsss
 
 def on_connect(client, userdata, flags, rc):
