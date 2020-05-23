@@ -1,54 +1,72 @@
-#!python3
-
-# mqtt module importieren
-import paho.mqtt.client as mqtt
-
-# Adafruit Bibliothek importieren
-import Adafruit_DHT
-
-#Config
-sensor = Adafruit_DHT.DHT22      # module has to be installed
-gpio = 4                         #one wire connection to gpio:? default: 4
-broker = ""                      #ip of broker like 192.168.188.[...]
+#!pyton3
 
 
-
-#import
+import socket
+import time
 import paho.mqtt.client as paho
 import json
-import time
+import Adafruit_DHT
 
 
 
-port = 1883                             ## The adress must match the on in the ssl key.
+# define all variables #
+hostname = socket.gethostname()     # hostname for connecting to self
+measurement_interval = 20          # in sec
+sensor = Adafruit_DHT.DHT22         # set type of DHT sensor
+gpio = 4                            # set gpio of one wire connection
+
+
+def get_cpu_temperature():
+    humidity, temperature = Adafruit_DHT.read_retry(sensor, gpio)
+    return int(humidity), int(temperature)
+
+
+# def for connecting to self/localhost #
+def on_log(client, userdata, level, buf):
+    print("log: "+buf)
 
 
 def on_connect(client, userdata, flags, rc):
-    print("Connected with result code "+str(rc))
-#    client.subscribe(mqttbase2)
-    while True:
-        print("@ While loop")
-        # Daten auslesen
-        timenow = time.time()
-        humidity, temperature = Adafruit_DHT.read_retry(sensor, gpio)
-        dictdata = {'Temperature': temperature, 'Humidity':humidity, 'Time': timenow}
-        data=json.dumps(dictdata)
-        client.publish("sensorbases/DHT22", data)
-        print (data)
-        time.sleep(60)
+    if rc == 0:
+        print("connected OK")
+    else:
+        print("Bad connection Returned code=", rc)
+
+
+def on_disconnect(client, userdata, flags, rc=0):
+    print("DisConnected result code "+str(rc))
 
 
 def on_message(client, userdata, msg):
-    message=msg.payload.decode("utf-8")
+    m_decode = str(msg.payload.decode("utf-8", "ignor"))
+    print("message received", m_decode)
 
 
-###setup for broker connection###
-conn_flag=False
-client = paho.Client(broker)
-client.on_connect=on_connect
-client.on_message=on_message
-print("Connecting to broker ", broker)
+# Client for Sensorbases and subgateways
+client = paho.Client('TempHumi')
+client.on_connect = on_connect
+client.on_disconnect = on_disconnect
+client.on_message = on_message
+print("Connecting to broker2 ", hostname)
+client.connect(hostname, 1883)
 
-client.connect(broker,port)
+print('Starting measurement and sending')
+print('measurement_interval: '+str(measurement_interval))
+payload={}
 
-client.loop_forever()
+while True:
+    client.loop_start()
+    time.sleep(1)
+    temp, humi = get_cpu_temperature()
+    now = int(time.time())
+    payload['Time'] = now
+    payload['Temperature'] = temp
+    payload['Humidity'] = humi
+    payload['Sensor'] = "DHT"
+    payloadj = json.dumps(payload)
+    topic = "sensorbase/DHT_RPI"
+    print(topic, payload)
+    client.publish(topic, payloadj)
+    print('time: '+str(now)+' Temperature: '+str(temp))
+    client.loop_stop()
+    time.sleep(measurement_interval)
