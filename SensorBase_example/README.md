@@ -55,19 +55,11 @@ please define all necessary parameter in the script such as:
 ### Raspberry Zero w with RD200M
 #### this code will do:
 
-1. connect to Wi-Fi router
-2. collect measurements (how many can be defined)
-- each measurement contain: lux with timestamp provided by udp server
-3. sends the measurements as json string to the Gateway
-
-if the feather is plug to power chare.
-
- -> Measurement will stop and send. 
- 
-if the feather is unplugged form power.
-
- -> measurement will begin
+1. connect to Wi-Fi router / Hotspot
+2. collect measurements (how many can be defined) from RD200M
+- each measurement contain: radon with timestamp provided by udp server + INFO
+3. sends the measurements as json string to the Gateway (->Self)
 
 please define all necessary parameter in the script such as:
 - Wi-Fi
-- Gateway IP
+- and setup a gateway before
