@@ -66,7 +66,7 @@ arch2=${arch:0:3}
 echo $arch
 if [ "$arch2" = "arm" ]; then
 echo "architecture: $arch"
-wget https://dl.grafana.com/oss/release/grafana_6.6.2_armhf4.deb
+wget https://dl.grafana.com/oss/release/grafana_6.6.2_armhf.deb
 PATH=$PATH:/sbin
 dpkg -i grafana_6.6.2_armhf.deb
 elif [ "$arch2" = "amd" ]; then
@@ -238,6 +238,6 @@ fi
 # making grafana user: admin
 sleep 10
 grafana-cli admin reset-admin-password $grafadmin
-echo "Setup complite"
-echo "You might want to check the username and password of the Grafana admin user. type command:"
-echo "nano /etc/iotree/config.json"
+echo "--> Setup complete <--"
+echo "--> You might want to check the username and password of the Grafana admin user. type command:"
+echo "--> nano /etc/iotree/config.json"
