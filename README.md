@@ -55,7 +55,7 @@ Install with sudo bash setup.sh.
 
 For a complete setup, this includes an SSL certificate setup provided by Let's encrypt and Nginx as web server.
 Please check after instalation if Gateway ZIP file has a PEM included.
-Also define Servername in /etc/iotree/config.json instad of IP.
+Also check if DNS in /etc/iotree/config.json is OK.
 #### NOTE: please setup the certs befor running setup.sh using certbot!
 ```
 sudo bash setup.sh --letsencrypt --nginx
