@@ -44,7 +44,7 @@ sudo apt-get -y upgrade
 
 download repository with git:
 ```
-git clone https://github.com:IoTree/IoTree42.git
+git clone https://github.com/IoTree/IoTree42.git
 ```
 ```
 cd IoTree42/IoTree_dir 
