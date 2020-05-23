@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -e
 
 # chacking for flags
 x=$1
@@ -61,9 +61,26 @@ apt install -y libtiff5
 apt-get install -y zip
 # installing grafana
 apt-get install -y adduser libfontconfig1
+arch=$(uname -m)
+arch2=${arch:0:3}
+echo $arch
+if [ "$arch2" = "arm" ]; then
+echo "architecture: $arch"
+wget https://dl.grafana.com/oss/release/grafana_6.6.2_armhf4.deb
+PATH=$PATH:/sbin
+dpkg -i grafana_6.6.2_armhf.deb
+elif [ "$arch2" = "amd" ]; then
+echo "architecture: $arch"
 wget https://dl.grafana.com/oss/release/grafana_6.6.2_amd64.deb
 PATH=$PATH:/sbin
 dpkg -i grafana_6.6.2_amd64.deb
+else
+echo "ERROR: invalid architecture '$arch' for Grafana"
+echo "Exit setup.sh please delete folder:"
+echo "'/etc/iotree"
+exit 1
+fi
+
 
 
 
@@ -71,6 +88,7 @@ dpkg -i grafana_6.6.2_amd64.deb
 mqttpass=$(</dev/urandom tr -dc '0123456789ABZDEFGHIJKLMOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz' | head -c12)
 serverip=$(ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1  -d'/')
 hostname=$(hostname)
+echo $hostname
 if [ -z "$myvariable" ]
 then
     myvariable=$(who am i | awk '{print $1}')
@@ -220,3 +238,6 @@ fi
 # making grafana user: admin
 sleep 10
 grafana-cli admin reset-admin-password $grafadmin
+echo "Setup complite"
+echo "You might want to check the username and password of the Grafana admin user. type command:"
+echo "nano /etc/iotree/config.json"
