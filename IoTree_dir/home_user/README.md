@@ -25,12 +25,14 @@ You must define the IP and the port of the gateway on your sensors and actuators
   -	Do not send multiple JSON strings at once. Send them individually.
   -	Max time increment is 1 millisecond.
   -	Send measurement values as integer not as string.
+  
 Example payload: {“sensor”: ”tsl2591”, “lux”: 2314, “time”: 1561373832.000}
 
 ### Important rules for the TOPIC:
   -	For simplicity only alphanumeric is allowed. If not, wrong characters will be deleted.
   -	Choose your topic and subtopic-levels wisely. So that you can find data later easily.
   -	Always use "sensorbases/" before the sub-topic. Otherwise it will not be processed through the gateway.
+  
 Example topic: sensorbases/luxsensor/tls2591
 
 ### Visualize or to check the incoming data
