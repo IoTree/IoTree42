@@ -47,6 +47,7 @@ Example topic: sensorbases/luxsensor/tls2591
   
 ### Dashboard with Grafana
 Please visied this sites/video to get a overview on how to work with grafana.
+
 https://docs.bitnami.com/virtual-machine/infrastructure/grafana/get-started/get-started/
 
   
@@ -55,10 +56,13 @@ You will need a REST-API Auth Tocken first
 Send a POST request to "<server address>/api-token-auth/"
 Containing your login credentials.
 You will receive an auth-Token.
+  
 Example: 
-  curl --header "Content-Type: application/json" --request POST --data '{"username":"xyz","password":"xyz"}' https://<server address>/api-token-auth/
 
-Then you connect your applications with Rest-Api trough the link "<server ad.>/iotree_api".
+  curl --header "Content-Type: application/json" --request POST --data '{"username":"xyz","password":"xyz"}' https://-server address-/api-token-auth/
+
+Then you connect your applications with Rest-Api trough the link "-server ad.-/iotree_api".
+
 If sending a GET request the server will answer with all the nodes and leaves you have.
 
 Then you can do your queries:
@@ -82,7 +86,7 @@ As you can see in the second example, the field "time_end" is set to "now". This
 
 #### Is it possible to use only the Mqtt-broker?
   -	Yes, it is. The permission for your specific topic is set to read and write. 
-  -	Just subscribe your topic (example: gateways/<your mqtt username>/...), with all the necessary
+  -	Just subscribe your topic (example: gateways/-your-mqtt-username-/...), with all the necessary
 information (certificates, user, topic, password, host, port).
 #### Is my data secure?
   -	Yes and no. your data can theoretically be seen by the admin.
