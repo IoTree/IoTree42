@@ -37,7 +37,7 @@ Example topic: sensorbases/luxsensor/tls2591
 
 #### Your IoTree:
   Click on “Your IoTree”.
-  ![alt text](https://github.com/IoTree/IoTree42/blob/master/.gitignore/query_data.png)
+  ![alt text](https://github.com/IoTree/IoTree42/blob/master/.gitignore/query_data2.png)
   1.	The tree structure corresponds to the MQTT topic defined in your sensorbase and gateway.
       Simply mark the Sensors or the top level nodes you like to work with.
   2.  Set the start and end point.
