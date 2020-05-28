@@ -5,8 +5,6 @@ import time
 """
 this script will display the last entry of your saved Datasets/Measurement
 also it will display the last entry of an specific column if you define.
-you will need to enter the <host>, <logins> and <gateway_id>.
-<column> and <tree> (tree branch) are optional
 """
 
 def main():
