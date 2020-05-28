@@ -35,7 +35,7 @@ def main():
         for m in n["children"]:
             listofleefs.append(m["id"])
     print(listofleefs)
-    tree = input("Choose one or more of your leefs and enter it: \n")
+    tree = input("Choose one or more of your noodes or leefs and enter it separated through ",": \n")
     query = {
         "tree": tree,
         "time_start":start_time,
