@@ -28,7 +28,6 @@ def main():
     rtoken = r.json().get("token")
     token = "Token " + str(rtoken)
     headers = {'Authorization': token}
-    print(headers)
     r = requests.get(url, headers=headers)
     treeids = json.loads(r.json())
     listofleefs = []
