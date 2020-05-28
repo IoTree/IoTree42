@@ -47,6 +47,8 @@ Example topic: sensorbases/luxsensor/tls2591
   
 ### Dashboard with Grafana
 Please visied this sites/video to get a overview on how to work with grafana.
+https://docs.bitnami.com/virtual-machine/infrastructure/grafana/get-started/get-started/
+
   
 ### Rest API
 You will need a REST-API Auth Tocken first
