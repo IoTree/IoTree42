@@ -22,8 +22,15 @@ read Port
 echo "<<<--          MQTT-Password          -->>>"
 echo "ENTER your MQTT-Password given to you when registering. !HIDDEN INPUT!"
 read -s Password
+echo "<<<--             Gateway-ID          -->>>"
+echo "DEFINE a Gateway-ID:"
+read GatewayID
 
+if [ -z "$GatewayID" ]
 NEW_UUID=$(cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 16 | head -n 1)
+else
+NEW_UUID=$GatewayID
+fi
 
 echo 'port 1883' >>./mosquitto.conf
 string="connection ${Username}"
