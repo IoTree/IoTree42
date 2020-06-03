@@ -31,9 +31,9 @@ Example payload: {“sensor”: ”tsl2591”, “lux”: 2314, “time”: 1561
 ### Important rules for the TOPIC:
   -	For simplicity only alphanumeric is allowed. If not, wrong characters will be deleted.
   -	Choose your topic and subtopic-levels wisely. So that you can find data later easily.
-  -	Always use "sensorbases/" before the sub-topic. Otherwise it will not be processed through the gateway.
+  -	Always use "sensorbase/" before the sub-topic. Otherwise it will not be processed through the gateway.
   
-Example topic: sensorbases/luxsensor/tls2591
+Example topic: sensorbase/luxsensor/tls2591
 
 ### Visualize or to check the incoming data
 
