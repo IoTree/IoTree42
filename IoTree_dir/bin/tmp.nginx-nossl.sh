@@ -25,6 +25,10 @@ server {
         location /static/ {
                 root /home/$USERNAME/dj_iot;
         }
+        
+        location /media/ {
+                root /home/$USERNAME/dj_iot;
+        }
 
         location / {
                 include proxy_params;
