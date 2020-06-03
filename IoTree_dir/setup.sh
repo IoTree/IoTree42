@@ -166,7 +166,8 @@ if [ "$ssl" = true ]; then
 cp /etc/ssl/certs/DST_Root_CA_X3.pem ./IoTree_Gateway
 fi
 zip -r IoTree_Gateway_V_1.1.zip ./IoTree_Gateway
-mv ./IoTree_Gateway_V_1.1.zip ./home_user/dj_iot/media/downloadfiles
+mkdir ./home_user/dj_iot/media/downloadfiles
+mv ./IoTree_Gateway_V_1.1.zip ./home_user/dj_iot/media/downloadfiles/
 
 
 # move all files and folders to destination
@@ -200,10 +201,10 @@ chmod -R 744 /etc/iotree/config.json
 chmod -R 766 /etc/iotree/.acl
 chmod -R 766 /etc/iotree/.hashing
 chmod -R 766 /etc/iotree/.passwd
-chown $myvariable:$myvariable /home/$myvariable/dj_iot
-chown $myvariable:$myvariable /home/$myvariable/iot42
-chmod -R 766 /home/$myvariable/dj_iot/db.sqlite3
-chmod 765 /home/$myvariable/dj_iot
+chown -R $myvariable:$myvariable /home/$myvariable/dj_iot
+chown -R $myvariable:$myvariable /home/$myvariable/iot42
+chmod -R 765 /home/$myvariable/dj_iot
+chmod 766 /home/$myvariable/dj_iot/db.sqlite3
 
 # setup mosquitto broker user
 mosquitto_passwd -b /etc/iotree/.passwd mqttodb $mqttpass
