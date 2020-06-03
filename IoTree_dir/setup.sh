@@ -35,12 +35,16 @@ echo "<<<-----     Hallo to IoTree42      --->>>"
 echo "ENTER YOUR LINUX USERNAME FOR BUIDING PATHS"
 read myvariable
 echo "<<<--          SETUP DJANGO          -->>>"
-echo "ENTER AN EMAIL, for sending the password reset url"
+echo "ENTER AN EMAIL, for sending the password reset url. You can leave it empty"
 read sendingmail
-echo "ENTER PASSWORD FOR THIS EMAIL, for sending the password reset url. !HIDDEN INPUT!"
+echo "ENTER PASSWORD FOR THIS EMAIL, for sending the password reset url. !HIDDEN INPUT! You can leave it empty"
 read -s sendingpass
-echo "ENTER ADMINMAIL, for resiving notivications form server"
+echo "ENTER ADMINMAIL, for resiving notivications form server. You can leave it empty"
 read adminmail
+if [ "$ssl" = true ]; then
+echo "ENTER domain name, for using https it's nessery to use correct domain name instad of IP"
+read domain
+fi
 
 # istalling all nessery programms
 # sudo apt-get update
@@ -105,6 +109,10 @@ if [ -z "$adminmail" ]
 then
     adminmail=defaultadmin
 fi
+if [ -z "$domain" ]
+then
+    domain=$hostname
+fi
 
 #generate pw for influx: admin, fluxcondj, mqttodb,
 fluxadmin=$(</dev/urandom tr -dc '0123456789ABZDEFGHIJKLMOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz' | head -c32)
@@ -120,7 +128,7 @@ djangokey=$(</dev/urandom tr -dc '0123456789!@#$%^&*()_=+abcdefghijklmnopqrstuvw
 mkdir ./tmp
 # build mosquitto.conf file
 if [ "$ssl" = true ]; then
-./bin/tmp.mosquitto.conf.ssl.sh $serverip > ./tmp/mosquitto.conf
+./bin/tmp.mosquitto.conf.ssl.sh $domain > ./tmp/mosquitto.conf
 else
 ./bin/tmp.mosquitto.conf.nossl.sh > ./tmp/mosquitto.conf
 fi
@@ -129,7 +137,7 @@ chmod -R 644 ./tmp/mosquitto.conf
 
 # building nginx config file
 if [ "$nginx" = true ]; then
-./bin/tmp.nginx-ssl.sh $myvariable $serverip > ./tmp/nginx-ssl.conf
+./bin/tmp.nginx-ssl.sh $myvariable $domain > ./tmp/nginx-ssl.conf
 ./bin/tmp.nginx-nossl.sh $myvariable $serverip > ./tmp/nginx-nossl.conf
 fi
 
@@ -152,7 +160,11 @@ else
 grafaaddress="http://$serverip:3000"
 fi
 
+if [ "$ssl" = true ]; then
+./bin/tmp.config.json.sh $myvariable $serverip $adminmail $sendingmail $sendingpass $djangokey $serverip $fluxadmin $fluxmqttodb $fluxcondj $grafadmin $grafaaddress $domain $mqttpass > ./tmp/config.json
+else
 ./bin/tmp.config.json.sh $myvariable $serverip $adminmail $sendingmail $sendingpass $djangokey $serverip $fluxadmin $fluxmqttodb $fluxcondj $grafadmin $grafaaddress $hostname $mqttpass > ./tmp/config.json
+fi
 
 # build hash3.sh file
 ./bin/tmp.hash3.sh > ./tmp/hash3.sh
