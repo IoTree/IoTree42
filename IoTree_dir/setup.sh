@@ -208,7 +208,7 @@ touch /etc/iotree/.acl
 touch /etc/iotree/.hashing
 touch /etc/iotree/.passwd
 echo 'user mqttodb' >>/etc/iotree/.acl
-echo 'topic readwrite gateways/#' >>/etc/iotree/.acl
+echo 'topic read gateways/#' >>/etc/iotree/.acl
 
 # secure files
 chmod -R 744 /etc/iotree/config.json
