@@ -37,6 +37,8 @@ string="connection ${Username}"
 echo ${string} >>./mosquitto.conf
 string="address ${Hostname}:${Port}"
 echo ${string} >>./mosquitto.conf
+string="remote_password ${Password}"
+echo ${string} >>./mosquitto.conf
 string="remote_username ${Username}"
 echo ${string} >>./mosquitto.conf
 echo 'bridge_cafile /etc/mosquitto/certs/DST_Root_CA_X3.pem' >>./mosquitto.conf
