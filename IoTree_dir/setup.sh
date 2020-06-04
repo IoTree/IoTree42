@@ -207,6 +207,8 @@ fi
 touch /etc/iotree/.acl
 touch /etc/iotree/.hashing
 touch /etc/iotree/.passwd
+echo 'user mqttodb' >>/etc/iotree/.acl
+echo 'topic readwrite gateways/#' >>/etc/iotree/.acl
 
 # secure files
 chmod -R 744 /etc/iotree/config.json
@@ -217,6 +219,7 @@ chown -R $myvariable:$myvariable /home/$myvariable/dj_iot
 chown -R $myvariable:$myvariable /home/$myvariable/iot42
 chmod -R 765 /home/$myvariable/dj_iot
 chmod 766 /home/$myvariable/dj_iot/db.sqlite3
+
 
 # setup mosquitto broker user
 mosquitto_passwd -b /etc/iotree/.passwd mqttodb $mqttpass
