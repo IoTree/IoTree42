@@ -166,8 +166,8 @@ else
 ./bin/tmp.config.json.sh $myvariable $serverip $adminmail $sendingmail $sendingpass $djangokey $serverip $fluxadmin $fluxmqttodb $fluxcondj $grafadmin $grafaaddress $hostname $mqttpass > ./tmp/config.json
 fi
 
-# build hash3.sh file
-./bin/tmp.hash3.sh > ./tmp/hash3.sh
+# build hash3.sh file -> not longer needed
+#./bin/tmp.hash3.sh > ./tmp/hash3.sh
 
 # build reload3.sh file
 ./bin/tmp.reload3.sh > ./tmp/reload3.sh
