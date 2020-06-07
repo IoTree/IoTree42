@@ -33,7 +33,7 @@ Originally, encryption was implemented using Openssl, but at the moment the focu
 ## Installation:
 ### Requirements: 
 
-The setup was tested on Debian 9 and Rpi 3B+ / 4.
+The setup was tested on Debian 9/10 and Rpi 3B+ / 4.
 
 ```
 sudo apt-get update 
