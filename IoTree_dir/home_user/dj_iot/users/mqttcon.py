@@ -7,6 +7,7 @@ bash script in background takes care of hashing and reloading the mosquitto brok
 from django.contrib.auth.models import User
 import subprocess
 import json
+from .hashpw import Hashing
 
 with open('/etc/iotree/config.json', encoding='utf-8') as config_file:
    config = json.load(config_file)
@@ -25,10 +26,12 @@ class InitMqttClient:
             f.write(
                 "\nuser " + str(self.user) + "\ntopic readwrite gateways/" + str(self.user) + "/#")
             f.close()
-            # make user-pass entry into password file after that it will be hased
-            f = open(config['MQTT_HASH_PATH'], "a")
+            # make user-pass entry into password file
+            hashing_client = Hashing(self.user, self.pword)
+            line_for_file = hashing_client.run()
+            f = open(config['MQTT_PASS_PATH'], "a")
             f.write(
-                "\n"+str(self.user) + ":" + mqttpw)
+                "\n"+line_for_file)
             f.close()
             return mqttpw
         except RuntimeError:
