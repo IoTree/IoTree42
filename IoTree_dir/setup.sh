@@ -166,9 +166,6 @@ else
 ./bin/tmp.config.json.sh $myvariable $serverip $adminmail $sendingmail $sendingpass $djangokey $serverip $fluxadmin $fluxmqttodb $fluxcondj $grafadmin $grafaaddress $hostname $mqttpass > ./tmp/config.json
 fi
 
-# build hash3.sh file -> not longer needed
-#./bin/tmp.hash3.sh > ./tmp/hash3.sh
-
 # build reload3.sh file
 ./bin/tmp.reload3.sh > ./tmp/reload3.sh
 
@@ -190,7 +187,6 @@ cp -r ./tmp/mosquitto.conf /etc/mosquitto/mosquitto.conf
 cp /etc/influxdb/influxdb.conf /etc/influxdb/influxdb.conf.iotree_save
 cp -r ./tmp/influxdb.conf /etc/influxdb/influxdb.conf
 cp -r ./tmp/config.json /etc/iotree
-cp -r ./tmp/hash3.sh /etc/iotree
 cp -r ./tmp/reload3.sh /etc/iotree
 cp -r ./tmp/gunicorn.service /etc/systemd/system
 cp -r ./tmp/gunicorn.socket /etc/systemd/system
@@ -203,9 +199,8 @@ else
 cp -r ./tmp/grafana.ini /etc/grafana/grafana.ini.iotree
 fi
 
-# building files acl, hashing, passwd
+# building files acl, passwd
 touch /etc/iotree/.acl
-touch /etc/iotree/.hashing
 touch /etc/iotree/.passwd
 echo 'user mqttodb' >>/etc/iotree/.acl
 echo 'topic read gateways/#' >>/etc/iotree/.acl
@@ -213,7 +208,6 @@ echo 'topic read gateways/#' >>/etc/iotree/.acl
 # secure files
 chmod -R 744 /etc/iotree/config.json
 chmod -R 766 /etc/iotree/.acl
-chmod -R 766 /etc/iotree/.hashing
 chmod -R 766 /etc/iotree/.passwd
 chown -R $myvariable:$myvariable /home/$myvariable/dj_iot
 chown -R $myvariable:$myvariable /home/$myvariable/iot42
