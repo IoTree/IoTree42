@@ -30,6 +30,21 @@ please define all necessary parameter in the script such as:
 - Gpio of one wire connection
 - type of DHT (22/11)
 
+## weather example
+### RPI 2 - 4 /zero
+#### this code will do:
+1. connect openweather.org
+2. get json form api
+3. sends velues to the server where it can be displayd in grafana e.g
+
+Install python Module "requests". "paho.mqtt" and "json".
+This script is ment to be run on the gateway it self, but you can change it.
+
+please define all necessary parameter in the script such as:
+- api_key
+- city
+- country
+
 ## Lux Sensorbase example
 ### Adafruit Feather m0 Wi-Fi with tsl2591
 #### this code will do:
