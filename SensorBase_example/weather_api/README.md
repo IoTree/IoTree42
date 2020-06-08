@@ -14,3 +14,7 @@ please define all necessary parameter in the script such as:
 - api_key
 - city
 - country
+
+
+NOTE: the json file can be imported to grafana as an template dashboard.
+You might have to change the database query to fit you def. topic
