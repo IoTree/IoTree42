@@ -5,7 +5,13 @@ DOMAIN=$1
 
 #define the template.
 cat << EOF
-port 8883
+per_listener_settings true
+
+listener 1883 localhost
+
+allow_anonymous false
+
+listener 8883
 
 cafile /etc/ssl/certs/DST_Root_CA_X3.pem
 
@@ -22,5 +28,4 @@ acl_file /etc/iotree/.acl
 
 pid_file /etc/mosquitto/tmppid
 
-listener 1883 0.0.0.0
 EOF
