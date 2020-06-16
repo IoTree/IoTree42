@@ -56,6 +56,8 @@ Install with sudo bash setup.sh.
 For a complete setup, this includes an SSL certificate setup provided by Let's encrypt and Nginx as web server.
 Please check after instalation if Gateway ZIP file has a PEM included.
 Also check if DNS in /etc/iotree/config.json is OK.
+If you plan to use own certs, Jan-Piet Mens CA generator would be a good start. -> https://github.com/owntracks/tools/tree/master/TLS 
+The script is also included in the IoTree folder...
 #### NOTE: please setup the certs befor running setup.sh using certbot!
 ```
 sudo bash setup.sh --letsencrypt --nginx
