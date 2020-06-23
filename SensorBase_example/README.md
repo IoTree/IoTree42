@@ -88,7 +88,7 @@ please define all necessary parameter in the script such as:
 2. get current active power and the Power over the day
 3. sends velues to the server where it can be displayd in grafana e.g
 
-Install python Module "socket", "paho.mqtt", "ModbusClient" and "json".
+Install python Module "socket", "paho.mqtt", "pymodbus" and "json".
 This script is ment to be run on the gateway it self, but you can change it.
 
 please define all necessary parameter in the script such as:
