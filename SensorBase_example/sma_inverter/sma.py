@@ -28,12 +28,10 @@ sma_modbus_port = 502               # enter the port of the modbus tcp normaly 5
 
 
 def get_w_sma():
-    client_sma = ModbusClient(sma_inverter_ip, port=sma_modbus_port)
     rr = client_sma.read_holding_registers(30775, 10, unit=3)
     return rr
 
 def get_w_sma_day():
-    client_sma = ModbusClient(sma_inverter_ip, port=sma_modbus_port)
     rr = client_sma.read_holding_registers(30517, 4, unit=3)
     return rr.registers[3]
 
@@ -72,11 +70,13 @@ payload={}
 
 while True:
     client.loop_start()
+    client_sma = ModbusClient(sma_inverter_ip, port=sma_modbus_port)
     time.sleep(1)
     sma_watt_all = get_w_sma()
     sma_watt_sum = sma_watt_all.registers[1]
     sma_watth_day = get_w_sma_day()
     now = int(time.time())
+    client_sma.close()
     payload['Time'] = now
     payload['SMA_Watt_sum'] = sma_watt_sum
     payload['SMA_Watth_day'] = sma_watth_day
