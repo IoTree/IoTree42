@@ -28,10 +28,12 @@ sma_modbus_port = 502               # enter the port of the modbus tcp normaly 5
 
 
 def get_w_sma():
+    client_sma = ModbusClient(sma_inverter_ip, port=sma_modbus_port)
     rr = client_sma.read_holding_registers(30775, 10, unit=3)
     return rr
 
 def get_w_sma_day():
+    client_sma = ModbusClient(sma_inverter_ip, port=sma_modbus_port)
     rr = client_sma.read_holding_registers(30517, 4, unit=3)
     return rr.registers[3]
 
@@ -64,7 +66,6 @@ client.on_disconnect = on_disconnect
 client.on_message = on_message
 print("Connecting to broker2 ", hostname)
 client.connect(hostname, 1883)
-client_sma = ModbusClient(sma_inverter_ip, port=sma_modbus_port)
 print('Starting measurement and sending')
 print('measurement_interval: '+str(measurement_interval))
 payload={}
