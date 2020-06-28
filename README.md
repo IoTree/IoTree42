@@ -175,6 +175,10 @@ It is recommended to do everything on an Nginx server.
 You may also want to install a firewall like ufw for security.
 and if you have a DNS name, lets encrypt would be a good choice.
 
+
+## Testing of Server performance
+Under the order "testing" is a python script which puts a stress test on the server.
+
 ## Rest API
 ### some API examples are found here:
 for [python](https://github.com/IoTree/IoTree42/tree/master/API_examples)
