@@ -96,8 +96,6 @@ def log_worker():
                 print("no json")
 
 ###setup for influxdb connection###
-username_flux = config['MQTTOFLUX_USER']
-password_flux = config['MQTTOFLUX_PW']
 host_flux=config['FLUX_ADRESS']
 port_flux=int(config['FLUX_PORT'])
 adress_flux = "http://"+host_flux+":"+str(port_flux)+"/write"
