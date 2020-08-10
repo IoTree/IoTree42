@@ -22,7 +22,8 @@ from django.core.validators import RegexValidator
 import datetime
 
 
-isalphavalidator = RegexValidator(r'^[\w]*$', message='name must be alphanumeric', code='Invalid name')
+
+isalphavalidator = RegexValidator(r'^[0-9a-zA-Z]*$', message='name must be alphanumeric', code='Invalid name')
 # class for checking if mail already exists
 class UniqueEmailForm:
     def clean_email(self):
