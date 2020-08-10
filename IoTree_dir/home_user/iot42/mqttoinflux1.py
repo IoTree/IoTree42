@@ -81,12 +81,22 @@ def log_worker():
                 data3 = []
                 if "timestamp" in payload_user:   ### checking for timestamp in msg to use it as the db timestamp ###
                     for n in payload_user:
-                        data3.append(n+'="{}"'.format(str(payload_user[n])))
+                        if isinstance(payload_user[n], int):
+                            data3.append(n+'={}'.format(str(payload_user[n])))
+                        elif isinstance(payload_user[n], float):
+                            data3.append(n+'={}'.format(str(payload_user[n])))
+                        else:
+                            data3.append(n+'="{}"'.format(str(payload_user[n])))
                     data3 = ','.join(data3)
                     data4 = data2+" "+data3+" "+str(int(payload_user["timestamp"]*1000000000)) ## nano sec ##
                 else:
                     for n in payload_user:
-                        data3.append(n+'="{}"'.format(str(payload_user[n])))
+                        if isinstance(payload_user[n], int):
+                            data3.append(n+'={}'.format(str(payload_user[n])))
+                        elif isinstance(payload_user[n], float):
+                            data3.append(n+'={}'.format(str(payload_user[n])))
+                        else:
+                            data3.append(n+'="{}"'.format(str(payload_user[n])))
                     data3 = ','.join(data3)
                     data4 = data2+" "+data3
 #                print(data4)
