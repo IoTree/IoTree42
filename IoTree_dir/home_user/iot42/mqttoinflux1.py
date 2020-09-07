@@ -30,7 +30,7 @@ port = 1883                             ## The adress must match the on in the s
 username = config["MQTTUSER"]
 password = config["MQTTPASS"]
 q=multiprocessing.Queue()
-set_threads = 12
+set_threads = 4   ### adapt to hardware
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
