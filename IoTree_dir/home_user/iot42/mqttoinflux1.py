@@ -13,14 +13,11 @@
 
 
 import paho.mqtt.client as paho
-import datetime
 import json
 import time
 import re
-import os
 import requests
-import threading
-from queue import Queue
+import multiprocessing
 
 with open('/etc/iotree/config.json', encoding='utf-8') as config_file:
    config = json.load(config_file)
@@ -32,76 +29,43 @@ broker = "0.0.0.0"                      ## Here you can define the adress of
 port = 1883                             ## The adress must match the on in the ssl key.
 username = config["MQTTUSER"]
 password = config["MQTTPASS"]
-q=Queue()
-set_threads = 3
-
-### mking two lists out of topic sting for later save in db and chacking stings ###
-def buildtree(topic):
-    topics = topic.split('/')
-    suptopics = topics[2:]
-    ## change or deleting all non alnum $$ _ && - characters for later simplification
-    suptopicss = [w.replace('_', '') for w in suptopics]
-    suptopicsss = []
-    for w in suptopicss:
-        suptopicsss.append(re.sub('[^0-9^a-z^A-Z]',"", w))
-    return topics, suptopicsss
+q=multiprocessing.Queue()
+set_threads = 12
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
-    client.subscribe(mqttbase2)
+    client.subscribe(mqttbase2, qos=0)
 
 def on_message(client,userdata, msg):
-    topic=msg.topic
     m_decode=str(msg.payload.decode("utf-8","ignore"))
-    message_handler(client,m_decode,topic)
-
-##put messages on queue ###
-def message_handler(client,msg,topic):
-    data=dict()
-    tnow=time.localtime(time.time())
-    m=time.asctime(tnow)+" "+topic+" "+msg
-    data["time"]=tnow
-    data["topic"]=topic
-    data["message"]=msg
+    data={}
+    data["topic"]=msg.topic
+    data["message"]=m_decode
     q.put(data) #put messages on queue
 
+
 ## main programm part for saving messages on queue to db ###
-def log_worker():
+def log_worker(q):
     while Log_worker_flag:
         while not q.empty():
             results = q.get()
             if results is None:
                 continue
             try:
-                tree, suptree=buildtree(results["topic"])
-                fluxtopic = '/'.join(map(str, suptree))
-                tags = {"tag":fluxtopic}
+                tree = re.sub('[^0-9^a-z^A-Z/]','', results["topic"]).split('/', 2)[1:]
                 payload_user = json.loads(results["message"])
-                data2 = fluxtopic+",tag="+fluxtopic
-                data3 = []
+                data = []
+                data.extend([tree[1], ',tag=', tree[1], ' '])
+                for n in payload_user:
+                    if isinstance(payload_user[n], (int, float)):
+                        data.extend([n,'=',payload_user[n], ','])
+                    else:
+                        data.extend([n, '=', '"{}"'.format(payload_user[n]), ','])
+                del data[-1]
                 if "timestamp" in payload_user:   ### checking for timestamp in msg to use it as the db timestamp ###
-                    for n in payload_user:
-                        if isinstance(payload_user[n], int):
-                            data3.append(n+'={}'.format(str(payload_user[n])))
-                        elif isinstance(payload_user[n], float):
-                            data3.append(n+'={}'.format(str(payload_user[n])))
-                        else:
-                            data3.append(n+'="{}"'.format(str(payload_user[n])))
-                    data3 = ','.join(data3)
-                    data4 = data2+" "+data3+" "+str(int(payload_user["timestamp"]*1000000000)) ## nano sec ##
-                else:
-                    for n in payload_user:
-                        if isinstance(payload_user[n], int):
-                            data3.append(n+'={}'.format(str(payload_user[n])))
-                        elif isinstance(payload_user[n], float):
-                            data3.append(n+'={}'.format(str(payload_user[n])))
-                        else:
-                            data3.append(n+'="{}"'.format(str(payload_user[n])))
-                    data3 = ','.join(data3)
-                    data4 = data2+" "+data3
-#                print(data4)
-                params_user = params + (('db', str(tree[1])),)
-                rr = requests.post(adress_flux, params=params_user, data=data4)
+                    data.extend([' ', int(payload_user["timestamp"]*1000000000)]) ## nano sec ##
+                params_user = params + (('db', tree[0]),)
+                rr = requests.post(adress_flux, params=params_user, data=''.join(map(str, data)))
             except Exception:
                 print("no json")
 
@@ -114,11 +78,11 @@ params = (
     ('u', config['MQTTOFLUX_USER']),)
 
 
-### setup for threading ### 
+### setup for threading ###
 Log_worker_flag=True
 threads = []
 for i in range(set_threads):
-    t = threading.Thread(target=log_worker) #start logger
+    t = multiprocessing.Process(target=log_worker,args=(q,)) #start logger
     threads.append(t)
     t.start() #start logging thread
 
@@ -133,4 +97,3 @@ print("Connecting to broker ", broker)
 client.connect(broker,port)
 
 client.loop_forever()
-
