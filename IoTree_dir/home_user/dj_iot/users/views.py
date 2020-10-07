@@ -16,6 +16,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from .forms import UserUpdateForm, ProfileUpdateForm, UserRegisterForm, TreePostForm
 from django.core.paginator import Paginator
 from .mqttcon import InitMqttClient, DelMqttClient
@@ -34,6 +35,7 @@ import json
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from revproxy.views import ProxyView
 import datetime
 
 
@@ -212,6 +214,15 @@ def manual(request):
 @login_required
 def tografana(request):
     return redirect(config['GRAFA_ADDRESS'])
+
+# methode for reverse proxy to grafana with auto login and user validation
+@method_decorator(login_required, name='dispatch')
+class GrafanaProxyView(ProxyView):
+    upstream = 'http://localhost:3000/'
+    def get_proxy_request_headers(self, request):
+        headers = super(GrafanaProxyView, self).get_proxy_request_headers(request)
+        headers['X-WEBAUTH-USER'] = request.user.username
+        return headers
 
 
 # func. for the iotree_show site, for displaying tables
