@@ -29,6 +29,7 @@ urlpatterns = [
     path('setup_rpi/', user_views.setup_rpi, name='setup-rpi'),
     path('manual/', user_views.manual, name='manual'),
     path('tografana/', user_views.tografana, name='tografana'),
+    re_path(r'^grafana/(?P<path>.*)$', user_views.GrafanaProxyView.as_view(), name='grafanaproxyview'),
     path('iotree_show/<str:tags>/<slug:time_start>/<slug:time_end>/', user_views.iotree_show, name='iotree-show'),
     path('iotree_download/<str:tags>/<slug:time_start>/<slug:time_end>/', user_views.iotree_download, name='iotree-download'),
     path('iotree_api/', user_views.iotree_api, name='iotree-api'),
