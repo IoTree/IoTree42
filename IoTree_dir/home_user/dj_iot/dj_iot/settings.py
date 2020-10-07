@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'captcha',
+    'revproxy',
 ]
 
 REST_FRAMEWORK = {
