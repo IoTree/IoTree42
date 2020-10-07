@@ -41,6 +41,8 @@ echo "ENTER PASSWORD FOR THIS EMAIL, for sending the password reset url. !HIDDEN
 read -s sendingpass
 echo "ENTER ADMINMAIL, for resiving notivications form server. You can leave it empty"
 read adminmail
+echo "ENTER ip, empty will try to read it form system"
+read enteredip
 if [ "$ssl" = true ]; then
 echo "ENTER domain name, for using https it's nessery to use correct domain name instad of IP"
 read domain
@@ -70,14 +72,19 @@ arch2=${arch:0:3}
 echo $arch
 if [ "$arch2" = "arm" ]; then
 echo "architecture: $arch"
-wget https://dl.grafana.com/oss/release/grafana_6.6.2_armhf.deb
+wget https://dl.grafana.com/oss/release/grafana_7.2.0_armhf.deb
 PATH=$PATH:/sbin
-dpkg -i grafana_6.6.2_armhf.deb
+dpkg -i grafana_7.2.0_armhf.deb
 elif [ "$arch2" = "amd" ]; then
 echo "architecture: $arch"
-wget https://dl.grafana.com/oss/release/grafana_6.6.2_amd64.deb
+wget https://dl.grafana.com/oss/release/grafana_7.2.0_amd64.deb
 PATH=$PATH:/sbin
-dpkg -i grafana_6.6.2_amd64.deb
+dpkg -i grafana_7.2.0_amd64.deb
+elif [ "$arch2" = "x86" ]; then
+echo "architecture: $arch"
+wget https://dl.grafana.com/oss/release/grafana_7.2.0_amd64.deb
+PATH=$PATH:/sbin
+dpkg -i grafana_7.2.0_amd64.deb
 else
 echo "ERROR: invalid architecture '$arch' for Grafana"
 echo "Exit setup.sh please delete folder:"
@@ -112,6 +119,11 @@ fi
 if [ -z "$domain" ]
 then
     domain=$hostname
+fi
+fi
+if [ -z "$enteredip" ]
+then
+    serverip=$enteredip
 fi
 
 #generate pw for influx: admin, fluxcondj, mqttodb,
