@@ -17,3 +17,4 @@ pymongo
 django-simple-captcha
 influxdb
 gunicorn
+django-revproxy
