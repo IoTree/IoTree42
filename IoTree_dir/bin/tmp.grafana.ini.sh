@@ -429,12 +429,12 @@ allow_sign_up = false
 
 #################################### Auth Proxy ##########################
 [auth.proxy]
-enabled = false
+enabled = true
 header_name = X-WEBAUTH-USER
 header_property = username
-auto_sign_up = true
-sync_ttl = 60
-whitelist = 127.0.0.1
+auto_sign_up = false
+;sync_ttl = 60
+;whitelist = 127.0.0.1
 ;headers = Email:X-User-Email, Name:X-User-Name
 # Read the auth proxy docs for details on what the setting below enables
 ;enable_login_token = false
