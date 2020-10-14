@@ -199,9 +199,9 @@ cp /etc/influxdb/influxdb.conf /etc/influxdb/influxdb.conf.iotree_save
 cp -r ./tmp/influxdb.conf /etc/influxdb/influxdb.conf
 cp -r ./tmp/config.json /etc/iotree
 cp -r ./tmp/reload3.sh /etc/iotree
+if [ "$nginx" = true ]; then
 cp -r ./tmp/gunicorn.service /etc/systemd/system
 cp -r ./tmp/gunicorn.socket /etc/systemd/system
-if [ "$nginx" = true ]; then
 cp -r ./tmp/nginx-ssl.conf /etc/nginx/sites-available/nginx-ssl.conf
 cp -r ./tmp/nginx-nossl.conf /etc/nginx/sites-available/nginx-nossl.conf
 cp /etc/grafana/grafana.ini /etc/grafana/grafana.ini.iotree_save
@@ -236,9 +236,9 @@ curl "http://localhost:8086/query" --data-urlencode "q=CREATE USER admin WITH PA
 
 
 # start services:
-systemctl daemon-reload
-systemctl enable grafana-server
-systemctl restart grafana-server
+sudo /bin/systemctl daemon-reload
+sudo /bin/systemctl enable grafana-server
+sudo /bin/systemctl restart grafana-server
 systemctl restart influxdb
 if [ "$nginx" = true ]; then
 systemctl start gunicorn
