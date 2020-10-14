@@ -11,7 +11,7 @@ if [ "$x" = "--letsencrypt" ]; then
 fi
 if [ "$x" = "--nginx" ]; then
   nginx=true
-
+fi
 if [ "$y" = "--letsencrypt" ]; then
   ssl=true
 fi
