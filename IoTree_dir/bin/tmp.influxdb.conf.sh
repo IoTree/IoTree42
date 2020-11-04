@@ -174,7 +174,7 @@ reporting-enabled = false
   https-certificate = "/etc/ssl/influxdb.pem"
   ### Use a separate private key location.
   # https-private-key = ""
-  max-row-limit = 10000
+  #max-row-limit = 10000
   realm = "InfluxDB"
 
 ###
