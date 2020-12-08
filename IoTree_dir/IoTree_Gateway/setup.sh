@@ -32,6 +32,8 @@ else
 NEW_UUID=$GatewayID
 fi
 
+cp /etc/mosquitto/mosquitto.conf /etc/mosquitto/mosquitto.conf.iotree_save
+
 echo 'port 1883' >>./mosquitto.conf
 string="connection ${Username}"
 echo ${string} >>./mosquitto.conf
@@ -49,7 +51,5 @@ echo ${string} >>./mosquitto.conf
 
 chmod -R 644 ./mosquitto.conf
 
-
-cp /etc/mosquitto/mosquitto.conf /etc/mosquitto/mosquitto.conf.iotree_save
 cp -r ./mosquitto.conf /etc/mosquitto/mosquitto.conf
 cp -r ./DST_Root_CA_X3.pem /etc/mosquitto/certs/DST_Root_CA_X3.pem
