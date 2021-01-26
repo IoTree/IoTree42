@@ -26,7 +26,7 @@ echo "<<<--             Gateway-ID          -->>>"
 echo "DEFINE a Gateway-ID:"
 read GatewayID
 
-if [ -z "$GatewayID" ]
+if [ -z "$GatewayID" ]; then
 NEW_UUID=$(cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 16 | head -n 1)
 else
 NEW_UUID=$GatewayID
