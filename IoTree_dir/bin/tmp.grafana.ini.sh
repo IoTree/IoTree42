@@ -285,10 +285,10 @@ allow_sign_up = false
 ;token_rotation_interval_minutes = 10
 
 # Set to true to disable (hide) the login form, useful if you use OAuth, defaults to false
-;disable_login_form = false
+disable_login_form = true
 
 # Set to true to disable the signout link in the side menu. useful if you use auth.proxy, defaults to false
-;disable_signout_menu = false
+disable_signout_menu = true
 
 # URL to redirect the user to after sign out
 ;signout_redirect_url =
