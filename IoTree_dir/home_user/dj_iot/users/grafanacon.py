@@ -88,9 +88,9 @@ class InitGrafaUser:
         payload += '", "password":"'
         payload += self.pword
         payload += '", "basicAuth": true, "basicAuthUser": "'
-        payload += str(config['FLUX_USER'])
+        payload += self.user
         payload += '", "secureJsonData": {"basicAuthPassword": "'
-        payload += str(config['FLUX_PW'])
+        payload += self.pword
         payload += '"}, "jsonData":{"httpMode": "GET"}'
         payload += ', "isDefault":true}'
         headers = {'content-type': 'application/json'}
