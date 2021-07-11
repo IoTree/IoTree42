@@ -18,3 +18,4 @@ django-simple-captcha
 influxdb
 gunicorn
 django-revproxy
+django-oauth-toolkit
