@@ -19,3 +19,4 @@ influxdb
 gunicorn
 django-revproxy
 django-oauth-toolkit
+django-cors-middleware
