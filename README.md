@@ -91,10 +91,10 @@ Then you can do your queries:
   }.
   
 #### example of a POST can look like this:
-  {"tree": {"gateway1/gatewayself/cputemp"}, "time_start":"0", "time_end":"1559187967000"}
+  {"tree": "gateway1/gatewayself/cputemp", "time_start":"0", "time_end":"1559187967000"}
   
 #### Or like this:
-  {"tree": {"gateway1/gatewayself/cputemp", "LUXSensor/tls2591"}, "time_start":"1559187967000", "time_end": "now"}
+  {"tree": "gateway1/gatewayself/cputemp,LUXSensor/tls2591", "time_start":"1559187967000", "time_end": "now"}
   
 As you can see in the second example, the field "time_end" is set to "now". This means that the server take the current UTC +- 0 time.
 
