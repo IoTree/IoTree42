@@ -1,0 +1,27 @@
+{% extends "iotdata/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="content-section">
+<br>
+<legend class="border-bottom mb-4">Manage Your Gateway(s)</legend>
+        <table class="table table-striped">
+            <tbody>
+                {% for post in context reversed %}
+                <tr>
+                <th><font color="fbfbfb">{{post.id}}</font></th>
+                <th><font color="{{post.color}}">{{post.status}}</font></th>
+                <th><form action="{% url 'input' post.id 'jsonfile' %}" method="get"><input class="btn btn-outline-info btn-block"  value="Synced Json File" type="submit"></form></th>
+                <th><form action="{% url 'input' post.id 'linkgateway' %}" method="get"><input class="btn btn-outline-info btn-block"  value="Link Gateway to..." type="submit"></form></th>
+                <th><form action="{% url 'input' post.id 'commandsend' %}" method="get"><input class="btn btn-outline-info btn-block"  value="Send Command" type="submit"></form></th>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    <div class="border-top pt-3">
+        <small class="text-muted">
+            Problems? Look here: <a class="ml-2" href="{% url 'manual' %}">Manual</a>
+        </small>
+    </div>
+</div>
+
+{% endblock content %}

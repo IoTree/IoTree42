@@ -1,0 +1,6 @@
+{% extends "iotdata/base_dash.html" %}
+{% block content %}
+    <div style="width:100%; height: calc(100% - 55px); background-color:#0b0c0e; position:absolute;top:55px">
+<iframe  src="{% url 'iframedash' %}"  style=" height:100%; width:100%; border: none"></iframe>
+</div>
+{% endblock content %}
