@@ -35,15 +35,14 @@ Be sure your Raspberry Pi is up to date and secure with a proper password!
 You must define the IP and the port of the gateway on your sensors and actuators as the broker, for the sensors/actuators to work
 
 ### Important rules for the PAYLOAD:
-  -	It must be in proper JSON-format. If not so it won’t be stored.
-  -	Timestamps must be in UNIX-Format. Also the field key needs to be “Time”. This is necessary for the server to recognise this field as a timestamp.
+  -	It must be in proper JSON-format. -> If not it will not be recognized from grafana.
+  -	Timestamps must be in UNIX-Format. Also the field key needs to be called "timestamp". <- This is necessary for the server to recognise this field as a timestamp.
   -	You should use global time UTC +-0.
-  -	Don’t use nested objects or Arrays!!!
-  -	Do not send multiple JSON strings at once. Send them individually.
-  -	Max time increment is 1 millisecond.
+  -	You can send an array of JSON objects
+  -	Max time increment is nanosecond.
   -	Send measurement values as integer not as string.
   
-Example payload: {“sensor”: ”tsl2591”, “lux”: 2314, “time”: 1561373832.000}
+Example payload: {“sensor”: ”tsl2591”, “lux”: 2314, “timestamp”: 1561373832.000023}
 
 ### Important rules for the TOPIC:
   -	For simplicity only alphanumeric is allowed. If not, wrong characters will be deleted.
