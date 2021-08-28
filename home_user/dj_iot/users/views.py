@@ -418,7 +418,12 @@ def iotree_api(request):
             return Response({"status":404,"Info":"Something went wrong when the query", "Hint":"Max rows 200000!"})
     else:
         flux_client = FluxDataCon(request.user.username)
-        context = flux_client.get_tag_tree()
+        iotree = flux_client.get_tag_tree()
+        leafs = flux_client.get_leafs()
+        context = {
+            "listofleafs": leafs,
+            "iotree": json.loads(iotree)
+            }
         del flux_client
         if str(context) == "false":
             context = {"error":"false"}

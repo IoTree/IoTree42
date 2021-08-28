@@ -102,6 +102,20 @@ class FluxDataCon:
         else:
             return False
 
+    def _get_leafs_(self):
+        tulpe = ('q', 'show tag values with key = "{}"'.format(self.tag))
+        params = self.params + (tulpe,)
+        response = requests.get(self.fluxurl, params=params)
+        r = json.loads(response.text)
+        leaflist  = []
+        try:
+            for n in r["results"][0]["series"]:
+                for m in  n["values"]:
+                    leaflist.append(m[1])
+            return leaflist
+        except:
+            return leaflist
+
     def _get_tags_(self):
         tulpe = ('q', 'show tag values with key = "{}"'.format(self.tag))
         params = self.params + (tulpe,)
@@ -242,3 +256,7 @@ class FluxDataCon:
     def get_raw_tags(self, giventags):
         tags = self._get_tags_raw_(giventags)
         return tags
+
+    def get_leafs(self):
+        leafs= self._get_leafs_()
+        return leafs
