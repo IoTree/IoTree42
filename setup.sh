@@ -270,6 +270,17 @@ rm -r /etc/nginx/sites-enabled/default
 systemctl restart nginx
 fi
 
+
+# premisisons and so on.
+chmod -R 744 /etc/iotree/config.json
+chmod -R 766 /etc/iotree/.acl
+chmod -R 766 /etc/iotree/.passwd
+chown -R $myvariable:$myvariable /home/$myvariable/dj_iot
+chown -R $myvariable:$myvariable /home/$myvariable/iot42
+chmod -R 765 /home/$myvariable/dj_iot
+chmod 766 /home/$myvariable/dj_iot/db.sqlite3
+sed -i "1s/.*/user '$myvariable';/" /etc/nginx/nginx.conf
+
 # making grafana user: admin
 sleep 10
 grafana-cli admin reset-admin-password $grafadmin
@@ -291,19 +302,9 @@ python3 /home/$myvariable/dj_iot/manage.py collectstatic
 deactivate
 
 
-# premisisons and so on.
-chmod -R 744 /etc/iotree/config.json
-chmod -R 766 /etc/iotree/.acl
-chmod -R 766 /etc/iotree/.passwd
-chown -R $myvariable:$myvariable /home/$myvariable/dj_iot
-chown -R $myvariable:$myvariable /home/$myvariable/iot42
-chmod -R 765 /home/$myvariable/dj_iot
-chmod 766 /home/$myvariable/dj_iot/db.sqlite3
-sed -i "1s/.*/user '$myvariable';/" /etc/nginx/nginx.conf
-
 
 #bugfix for django-revproxy plugin
-bash ./bugfix_revproxy.sh '$myvariable'
+bash ./bugfix_revproxy.sh $myvariable
 
 if [ "$nginx" = true ]; then
   systemctl restart nginx
@@ -322,11 +323,16 @@ else
   echo "mosquitto		1883"
 fi
 echo " "
-echo "$fluxadmin"
 echo "--> Setup complete <--"
 echo "--> You might want to check the config.json:"
 echo "--> nano /etc/iotree/config.json"
 echo "--> You can delete the folder IoTree42"
+echo " "
+if [ "$full" = true ]; then
+  echo "--> The server can be reached at: https://$domain/"
+else
+  echo "--> The server can be reached at: http://$serverip/"
+fi
 cd ..
 
 exit
