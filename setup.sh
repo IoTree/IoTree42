@@ -15,12 +15,18 @@ if [ "$x" = "--full" ]; then
 elif [ "$x" = "--raspberry" ]; then
   local=true
 else
-echo "no option set! Help for: sudo bash setup.sh [1. argument] [2. argument]"
-echo "1. argument:"
-echo "--full		full installation including https support and nginx"
-echo "--raspberry	for a local installation e.g. on a Raspberry no SSL and other security settings are enabled, nginx is included."
-echo "2. argument:"
-echo "--nonginx		Nginx Webeserver and the Python WSGI HTTP Server gunicorn are NOT installed (not recommended)."
+echo "No option set!"
+echo "<<<-----      IoTree42 Help      --->>>"
+echo " "
+echo "sudo bash setup.sh [1. argument] [2. argument]"
+echo " "
+echo "[1. argument]:"
+echo "	--full		full installation including https support and nginx"
+echo "	--raspberry	for a local installation e.g. on a Raspberry no SSL"
+echo "			and other security settings are enabled, nginx is included."
+echo "[2. argument]:"
+echo "	--nonginx	Nginx Webeserver and the Python WSGI HTTP Server"
+echo "			gunicorn are NOT installed (not recommended)."
 exit
 fi
 
@@ -40,7 +46,7 @@ echo "<<<-----     SETUP OF IoTree42      --->>>"
 echo "<<<-----      Version v0.4.1        --->>>"
 echo "ENTER LINUX USERNAME FOR BUIDING PATHS"
 read myvariable
-echo "ENTER AN ADMIN PASSWORD !HIDDEN INPUT!"
+echo "SET DJANGO ADMIN PASSWORD !HIDDEN INPUT!"
 read -s djangopass
 #echo "<<<--          SETUP DJANGO          -->>>"
 #echo "ENTER AN EMAIL, for sending the password reset url. You can leave it empty"
@@ -226,15 +232,6 @@ touch /etc/iotree/.passwd
 echo 'user mqttodb' >>/etc/iotree/.acl
 echo 'topic read gateways/#' >>/etc/iotree/.acl
 
-# secure files
-chmod -R 744 /etc/iotree/config.json
-chmod -R 766 /etc/iotree/.acl
-chmod -R 766 /etc/iotree/.passwd
-chown -R $myvariable:$myvariable /home/$myvariable/dj_iot
-chown -R $myvariable:$myvariable /home/$myvariable/iot42
-chmod -R 765 /home/$myvariable/dj_iot
-chmod 766 /home/$myvariable/dj_iot/db.sqlite3
-
 
 # setup mosquitto broker user
 mosquitto_passwd -b /etc/iotree/.passwd mqttodb $mqttpass
@@ -294,14 +291,25 @@ python3 /home/$myvariable/dj_iot/manage.py collectstatic
 deactivate
 
 
+# premisisons and so on.
+chmod -R 744 /etc/iotree/config.json
+chmod -R 766 /etc/iotree/.acl
+chmod -R 766 /etc/iotree/.passwd
+chown -R $myvariable:$myvariable /home/$myvariable/dj_iot
+chown -R $myvariable:$myvariable /home/$myvariable/iot42
+chmod -R 765 /home/$myvariable/dj_iot
+chmod 766 /home/$myvariable/dj_iot/db.sqlite3
+sed -i "1s/.*/user '$myvariable';/" /etc/nginx/nginx.conf
+
+
+#bugfix for django-revproxy plugin
+bash ./bugfix_revproxy.sh '$myvariable'
+
 if [ "$nginx" = true ]; then
   systemctl restart nginx
   systemctl restart gunicorn
 fi
 
-
-#bugfix for django-revproxy plugin
-./bugfix_revproxy.sh '$myvariable'
 
 
 echo "-Endpoints-		-port-"
