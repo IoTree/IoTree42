@@ -10,11 +10,11 @@ DJANGOKEY=$6
 HOSTIP=$7
 FLUXPW=$8
 MQTTOFLUXPW=$9
-FLUXDJANGOPW=$10
-GRAFAPW=$11
-GRAFAADD=$12
-HOSTNAME=$13
-MQTTPASSWORD=$14
+FLUXDJANGOPW=${10}
+GRAFAPW=${11}
+GRAFAADD=${12}
+HOSTNAME=${13}
+MQTTPASSWORD=${14}
 
 #define the template.
 cat << EOF
@@ -50,8 +50,6 @@ cat << EOF
 	"GRAFA_ADDRESS":"$GRAFAADD",
 
 	"MQTT_ACL_PATH":"/etc/iotree/.acl",
-	"MQTT_PASS_PATH":"/etc/iotree/.passwd",
-	"MQTT_HASH_PATH":"/etc/iotree/.hashing",
-	"MQTT_PASSWD_PATH": "/.passwd"
+	"MQTT_PASS_PATH":"/etc/iotree/.passwd"
 }
 EOF

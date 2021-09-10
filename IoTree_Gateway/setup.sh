@@ -17,17 +17,17 @@ echo "<<<-----      Broker IP/Hostname     --->>>"
 echo "ENTER MQTT-Broker IP or Hostname"
 read Hostname
 echo "<<<-----         Broker Port         --->>>"
-echo "ENTER MQTT-Broker Port general 1883 or 8883 for TLS"
+echo "ENTER MQTT-Broker Port. In general 1883 or 8883 for TLS"
 read Port
 echo "<<<--          MQTT-Password          -->>>"
-echo "ENTER your MQTT-Password given to you when registering. !HIDDEN INPUT!"
+echo "ENTER your MQTT-Password same as on the Web-Site. !HIDDEN INPUT!"
 read -s Password
 echo "<<<--             Gateway-ID          -->>>"
 echo "DEFINE a Gateway-ID (only alphanumeric!):"
 read GatewayID
 if [ -n "$(tr -d '[:alnum:]' <<<$GatewayID)" ]
 then
-    echo "invalid ONLY alohanumeric! Please try again."
+    echo "Invalid input ONLY alphanumeric! Please try again."
     exit 1
 else
     echo valid
@@ -150,6 +150,7 @@ sleep 1
 sudo systemctl restart mosquitto
 sleep 1
 
-echo "Everything is setup please check if heartbeat can be seen from the server side."
-echo "If necessary check with 'sudo systemctl status mosquitto' if Broker is running properly."
+echo "Everything is setup please check if heartbeat can be seen on the Iotree42 Platform."
+echo "If necessary check with 'sudo systemctl status mosquitto' if Broker isn't running properly."
+echo "And Please:"
 echo "<<<<      PLEASE REBOOT!      >>>>"

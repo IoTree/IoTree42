@@ -15,13 +15,11 @@ The sensor bases to which the sensor is connected send the respectively measured
 The gateway itself can be a sensor base.
 Then the gateway sends the data (encrypted) to the server, where it is stored in a database.
 The data can be looked up on the website or via the rest API.
-On the server side there are basically Django, Moquitto Broker, a basic Python scrip that stores all incoming messages on the Mongo-dB. Additionally the connection between Gateway and Server can be TLS-encrypted.
+On the server side there are basically Django, Moquitto Broker, a basic Python scrip that stores all incoming messages on the InfluxdB. Additionally the connection between Gateway and Server can be TLS-encrypted.
 The Gateway can be any Device capable of running mosquitto Broker.
 
 
 ## How to use:
-How to use IoTree42 Platform when installed!
-
 ### Setup gateway.
 
 For this look at Setting up my RPi.
@@ -98,7 +96,7 @@ Then you can do your queries:
   
 As you can see in the second example, the field "time_end" is set to "now". This means that the server take the current UTC +- 0 time.
 
-## Installation:
+## IoTree42 Platform Installation:
 
 ### General:
 ##### Gateway:
@@ -125,42 +123,28 @@ download repository with git:
 ```
 git clone https://github.com/IoTree/IoTree42.git
 ```
-```
-cd IoTree42/IoTree_dir 
-```
-
-### setup.sh
-Install with sudo bash setup.sh.
-
-For a complete setup, this includes an SSL certificate setup provided by Let's encrypt and Nginx as web server.
-Please check after instalation if Gateway ZIP file has a PEM included.
-Also check if DNS in /etc/iotree/config.json is OK.
-If you plan to use own certs, Jan-Piet Mens CA generator would be a good start. -> https://github.com/owntracks/tools/tree/master/TLS 
-The script is also included in the IoTree folder...
-#### NOTE: please setup the certs befor running setup.sh using certbot!
-```
-sudo bash setup.sh --letsencrypt --nginx
-```
-Without ssl encryption but with nginx do (recommended):
-```
-sudo bash setup.sh --nginx
-```
-or:
-```
-sudo bash setup.sh
-```
-It is possible to add the encryption later for exaple with Openssl tutorials can be found [here](http://www.steves-internet-guide.com/mosquitto-tls/) and [here](https://mosquitto.org/man/mosquitto-tls-7.html).
-You have to change the IoTree_Gateway_V_1.0.zip so that it contains the required certificate (client) for the gateway.
 
 
-The installation can take a while...
+### Run Setup
+For a clean complete setup, this includes an SSL certificate setup signed by Let's encrypt Nginx, Influxb, Grafana, Django, Gunicorn.
+If you plan to use your own Certificate authorty, Jan-Piet Mens CA generator would be a good start. It is included in the repository.
+#### NOTE: please setup the certs befor running setup.sh.
+```
+cd IoTree42 && sudo bash setup.sh --server 
+```
+For local use only (no TLS) e.g. on an rasperry Pi:
+```
+cd IoTree42 && sudo bash setup.sh --local
+```
 
-You will be ask for the linux Username. This is needed to save all files in the right directory.
+You will be ask for the linux Username.
 
 Also you will be asked for an email, a password and an admin-mail.
-  The first e-mail and password are for the server to send password resets.
-  Not all email providers work, but Gmail usually works. More information can be found [here](https://www.dev2qa.com/how-do-i-enable-less-secure-apps-on-gmail/) and [here](https://support.google.com/a/answer/176600?hl=en).
-  The administrator email is for the user and server to send problems and information to you.
+  The first e-mail and password are for the server to send password resets. (you can leve it empty)
+  	Not all email providers work, but Gmail usually works. More information can be found [here](https://www.dev2qa.com/how-do-i-enable-less-secure-apps-on-gmail/) and [here](https://support.google.com/a/answer/176600?hl=en).
+  The administrator email is for the user and server to send problems and information to you (only works wenn email provider...).
+
+!Please take a coffee the installation might take a while...!
 
 ### set crontab jobs
 we need to set up a crontab job so user will be register on mosquitto broker.
@@ -172,7 +156,7 @@ At the end add this line.
 @reboot bash /etc/iotree/reload3.sh
 ```
 save and close it.
-
+.
 ### Installations of python modules and test.
 ```
 cd ~/iot42 
@@ -244,26 +228,37 @@ sudo systemctl restart gunicorn
 
 ## additional installations
 ### Gateway and server share the same hardware.
-install without let's encrypt..
-Then you can just download and install the gateway repository. Explant on the Setup Gateway page.
-If you also want to use SSL encryption, you must customize the gateway script mqttbgidge1.py to meet your needs.
-Look at mqttodb1.py as an example.
+*******
 
-### Deploy on a real server.
-It is recommended to do everything on an Nginx server.
+### In production
 You may also want to install a firewall like ufw for security.
-and if you have a DNS name, lets encrypt would be a good choice.
+And fail2ban as a starting point.
+NOTE: When installt with the arg. --server django is already setup for production.
 
 
 ## Testing of Server performance
-Under the order "testing" is a python script which puts a stress test on the server.
+**** Under the order "testing" is a python script which puts a stress test on the server. ***
+
+
+
 
 ## Rest API
 ### some API examples are found here:
-for [python](https://github.com/IoTree/IoTree42/tree/master/API_examples)
-for [R](https://github.com/IoTree/IoTree42/tree/master/API_examples)
+for [python](https://github.com/IoTree/IoTree42/tree/master/API_examples) 
+for [R](https://github.com/IoTree/IoTree42/tree/master/API_examples) (needs update)
+for [node-red](https://github.com/IoTree/IoTree42/tree/master/API_examples)
 
-## FAQs
+
+
+## Points of faliur after instalation
+Several thinks an be checkt if ....
+Please check after instalation if Gateway ZIP file has a PEM included.
+Also check if DNS in /etc/iotree/config.json is OK.
+It is recomentet to take furhter steps for serve securyty such as firewall ....
+
+
+
+## FAQ
 #### Is it possible to use only the Mqtt-broker?
   -	Yes, it is. The permission for your specific topic is set to read and write. 
   -	Just subscribe your topic (example: gateways/-your-mqtt-username-/...), with all the necessary

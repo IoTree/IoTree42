@@ -29,7 +29,7 @@ SECRET_KEY = config.get('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = [config.get('HOST_IP'), config.get('HOSTNAME')] # put the server ip or in config.json
+ALLOWED_HOSTS = [config.get('HOST_IP'), config.get('HOSTNAME'),"localhost"] # put the server ip or in config.json
 
 
 # Application definition
