@@ -316,7 +316,10 @@ def manual(request):
 # func. for redirect to a grafana iframe via modif.
 @login_required
 def tografana(request):
-    return render(request, 'users/dashboard.html')
+#    return render(request, 'users/dashboard.html')
+# somthing not wroking properly with iframe needs more investiagtion.
+# work around no iframe via redirect to grafana proxy address
+    return redirect(config['GRAFA_ADDRESS'])
 
 
 # modified page for render Grafana in iframe

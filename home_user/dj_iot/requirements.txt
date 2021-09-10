@@ -13,7 +13,6 @@ markdown
 django-filter
 django-ranged-response
 captcha
-pymongo
 django-simple-captcha
 influxdb
 gunicorn

@@ -300,6 +300,8 @@ if [ "$nginx" = true ]; then
 fi
 
 
+#bugfix for django-revproxy plugin
+./bugfix_revproxy.sh '$myvariable'
 
 
 echo "-Endpoints-		-port-"

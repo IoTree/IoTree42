@@ -53,7 +53,7 @@ domain = localhost
 root_url = %(protocol)s://%(domain)s:%(http_port)s/grafana
 
 # Serve Grafana from subpath specified in `root_url` setting. By default it is set to `false` for compatibility reasons.
-;serve_from_sub_path = false
+serve_from_sub_path = true
 
 # Log web requests
 ;router_logging = false
@@ -620,6 +620,17 @@ auto_sign_up = false
 # Url used to import dashboards directly from Grafana.com
 [grafana_com]
 ;url = https://grafana.com
+
+#################################### Grafana Live ##########################################
+[live]
+# max_connections to Grafana Live WebSocket endpoint per Grafana server instance. See Grafana Live docs
+# if you are planning to make it higher than default 100 since this can require some OS and infrastructure
+# tuning. 0 disables Live, -1 means unlimited connections.
+max_connections = 0
+
+# allowed_origins is a comma-separated list of origins that can establish connection with Grafana Live.
+# If not set then origin will be matched over root_url. Supports wildcard symbol "*".
+;allowed_origins =
 
 #################################### Distributed tracing ############
 [tracing.jaeger]

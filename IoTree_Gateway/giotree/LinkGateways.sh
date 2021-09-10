@@ -29,7 +29,9 @@ do
         echo ${string} >>/etc/mosquitto/mosquitto.conf
         string="remote_username ${Username}"
         echo ${string} >>/etc/mosquitto/mosquitto.conf
-        echo 'bridge_cafile /etc/mosquitto/certs/DST_Root_CA_X3.pem' >>/etc/mosquitto/mosquitto.conf
+        if [ "$Port" = "8883"]; then
+            echo 'bridge_cafile /etc/mosquitto/certs/DST_Root_CA_X3.pem' >>/etc/mosquitto/mosquitto.conf
+        fi
         string="remote_clientid ${GatewayID}"
         echo ${string} >>/etc/mosquitto/mosquitto.conf
         string="topic # both 2 sensorbase/ gateways/${Username}/${GatewayID}/"
@@ -51,12 +53,14 @@ do
                     string="connection ext${arline[0]}"
                     echo ${string} >>/etc/mosquitto/mosquitto.conf
                     echo 'cleansession false' >>/etc/mosquitto/mosquitto.conf
-                    echo 'address iot.beratende-ingenieure.it:8883' >>/etc/mosquitto/mosquitto.conf
+                    echo 'address ${Hostname}:${Port}' >>/etc/mosquitto/mosquitto.conf
                     string="remote_password ${Password}"
                     echo ${string} >>/etc/mosquitto/mosquitto.conf
                     string="remote_username ${Username}"
                     echo ${string} >>/etc/mosquitto/mosquitto.conf
-                    echo 'bridge_cafile /etc/mosquitto/certs/DST_Root_CA_X3.pem' >>/etc/mosquitto/mosquitto.conf
+                    if [ "$Port" = "8883"]; then
+                        echo 'bridge_cafile /etc/mosquitto/certs/DST_Root_CA_X3.pem' >>/etc/mosquitto/mosquitto.conf
+                    fi
                     string="remote_clientid ext${arline[0]}"
                     echo ${string} >>/etc/mosquitto/mosquitto.conf
                     string="topic ${arline[1]} in 2 gateway/${arline[0]}/ gateways/${Username}/${arline[0]}/"
