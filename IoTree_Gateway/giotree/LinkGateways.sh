@@ -6,7 +6,7 @@
 
 while true  # Keep an infinite loop to reconnect when connection lost/broker unavailable
 do
-    mosquitto_sub -h localhost -p 1883 -t 'sensorbase/SYSTEMcontrolDONOTSAVE/linkgateway' | while read -r payload
+    mosquitto_sub -h localhost -p 1883 -t 'universe/SYSTEMcontrolDONOTSAVE/linkgateway' | while read -r payload
     do
         #when incoming read cred. file
         Username=$(sed -n '1p' /etc/giotree/CredentialsFile.txt)
@@ -34,7 +34,7 @@ do
         fi
         string="remote_clientid ${GatewayID}"
         echo ${string} >>/etc/mosquitto/mosquitto.conf
-        string="topic # both 2 sensorbase/ gateways/${Username}/${GatewayID}/"
+        string="topic # both 2 universe/ gateways/${Username}/${GatewayID}/"
         echo ${string} >>/etc/mosquitto/mosquitto.conf
         echo >>/etc/mosquitto/mosquitto.conf
         # clean json
@@ -77,7 +77,7 @@ do
         then
             # when working send list of gateway id back to server
             # get variables and make json string
-            mosquitto_pub -h localhost -p 1883 -t sensorbase/SYSTEMcontrolSAVEJSON/linkgateway -m "$payload"
+            mosquitto_pub -h localhost -p 1883 -t universe/SYSTEMcontrolSAVEJSON/linkgateway -m "$payload"
         else
             # if not get old file again and reload mosquitto
             rm -r /etc/mosquitto/mosquitto.conf

@@ -87,8 +87,15 @@ echo "architecture: $arch"
 wget https://dl.grafana.com/oss/release/grafana_8.0.6_armhf.deb
 PATH=$PATH:/sbin
 dpkg -i grafana_8.0.6_armhf.deb
-wget https://dl.influxdata.com/influxdb/releases/influxdb-1.8.9_linux_armhf.tar.gz
-tar xvfz influxdb-1.8.9_linux_armhf.tar.gz
+wget -qO- https://repos.influxdata.com/influxdb.key | sudo apt-key add -
+echo "deb https://repos.influxdata.com/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/influxdb.list
+apt update
+apt install influxdb
+systemctl unmask influxdb
+systemctl enable influxdb
+systemctl start influxdb
+#wget https://dl.influxdata.com/influxdb/releases/influxdb-1.8.9_linux_armhf.tar.gz
+#tar xvfz influxdb-1.8.9_linux_armhf.tar.gz
 elif [ "$arch2" = "amd" ]; then
 echo "architecture: $arch"
 wget https://dl.influxdata.com/influxdb/releases/influxdb_1.8.9_amd64.deb
@@ -279,7 +286,7 @@ chown -R $myvariable:$myvariable /home/$myvariable/dj_iot
 chown -R $myvariable:$myvariable /home/$myvariable/iot42
 chmod -R 765 /home/$myvariable/dj_iot
 chmod 766 /home/$myvariable/dj_iot/db.sqlite3
-sed -i "1s/.*/user '$myvariable';/" /etc/nginx/nginx.conf
+sed -i "1s/.*/user $myvariable;/" /etc/nginx/nginx.conf
 
 # making grafana user: admin
 sleep 10

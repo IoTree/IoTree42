@@ -6,7 +6,7 @@
 
 while true  # Keep an infinite loop to reconnect when connection lost/broker unavailable
 do
-    mosquitto_sub -h localhost -p 1883 -t 'sensorbase/SYSTEMcontrolDONOTSAVE/syncfile' | while read -r payload
+    mosquitto_sub -h localhost -p 1883 -t 'universe/SYSTEMcontrolDONOTSAVE/syncfile' | while read -r payload
     do
         # check for commands and execute them:
         echo "$payload" > /etc/giotree/SyncFile.json

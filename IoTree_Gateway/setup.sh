@@ -57,15 +57,19 @@ string="remote_password ${Password}"
 echo ${string} >>/etc/mosquitto/mosquitto.conf
 string="remote_username ${Username}"
 echo ${string} >>/etc/mosquitto/mosquitto.conf
-echo 'bridge_cafile /etc/mosquitto/certs/DST_Root_CA_X3.pem' >>/etc/mosquitto/mosquitto.conf
+if [ "$Port" = "8883"]; then
+   echo 'bridge_cafile /etc/mosquitto/certs/DST_Root_CA_X3.pem' >>/etc/mosquitto/mosquitto.conf
+fi
 string="remote_clientid ${GatewayID}"
 echo ${string} >>/etc/mosquitto/mosquitto.conf
-string="topic # both 2 sensorbase/ gateways/${Username}/${GatewayID}/"
+string="topic # both 2 universe/ gateways/${Username}/${GatewayID}/"
 echo ${string} >>/etc/mosquitto/mosquitto.conf
 
 chmod -R 644 /etc/mosquitto/mosquitto.conf
 
-cp -r ./DST_Root_CA_X3.pem /etc/mosquitto/certs/DST_Root_CA_X3.pem
+if [ "$Port" = "8883"]; then
+   cp -r ./DST_Root_CA_X3.pem /etc/mosquitto/certs/DST_Root_CA_X3.pem
+fi
 
 rm -r /etc/giotree
 cp -r ./giotree /etc/giotree
@@ -83,7 +87,7 @@ username=$(whoami)
 crontab -r
 
 
-line="* * * * * mosquitto_pub -t sensorbase/SYSTEMcontrol/ping -m '{\"notimestamp\":true}' -h localhost -p 1883"
+line="* * * * * mosquitto_pub -t universe/SYSTEMcontrol/ping -m '{\"notimestamp\":true}' -h localhost -p 1883"
 (crontab -u $username -l; echo "$line" ) | crontab -u $username -
 
 

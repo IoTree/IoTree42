@@ -10,7 +10,7 @@ password_file /etc/iotree/.passwd
 
 acl_file /etc/iotree/.acl
 
-pid_file /etc/mosquitto/tmppid
+#pid_file /etc/mosquitto/tmppid
 
 
 EOF

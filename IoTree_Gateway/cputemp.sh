@@ -21,6 +21,6 @@ cputemp=$(cat /sys/class/thermal/thermal_zone0/temp)
 cputemp=$((cputemp / 1000))
 timestamp=$(date "+%s")
 echo '{"cputemp":'$cputemp',"timestamp":'$timestamp'}'
-mosquitto_pub -h localhost -p 1883 -t sensorbase/gatewayself/cputemp -m '{"cputemp":'$cputemp',"timestamp":'$timestamp'}'
+mosquitto_pub -h localhost -p 1883 -t universe/gatewayself/cputemp -m '{"cputemp":'$cputemp',"timestamp":'$timestamp'}'
 sleep 20
 done

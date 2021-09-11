@@ -3,7 +3,7 @@ The number of sensors is steadily increasing. We find a huge number of sensors i
 
 For personal, educational or scientific purposes or settings, where money is a strictly limited resource, there is a lack of an easy-to-use and robust data warehouse, that respects your data privacy. Most of the popular cloud based IoT platforms (e.g. Thingspeak) are either closed source, limited in the possibility to expand, charging for premium features or do not meet the strict European data privacy laws, when storing sensitive personal data. 
 The following project fills this gap by providing an open source software that is capable to scale and collect data from thousands of sensors and make the data accessible easily.
-IoTree42 consists of three parts. The server, that stores the data, the gateway, that connects to the server via TLS and the sensor itself. The server runs on any i386 or ARM platform with a Linux operating system. For the gateway you can choose between a low budget ARM or ESP system. The data is sent from the sensor via the widespread Mqtt protocol using a JSON formatted data set. The server receives the data and stores it in a database (MongoDB). Users can access the data via an easy to use multiuser web interface or by using a RESTAPI. 
+IoTree42 consists of three parts. The server, that stores the data, the gateway, that connects to the server via TLS and the sensor itself. The server runs on any i386 or ARM platform with a Linux operating system. For the gateway you can choose between a low budget ARM or ESP system. The data is sent from the sensor via the widespread Mqtt protocol using a JSON formatted data set. The server receives the data and stores it in a database (InfluxDb). Users can access the data via an easy to use multiuser web interface or by using a RESTAPI. 
 IoTree42 is an easy to use data warehouse and IoT platform with a lot of possibilities for collecting and distributing sensor data for educational or scientific purposes or even 
 for running it at home.
 
@@ -12,7 +12,7 @@ The basic Structure is illustrated below.
 ![alt text](https://github.com/IoTree/IoTree42/blob/master/.gitignore/in_a_nutshell.png)
 
 The sensor bases to which the sensor is connected send the respectively measured values ??via mqtt to the gateway.
-The gateway itself can be a sensor base.
+The gateway itself can be a sensor host.
 Then the gateway sends the data (encrypted) to the server, where it is stored in a database.
 The data can be looked up on the website or via the rest API.
 On the server side there are basically Django, Moquitto Broker, a basic Python scrip that stores all incoming messages on the InfluxdB. Additionally the connection between Gateway and Server can be TLS-encrypted.
@@ -46,16 +46,16 @@ Example payload: {“sensor”: ”tsl2591”, “lux”: 2314, “time”: 1561
 ### Important rules for the TOPIC:
   -	For simplicity only alphanumeric is allowed. If not, wrong characters will be deleted.
   -	Choose your topic and subtopic-levels wisely. So that you can find data later easily.
-  -	Always use "sensorbase/" before the sub-topic. Otherwise it will not be processed through the gateway.
+  -	Always use "universe/" before the sub-topic. Otherwise it will not be processed through the gateway.
   
-Example topic: sensorbase/luxsensor/tls2591
+Example topic: universe/luxsensor/tls2591
 
 ### Visualize or to check the incoming data
 
 #### Your IoTree:
   Click on “Your IoTree”.
   ![alt text](https://github.com/IoTree/IoTree42/blob/master/.gitignore/query_data2.png)
-  1.	The tree structure corresponds to the MQTT topic defined in your sensorbase and gateway.
+  1.	The tree structure corresponds to the MQTT topic defined in your sensor host (e.g. microcontroller with attached sensors) and gateway.
       Simply mark the Sensors or the top level nodes you like to work with.
   2.  Set the start and end point.
   3.	Select if you want to download a CSV file or view a spreadsheet or to delete the selected data.
@@ -100,7 +100,7 @@ As you can see in the second example, the field "time_end" is set to "now". This
 
 ### General:
 ##### Gateway:
-The gateway forwards all incoming messages under sensorbases/ to the server. Furthermore, it receives all other messages from all other gateways of a user by default. This can be adjusted in the mosquitto.conf file. A user friendly web environment for configuration of the gateway is under development.
+The gateway forwards all incoming messages under universe/ to the server. Furthermore, it receives all other messages from all other gateways of a user by default. This can be adjusted in the mosquitto.conf file. A user friendly web environment for configuration of the gateway is under development.
 
 ##### server: 
 The installation includes Eclipse Mosquitto as broker, Django as web framework and Inlfuxdb as database. Optionally, nginx and gunicorn can be installed and configured as web servers.
@@ -267,7 +267,7 @@ information (certificates, user, topic, password, host, port).
   -	Yes and no. your data can theoretically be seen by the admin.
   -	Your profile pic can be seen from everyone who has access to this site.
   -	The use of IoTree42 is at your own risk.
-#### Can the Gateway itself be also a Sensorbase?
+#### Can the Gateway itself be also a Sensorhost?
   -	Yes, just program your script as if it were on a different Raspberry Pi.
 #### Can I delete all my data?
   -	Yes, when you delete your account everything stored related to you will be deleted.
@@ -291,7 +291,7 @@ information (certificates, user, topic, password, host, port).
   -	Make sure your gateway has internet connection.
   -	Make sure your mqtt username and password is set correctly.
 #### Timestamp is displaying something around 1970.
-  - Your sensorbase likely do not have the global time so it starts with UNIX time = 0 sec,
+  - Your sensor host likely do not have the global time so it starts with UNIX time = 0 sec,
     which is equal to 01.01.1970 00:00:00 in human readable time.
 #### I cannot log in!
   -	Contact admin

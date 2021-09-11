@@ -6,7 +6,7 @@
 
 while true  # Keep an infinite loop to reconnect when connection lost/broker unavailable
 do
-    mosquitto_sub -h localhost -p 1883 -t 'sensorbase/SYSTEMcontrolDONOTSAVE/bashCOMMAND' | while read -r payload
+    mosquitto_sub -h localhost -p 1883 -t 'universe/SYSTEMcontrolDONOTSAVE/bashCOMMAND' | while read -r payload
     do
         # check for commands and execute them:
         if [ "$payload" == "reboot" ]
