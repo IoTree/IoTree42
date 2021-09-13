@@ -50,31 +50,25 @@ At the end add this lines (fill out "<user>").
 ```
 save, close and reboot.
 Your IoTree42 platform is installed and ready for your tasks.
-.
 
-## additional installations
-### Gateway and server share the same hardware.
-You might want to tweck the mosquitto.conf file for your application e.g., change allow anonymus to True.
-*******
-
-### In production
+#### In production
 You sould uncommend the last part of the settings.py file from django.
 However, you can also install a firewall like ufw and fail2ban to increase security.
 
-## Points of failure
+### Points of failure
 Please check after instalation if Gateway ZIP file has a .pem pulic key included.
 Also check if DNS in /etc/iotree/config.json is OK, es well as the rest.
 
-## Testing of MQTT-Server/Network performance
+### Testing of MQTT-Server/Network performance
 Please take a look at the repository: for [python](https://github.com/IoTree/IoTree42/tree/master/API_examples) ****
 
-## Extending IoTree backend.
-### A more advanced backend written in Node Red with filters, weather features and more can be fond in the repo. [here](https://github.com/IoTree/IoTree42_Extensions)
+### Extending IoTree backend.
+A more advanced backend written in Node Red with filters, weather features and more can be fond in the repo. [here](https://github.com/IoTree/IoTree42_Extensions)
 
-## Rest API
-### some API examples for python, R and Node-red are found [here](https://github.com/IoTree/Example_API)
+### Rest API
+some API examples for python, R and Node-red are found [here](https://github.com/IoTree/Example_API)
 
-
+*******
 ## How it works
 ### General:
 ##### server: 
