@@ -1,0 +1,118 @@
+{% extends "iotdata/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load static %}
+<div class="content-section">
+        <div class="article-metadata">
+            <h3><a class="mr-2">Manual</a></h3>
+        </div>
+        <h4><strong>How it works</strong></h4>
+<p>The basic is Structure is illustrated below.</p>
+
+<img src="/static/iotdata/img/in_a_nutshell.png" class="img-fluid" alt="How it works in a nutshell">
+<p>&nbsp;</p>
+<h4><strong>FAQs</strong></h4>
+
+<br><a>Is it possible to use only the Mqtt network without saving data?</a>
+<ul>
+<li>Yes, by inserting a substring "DONOTSAVE" somewhere in the MQTT topic.</li>
+</ul>
+<br><a>Can I save a JSON-String as a hole String e.g. for logging data?</a>
+<ul>
+<li>Yes, by inserting a substring "SAVEJSON" somewhere in the MQTT topic.</li>
+</ul>
+<br><a>Is it possible to connect to the Mqtt-broker directly?</a>
+<ul>
+<li>Yes, it is. The permission for your specific topic is set to read and write.</li>
+<li>Just subscribe your topic (example: gateways/your mqtt username/...), with all the necessary information (certificates, user, topic, password, host, port).</li>
+</ul>
+<br><a>Is my data secure?</a>
+<ul>
+<li>Yes and no. your data is not stored encrypted and theoretically it can be seen form the admin.</li>
+<li>Your profile pic can be seen from everyone who has access to this site.</li>
+<li>The use of IoTree42 is at your own risk.</li>
+</ul>
+<br><a>Can the Gateway itself be also a Sensorbase?</a>
+<ul>
+<li>Yes, just program your script as if it were on a different Raspberry Pi.</li>
+</ul>
+<br><a>Can I delete my data?</a>
+<ul>
+<li>Yes, go to "Your IoTree", select the leaf or node, and then select "deleted" in the drop-down list.</li>
+</ul>
+<br><a>Can I use other devices as gateway than a Raspberry pi?</a>
+<ul>
+<li>Yes, you can easily run the scripts on any Linux,</li>
+</ul>
+<br><a>but cputemp.sh might not work.</a>
+<ul>
+<li>If you want to run it on some other device you will need the certificates form the “.ssl” folder.</li>
+</ul>
+<br><a>Can I send data from 2 gateways, which will then be displayed as one?</a>
+<ul>
+<li>Yes, You need to set the same ID for both.</li>
+</ul>
+<br><a>Can I set up a gateway as a subgetaway?</a>
+<ul>
+<li>Yes, you'll need to modify the mqttbridge1.py script a little so that the data is sent to the first gateway.</li>
+</ul>
+<br><a>I would like to extend my measurement with a new sensor. Can I use the already used topic?</a>
+<ul>
+<li>Yes, you can. Just expand your JSON string with a new field and a value.</li>
+<li>Do not delete other fields. This can cause problems because some data will not be displayed. Send instead zeros or null.</li>
+</ul>
+<p>&nbsp;</p>
+<h4><strong>Difficulties?</strong></h4>
+<br><a>My Mqtt-password has been stolen what should I do?</a>
+<ul>
+<li>Contact admin</li>
+</ul>
+<br><a>Data is not displayed!</a>
+<ul>
+<li>If you just registered the server/admin will need some time to set up everything for you. Try it later again.</li>
+<li>Make sure your using global time UTC +-0</li>
+<li>Make sure your json string is valid. Can be tested <a title="JSON Validator" href="https://jsonlint.com" target="_blank">here</a>.</li>
+<li>Make sure your gateway has internet connection</li>
+<li>Make sure your mqtt username and password is set correctly.</li>
+</ul>
+<br><a>Timestamp is displaying something around 1970.</a>
+<ul>
+<li>Your sensorbase likely do not have the global time so it starts with UNIX time = 0 sec, which is equal to 01.01.1970 00:00:00 in human readable time.</li>
+</ul>
+<br><a>I can not log in!</a>
+<ul>
+<li>Contact admin</li>
+</ul>
+<br><a>Raspberry Pi doesn't get any connection to server.</a>
+<ul>
+<li>Check internet connection.</li>
+<li>Check your config.json file.</li>
+<li>Check your power.</li>
+<li>Or contact Admin.</li>
+</ul>
+<br><a>Some data is missing.</a>
+<ul>
+<li>Look at FAQs “<u>I would like to extend…”</u></li>
+<li>Is your JSON-string correct.</li>
+<li>Dose your sensor works correctly.</li>
+</ul>
+<p>&nbsp;</p>
+<h4><strong>Limitations:</strong></h4>
+<ul>
+<li>This platform can not handle time critical stuff (in msec range).</li>
+<li>Max payload size : 20MB</li>
+<li>Milliseconds are the time interval, but fload down to nsec are accumulated.</li>
+<li>Nested Array or Object are possible but not recomendet. Maybe use the "SAVEJSON" tag in the topic!</li>
+</ul>
+<p>&nbsp;</p>
+<h5><strong><em>Also look at <a title="IoTree Github" href="https://github.com/IoTree/IoTree42" target="_blank">GitHub</a>.</em></strong></h5>
+<p>&nbsp;</p>
+<h5><strong>At last</strong></h5>
+<p><span style="color: #ff0000;">There is <strong>NO WARRANTY</strong> or guarantee <strong>FOR LOUSING DATA</strong> on both sides, server and gateway.</span></p>
+<p><span style="color: #ff0000;">The operator takes <strong>NO RESPON</strong> on anything. <strong>THE USE</strong> of this platform IoTree42 and anything related to it, <strong>IS ON YOUR ON RISK</strong>.</span></p>
+<p>&nbsp;</p>
+<br><a><strong>Found some bugs?</strong></a>
+<p>Contact me on <a title="IoTree Github" href="https://github.com/IoTree/IoTree42" target="_blank">GitHub</a>.</p>
+<p>&nbsp;</p>
+    </div>
+{% endblock content %}

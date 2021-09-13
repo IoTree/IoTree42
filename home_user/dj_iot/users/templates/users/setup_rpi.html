@@ -1,0 +1,39 @@
+{% extends "iotdata/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div  class="content-section">
+        <div class="article-metadata">
+            <h5><a class="mr-2" >How to setup Gateway / Raspberry Pi</a></h5>
+        </div>
+        <a>We going to start with some commands on our Rpi</a>
+        <p>We need to download the repository. Enter the following command.</p>
+        <pre style="background-color: #C0C0C0">curl -O https:--your site name--/media/downloadfiles/IoTree_Gateway_V_2.0.zip</pre>
+        <p>Or download it manually:</p>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" value="{{ context.file }}" name="download">
+            <button type="submit" class="">
+                Zip Download
+            </button>
+        </form>
+        <br>
+        <p>Lets unzip and delete the downloaded file:</p>
+        <a><pre style="background-color: #C0C0C0">unzip IoTree_Gateway_V_2.0.zip</pre></a>
+        <a><pre style="background-color: #C0C0C0">rm -r IoTree_Gateway_V_2.0.zip</pre></a>
+        <p>Lets go in the directory witch has been unzip.</p>
+        <pre style="background-color: #C0C0C0">cd IoTree_gateway</pre>
+        <pre style="background-color: #C0C0C0">sudo bash setup.sh</pre>
+        <a>follow the instructions: enter all necessary variables. </a>
+        <br><a>If everything setup you can reboot or run the cputemp.sh file to test the connection to get your first entries:</a>
+        <pre style="background-color: #C0C0C0">bash cputemp.sh</pre>
+        <a>By default, this script sends the CPU temperature to the database every 20 seconds.</a>
+        <a>The connection might be rejected. Because your account is not fully set up.</a>
+        <a>Try it a few minutes later.</a>
+        <p>And last but not least, have fun with your IoTtree42 network.</p>
+        <div class="border-top pt-3">
+            <small class="text-muted">
+                Problems? Look here: <a class="ml-2" href="{% url 'manual' %}">Manual</a>
+            </small>
+        </div>
+    </div>
+{% endblock content %}

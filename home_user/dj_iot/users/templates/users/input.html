@@ -1,0 +1,45 @@
+{% extends "iotdata/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="content-section">
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">{{context.gateway}}</legend>
+                {{ context.label }}
+                {{ form | crispy }}
+            </fieldset>
+            <div align="left";>
+                <input class="btn btn-outline-info" id="clickMe" type="button" value="Make Json Pretty" onclick="prettyPrint();" />
+            </div>
+            <br>
+            <div class="form-group">
+                <input class="btn btn-outline-info" name="update" value="Update" type="submit">
+                <input class="btn btn-outline-info" name="send" value="Send" type="submit">
+                <input class="btn btn-outline-info" name="cancel" value="Cancel" type="submit">
+            </div>
+        </form>
+        <div class="border-top pt-3" style="border-color:#009;">
+        <small class="text-muted">
+            Problems? Look here: <a class="ml-2" href="{% url 'manual' %}">Manual</a>
+        </small>
+        </div>
+    </div>
+
+
+{% block javascript %}
+
+
+<script type="text/javascript">
+
+function prettyPrint() {
+    var ugly = document.getElementById('id_textbox').value;
+    var obj = JSON.parse(ugly);
+    var pretty = JSON.stringify(obj, undefined, 4);
+    document.getElementById('id_textbox').value = pretty;
+}
+
+</script>
+{% endblock javascript %}
+
+{% endblock content %}
