@@ -1,7 +1,7 @@
 # IoTree42 
 ##### OpenSource IoT Platform, Network and Data Warehouse for Privacy-Compliant Applications in Research and Industry
 
-## IoTree42 Platform Installation:
+## Installation:
 
 ### Requirements: 
 The setup and platform has been tested on a cleanly installed Debian server 9/10 and Rpi 3B+ / 4 (recommended).
@@ -61,7 +61,7 @@ You might want to tweck the mosquitto.conf file for your application e.g., chang
 You sould uncommend the last part of the settings.py file from django.
 However, you can also install a firewall like ufw and fail2ban to increase security.
 
-## Points of faliur after instalation
+## Points of failure
 Please check after instalation if Gateway ZIP file has a .pem pulic key included.
 Also check if DNS in /etc/iotree/config.json is OK, es well as the rest.
 
