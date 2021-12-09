@@ -33,6 +33,7 @@ else
     echo valid
 fi
 
+NEW_UUID=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
 
 sudo apt-get -y update
 sudo apt-get -y upgrade
@@ -60,7 +61,7 @@ echo ${string} >>/etc/mosquitto/mosquitto.conf
 if [ "$Port" = "8883"]; then
    echo 'bridge_cafile /etc/mosquitto/certs/DST_Root_CA_X3.pem' >>/etc/mosquitto/mosquitto.conf
 fi
-string="remote_clientid ${GatewayID}"
+string="remote_clientid ${GatewayID}${NEW_UUID}"
 echo ${string} >>/etc/mosquitto/mosquitto.conf
 string="topic # both 2 universe/ gateways/${Username}/${GatewayID}/"
 echo ${string} >>/etc/mosquitto/mosquitto.conf

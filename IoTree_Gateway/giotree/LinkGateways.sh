@@ -14,6 +14,7 @@ do
         GatewayID=$(sed -n '3p' /etc/giotree/CredentialsFile.txt)
         Hostname=$(sed -n '4p' /etc/giotree/CredentialsFile.txt)
         Port=$(sed -n '5p' /etc/giotree/CredentialsFile.txt)
+        NEW_UUID=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
         #save existing config file
         rm -r /etc/mosquitto/mosquitto.conf.link_save
         mv /etc/mosquitto/mosquitto.conf  /etc/mosquitto/mosquitto.conf.link_save
@@ -32,7 +33,7 @@ do
         if [ "$Port" = "8883"]; then
             echo 'bridge_cafile /etc/mosquitto/certs/DST_Root_CA_X3.pem' >>/etc/mosquitto/mosquitto.conf
         fi
-        string="remote_clientid ${GatewayID}"
+        string="remote_clientid ${GatewayID}${NEW_UUID}"
         echo ${string} >>/etc/mosquitto/mosquitto.conf
         string="topic # both 2 universe/ gateways/${Username}/${GatewayID}/"
         echo ${string} >>/etc/mosquitto/mosquitto.conf
@@ -61,7 +62,7 @@ do
                     if [ "$Port" = "8883"]; then
                         echo 'bridge_cafile /etc/mosquitto/certs/DST_Root_CA_X3.pem' >>/etc/mosquitto/mosquitto.conf
                     fi
-                    string="remote_clientid ext${arline[0]}"
+                    string="remote_clientid ${GatewayID}ext${arline[0]}${NEW_UUID}"
                     echo ${string} >>/etc/mosquitto/mosquitto.conf
                     string="topic ${arline[1]} in 2 gateway/${arline[0]}/ gateways/${Username}/${arline[0]}/"
                     echo ${string} >>/etc/mosquitto/mosquitto.conf
